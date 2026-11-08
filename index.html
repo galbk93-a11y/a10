@@ -2,7 +2,7 @@
 <html lang="he" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>תרגול דמיון משולשים – כיתה ט׳</title>
 <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
@@ -11,21 +11,33 @@
   --pen:#2f5bd3; --onpen:#ffffff; --pen-soft:#e3eafb; --ok:#1f8a5b; --ok-soft:#e1f3ea;
   --bad:#c2412d; --bad-soft:#fbe7e3; --hl:#d99a00; --line:#c9d3e3;
   color-scheme: light;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
 }
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
 @media (prefers-color-scheme: dark){
-  :root{
+  :root:not([data-theme="light"]){
     --bg:#141a26; --grid:#1b2332; --card:#1d2535; --ink:#e7ecf5; --muted:#9aa6bf;
     --pen:#7ea2ff; --onpen:#0f1729; --pen-soft:#25324f; --ok:#4cc38a; --ok-soft:#173327;
     --bad:#ff7a63; --bad-soft:#3a1f1b; --hl:#f2c14e; --line:#334058;
     color-scheme: dark;
   }
 }
+:root[data-theme="dark"]{
+  --bg:#141a26; --grid:#1b2332; --card:#1d2535; --ink:#e7ecf5; --muted:#9aa6bf;
+  --pen:#7ea2ff; --onpen:#0f1729; --pen-soft:#25324f; --ok:#4cc38a; --ok-soft:#173327;
+  --bad:#ff7a63; --bad-soft:#3a1f1b; --hl:#f2c14e; --line:#334058;
+  color-scheme: dark;
+}
 *{box-sizing:border-box}
+html{background:var(--bg)}
 body{
-  margin:0; font-family:"Rubik",Arial,sans-serif; color:var(--ink); line-height:1.6;
+  margin:0; font-family:"Rubik",Arial,"Segoe UI",sans-serif; color:var(--ink); line-height:1.6;
   background-color:var(--bg);
   background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
   background-size:24px 24px;
+  overflow-x:hidden;
 }
 header{max-width:860px;margin:0 auto;padding:28px 16px 4px}
 h1{margin:0;font-size:2rem}
@@ -58,15 +70,17 @@ button.choice{font:inherit;padding:6px 12px;border-radius:8px;border:1.5px solid
 .m{direction:ltr;unicode-bidi:isolate;white-space:nowrap;font-family:"Cambria Math","Times New Roman",serif;font-size:1.06em}
 .fr{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;margin:0 2px;line-height:1.15}
 .fr>span:first-child{border-bottom:1.2px solid currentColor;padding:0 3px}
+.tablewrap{overflow-x:auto}
 table.proof{width:100%;border-collapse:collapse;margin-top:8px}
 .proof th,.proof td{border:1px solid var(--line);padding:6px 8px;text-align:right;vertical-align:middle}
 .proof th{background:var(--pen-soft)}
 .proof td:first-child{width:30px;text-align:center}
-.proof select{font:inherit;font-size:.92rem;width:100%;padding:4px;border-radius:6px;border:1.5px solid var(--line);background:var(--card);color:var(--ink)}
+.proof select{font:inherit;font-size:.92rem;width:100%;min-width:150px;padding:4px;border-radius:6px;border:1.5px solid var(--line);background:var(--card);color:var(--ink)}
 .proof select.right{border-color:var(--ok);background:var(--ok-soft)}
 .proof select.wrong{border-color:var(--bad);background:var(--bad-soft)}
 .given{margin:4px 0}
 .calc{margin-top:12px;font-weight:500}
+.note{color:var(--muted);margin:8px 0}
 button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--hl);outline-offset:2px}
 svg .sg{stroke:var(--ink);stroke-width:2;stroke-linecap:round}
 svg .aux{stroke:var(--pen);stroke-width:2;stroke-dasharray:6 4}
@@ -87,7 +101,6 @@ svg .dot{fill:var(--ink)}
 <main id="main"></main>
 
 <script>
-// ---------- עזרי תצוגה ----------
 const fmt = s => s.replace(/\$(.+?)\$/g, (_, m) =>
   '<span class="m">' + m.replace(/\[\[(.+?)\|(.+?)\]\]/g, '<span class="fr"><span>$1</span><span>$2</span></span>') + '</span>');
 
@@ -121,7 +134,6 @@ function fig(f){
   return s+'</svg>';
 }
 
-// ---------- שרטוטים קבועים ----------
 const parFig=(sides=[],par=true)=>({pts:{A:[160,22],B:[40,200],C:[290,200],D:[112,92],E:[212,92]},
   segs:['AB','AC','BC','DE'],par:par?[['D','E'],['B','C']]:[],sides});
 const hourFig=(sides=[])=>({pts:{A:[60,30],B:[170,30],O:[120,90,18,0],D:[210,180],C:[45,180]},
@@ -139,7 +151,6 @@ const pairFig=(sides=[],arcs=[])=>({pts:{A:[20,200],B:[140,200],C:[55,90],D:[175
 const rightPair=(sides=[])=>({pts:{B:[25,195],A:[25,123],C:[121,195],E:[170,195],D:[170,87],F:[314,195]},
   groups:[['A','B','C'],['D','E','F']],segs:['AB','BC','CA','DE','EF','FD'],right:[['B','A','C'],['E','D','F']],sides,w:340,h:215});
 
-// ---------- נימוקים להוכחות ----------
 const R=[
  'נתון',
  'זווית משותפת',
@@ -158,7 +169,6 @@ const R=[
  'מכפלת קצוות שווה למכפלת אמצעים'
 ];
 
-// ---------- התרגילים ----------
 const TABS=[
 {name:'זיהוי ויחס',
  intro:`שני משולשים דומים אם מתקיים אחד ממשפטי הדמיון: <b>ז.ז</b> (שתי זוויות שוות), <b>צ.ז.צ</b> (שתי צלעות פרופורציוניות והזווית שביניהן שווה), <b>צ.צ.צ</b> (שלוש צלעות פרופורציוניות). <b>יחס הדמיון</b> $k$ הוא היחס בין צלעות מתאימות. כותבים את הדמיון לפי סדר ההתאמה של הקודקודים!`,
@@ -290,11 +300,11 @@ const TABS=[
         `$8 · [[3|2]] = 12$.`,
         `$45 · [[2|3]] = 30$.`]},
   {title:'גבהים מתאימים',
-   text:`$ΔABC ∼ ΔA'B'C'$, $BC = 10$, $B'C' = 15$. הגובה לצלע $BC$ הוא $AH = 6$.`,
-   parts:[{q:`חשבו את הגובה המתאים $A'H'$.`,ans:9},{q:`חשבו את שטח $ΔABC$.`,ans:30},{q:`חשבו את שטח $ΔA'B'C'$.`,ans:67.5}],
-   sol:[`$k = [[15|10]] = 1.5$. הגבהים המתאימים ביחס הדמיון: $A'H' = 1.5 · 6 = 9$.`,
+   text:`$ΔABC ∼ ΔA′B′C′$, $BC = 10$, $B′C′ = 15$. הגובה לצלע $BC$ הוא $AH = 6$.`,
+   parts:[{q:`חשבו את הגובה המתאים $A′H′$.`,ans:9},{q:`חשבו את שטח $ΔABC$.`,ans:30},{q:`חשבו את שטח $ΔA′B′C′$.`,ans:67.5}],
+   sol:[`$k = [[15|10]] = 1.5$. הגבהים המתאימים ביחס הדמיון: $A′H′ = 1.5 · 6 = 9$.`,
         `$S<sub>ABC</sub> = [[10 · 6|2]] = 30$.`,
-        `$S<sub>A'B'C'</sub> = [[15 · 9|2]] = 67.5$. בדיקה: $1.5² · 30 = 2.25 · 30 = 67.5$ ✓`]},
+        `$S<sub>A′B′C′</sub> = [[15 · 9|2]] = 67.5$. בדיקה: $1.5² · 30 = 2.25 · 30 = 67.5$ ✓`]},
   {title:'שטח משולש וטרפז',fig:parFig(),
    text:`$DE ∥ BC$, $AD : DB = 2 : 3$, ושטח $ΔADE$ הוא 8.`,
    parts:[{q:`מהו יחס הדמיון $[[AD|AB]]$?`,ans:0.4},{q:`חשבו את שטח $ΔABC$.`,ans:50},{q:`חשבו את שטח הטרפז $DECB$.`,ans:42}],
@@ -356,42 +366,42 @@ const TABS=[
  ex:[
   {title:'צל של עץ',fig:{pts:{A:[40,130],B:[40,190],C:[130,190],D:[180,30],E:[180,190],F:[330,190]},groups:[['A','B','C'],['D','E','F']],
      segs:['AB','BC','DE','EF'],aux:['AC','DF'],right:[['B','A','C'],['E','D','F']],sides:[['AB','2'],['BC','3'],['EF','18'],['DE','h']],w:350,h:215},
-   text:`מקל שגובהו 2 מ' מטיל צל של 3 מ'. באותה שעה עץ מטיל צל של 18 מ'.`,
+   text:`מקל שגובהו 2 מ׳ מטיל צל של 3 מ׳. באותה שעה עץ מטיל צל של 18 מ׳.`,
    parts:[{q:`מהו גובה העץ (במטרים)?`,ans:12}],
    sol:[`קרני השמש מקבילות, לכן הזווית שבין הקרן לקרקע שווה בשני המשולשים, ושניהם ישרי זווית. לכן הם דומים (ז.ז).`,
-        `$[[h|2]] = [[18|3]]$, ולכן $h = 12$ מ'.`]},
+        `$[[h|2]] = [[18|3]]$, ולכן $h = 12$ מ׳.`]},
   {title:'מראה על הקרקע',fig:{pts:{A:[30,120],B:[30,190],M:[100,190,0,16],C:[320,190],D:[320,20]},groups:[['A','B','M'],['D','C','M']],
      segs:['AB','BM','MC','CD'],aux:['AM','MD'],right:[['B','A','M'],['C','D','M']],arcs:[['M','A','B',1],['M','D','C',1]],
      sides:[['AB','1.6'],['BM','2'],['MC','25'],['CD','h']],w:345,h:215},
-   text:`דנה מניחה מראה על הקרקע ומתרחקת ממנה 2 מ', עד שהיא רואה במראה את ראש הבניין. גובה עיניה 1.6 מ', והמרחק מהמראה לבניין 25 מ'. זווית הפגיעה במראה שווה לזווית ההחזרה.`,
+   text:`דנה מניחה מראה על הקרקע ומתרחקת ממנה 2 מ׳, עד שהיא רואה במראה את ראש הבניין. גובה עיניה 1.6 מ׳, והמרחק מהמראה לבניין 25 מ׳. זווית הפגיעה במראה שווה לזווית ההחזרה.`,
    parts:[{q:`מהו גובה הבניין (במטרים)?`,ans:20}],
    sol:[`$∠AMB = ∠DMC$ (פגיעה = החזרה), $∠B = ∠C = 90°$, לכן $ΔABM ∼ ΔDCM$ (ז.ז).`,
-        `$[[DC|AB]] = [[CM|BM]]$, כלומר $[[h|1.6]] = [[25|2]]$, ולכן $h = 1.6 · 12.5 = 20$ מ'.`]},
+        `$[[DC|AB]] = [[CM|BM]]$, כלומר $[[h|1.6]] = [[25|2]]$, ולכן $h = 1.6 · 12.5 = 20$ מ׳.`]},
   {title:'עמוד תאורה',fig:{pts:{L:[30,70],P:[30,190],Q:[150,190],H:[150,150],S:[210,190]},groups:[['L','P','S']],
      segs:['LP','PS','QH'],aux:['LS'],right:[['P','L','S'],['Q','H','S']],sides:[['LP','h'],['QH','1.8'],['PQ','4'],['QS','2']],w:240,h:215},
-   text:`אדם שגובהו 1.8 מ' עומד במרחק 4 מ' מעמוד תאורה, ואורך הצל שלו 2 מ'.`,
+   text:`אדם שגובהו 1.8 מ׳ עומד במרחק 4 מ׳ מעמוד תאורה, ואורך הצל שלו 2 מ׳.`,
    parts:[{q:`מהו גובה העמוד (במטרים)?`,ans:5.4}],
    sol:[`$∠S$ משותפת, $∠P = ∠Q = 90°$, לכן $ΔHQS ∼ ΔLPS$ (ז.ז).`,
         `$PS = 4 + 2 = 6$.`,
-        `$[[h|1.8]] = [[6|2]]$, ולכן $h = 5.4$ מ'.`]},
+        `$[[h|1.8]] = [[6|2]]$, ולכן $h = 5.4$ מ׳.`]},
   {title:'הגדלה במכונת צילום',
-   text:`משולש שצלעותיו 5, 7, 9 ס"מ הוגדל במכונת צילום כך שהצלע הקצרה שלו היא 7.5 ס"מ.`,
+   text:`משולש שצלעותיו 5, 7, 9 ס״מ הוגדל במכונת צילום כך שהצלע הקצרה שלו היא 7.5 ס״מ.`,
    parts:[{q:`מה אורך הצלע הארוכה אחרי ההגדלה?`,ans:13.5},{q:`מהו ההיקף אחרי ההגדלה?`,ans:31.5},{q:`פי כמה גדל השטח?`,ans:2.25}],
    sol:[`$k = [[7.5|5]] = 1.5$.`,
         `הצלע הארוכה: $9 · 1.5 = 13.5$.`,
         `היקף: $(5 + 7 + 9) · 1.5 = 21 · 1.5 = 31.5$.`,
         `השטח גדל פי $k² = 1.5² = 2.25$.`]},
   {title:'מפה',
-   text:`על מפה בקנה מידה 1:2000 מסומנת חלקה משולשת ישרת זווית שניצביה 3 ס"מ ו־4 ס"מ.`,
-   parts:[{q:`מה אורך היתר של החלקה במציאות (במטרים)?`,ans:100},{q:`מהו שטח החלקה במציאות (במ"ר)?`,ans:2400}],
+   text:`על מפה בקנה מידה 1:2000 מסומנת חלקה משולשת ישרת זווית שניצביה 3 ס״מ ו־4 ס״מ.`,
+   parts:[{q:`מה אורך היתר של החלקה במציאות (במטרים)?`,ans:100},{q:`מהו שטח החלקה במציאות (במ״ר)?`,ans:2400}],
    sol:[`החלקה במציאות דומה למשולש שבמפה ביחס $k = 2000$.`,
-        `היתר במפה הוא 5 ס"מ (פיתגורס), ובמציאות $5 · 2000 = 10000$ ס"מ, כלומר 100 מ'.`,
-        `הניצבים במציאות: 60 מ' ו־80 מ', ולכן השטח $[[60 · 80|2]] = 2400$ מ"ר.`,
-        `בדיקה ביחס שטחים: שטח במפה 6 סמ"ר, $6 · 2000² = 24,000,000$ סמ"ר, שהם 2400 מ"ר ✓`]}
+        `היתר במפה הוא 5 ס״מ (פיתגורס), ובמציאות $5 · 2000 = 10000$ ס״מ, כלומר 100 מ׳.`,
+        `הניצבים במציאות: 60 מ׳ ו־80 מ׳, ולכן השטח $[[60 · 80|2]] = 2400$ מ״ר.`,
+        `בדיקה ביחס שטחים: שטח במפה 6 סמ״ר, $6 · 2000² = 24,000,000$ סמ״ר, שהם 2400 מ״ר ✓`]}
  ]},
 
 {name:'הוכחות',
- intro:`בחרו לכל טענה את הנימוק המתאים מהרשימה ולחצו "בדיקת ההוכחה". ברוב ההוכחות המבנה הוא: שתי טענות על זוויות (או צלעות), משולשים דומים, ואז מסקנה (צלעות פרופורציוניות, זוויות שוות או מכפלה). אחרי ההוכחה יש סעיף חישוב.`,
+ intro:`נסו קודם להוכיח לבד במחברת. אחר כך לחצו “בדיקת ההוכחה”, בחרו לכל טענה את הנימוק המתאים מהרשימה ולחצו “בדיקת הנימוקים”. ברוב ההוכחות המבנה הוא: שתי טענות על זוויות (או צלעות), משולשים דומים, ואז מסקנה (צלעות פרופורציוניות, זוויות שוות או מכפלה). אחרי ההוכחה יש סעיף חישוב.`,
  ex:[
   {title:'קטע מקביל יוצר משולש דומה',fig:parFig(),proof:true,
    given:`$DE ∥ BC$, הנקודה $D$ על $AB$ והנקודה $E$ על $AC$.`,prove:`$ΔADE ∼ ΔABC$`,
@@ -436,7 +446,6 @@ const TABS=[
  ]}
 ];
 
-// ---------- בניית הדף ----------
 const PARTS={}, PROOFS={}, solved=new Set(); let total=0;
 const LET='אבגדהוזח';
 
@@ -447,11 +456,11 @@ function renderEx(e,id,num){
   if(e.proof){
     PROOFS[id]=e; total++;
     h+=`<div class="given"><b>נתון:</b> ${fmt(e.given)}</div><div class="given"><b>צריך להוכיח:</b> ${fmt(e.prove)}</div>`;
-    h+=`<table class="proof"><thead><tr><th>#</th><th>טענה</th><th>נימוק</th></tr></thead><tbody>`;
+    h+=`<p class="note">נסו לכתוב את ההוכחה לבד במחברת. כשתסיימו, לחצו כדי לבדוק אותה.</p><button class="act" data-reveal="${id}">בדיקת ההוכחה</button><div class="proofbox" id="pbox-${id}" hidden><p class="note">לפניכם הטענות של ההוכחה. בחרו לכל טענה את הנימוק המתאים ולחצו “בדיקת הנימוקים”.</p><div class="tablewrap"><table class="proof"><thead><tr><th>#</th><th>טענה</th><th>נימוק</th></tr></thead><tbody>`;
     e.steps.forEach((st,k)=>{
       h+=`<tr><td>${k+1}</td><td>${fmt(st[0])}</td><td><select data-proof="${id}" data-r="${k}" aria-label="נימוק לטענה ${k+1}"><option value="">בחרו נימוק…</option>${R.map((x,ri)=>`<option value="${ri}">${x}</option>`).join('')}</select></td></tr>`;
     });
-    h+=`</tbody></table><div class="row"><button class="act" data-pcheck="${id}">בדיקת ההוכחה</button><span class="fb" id="pfb-${id}"></span></div>`;
+    h+=`</tbody></table></div><div class="row"><button class="act" data-pcheck="${id}">בדיקת הנימוקים</button><span class="fb" id="pfb-${id}"></span></div></div>`;
     if(e.parts) h+=`<div class="calc">סעיף חישוב</div>`;
   }
   (e.parts||[]).forEach((p,j)=>{
@@ -464,7 +473,7 @@ function renderEx(e,id,num){
   let lines=[];
   if(e.proof) lines=e.steps.map(st=>`${st[0]} &nbsp;|&nbsp; <i>${R[[].concat(st[1])[0]]}</i>`);
   lines=lines.concat(e.sol||[]);
-  h+=`<button class="ghost" data-sol="${id}">הצגת פתרון מלא</button><div class="sol" id="sol-${id}"><ol>${lines.map(l=>'<li>'+fmt(l)+'</li>').join('')}</ol></div></div>`;
+  h+=`<button class="ghost" data-sol="${id}" id="solbtn-${id}"${e.proof?' hidden':''}>הצגת פתרון מלא</button><div class="sol" id="sol-${id}"><ol>${lines.map(l=>'<li>'+fmt(l)+'</li>').join('')}</ol></div></div>`;
   return h;
 }
 
@@ -513,6 +522,12 @@ document.addEventListener('click',ev=>{
   if(t.dataset.check) checkNum(t.dataset.check);
   else if(t.dataset.pid) checkChoice(t);
   else if(t.dataset.pcheck) checkProof(t.dataset.pcheck);
+  else if(t.dataset.reveal){
+    const id=t.dataset.reveal;
+    document.getElementById('pbox-'+id).hidden=false;
+    document.getElementById('solbtn-'+id).hidden=false;
+    t.hidden=true;
+  }
   else if(t.dataset.sol){
     const s=document.getElementById('sol-'+t.dataset.sol);
     s.classList.toggle('show');
