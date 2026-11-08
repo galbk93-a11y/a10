@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>תרגול דמיון משולשים – כיתה ט׳</title>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#eef2f7; --grid:#dde4ee; --card:#ffffff; --ink:#1f2a44; --muted:#5b6782;
+  --pen:#2f5bd3; --onpen:#ffffff; --pen-soft:#e3eafb; --ok:#1f8a5b; --ok-soft:#e1f3ea;
+  --bad:#c2412d; --bad-soft:#fbe7e3; --hl:#d99a00; --line:#c9d3e3;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#141a26; --grid:#1b2332; --card:#1d2535; --ink:#e7ecf5; --muted:#9aa6bf;
+    --pen:#7ea2ff; --onpen:#0f1729; --pen-soft:#25324f; --ok:#4cc38a; --ok-soft:#173327;
+    --bad:#ff7a63; --bad-soft:#3a1f1b; --hl:#f2c14e; --line:#334058;
+    color-scheme: dark;
+  }
+}
+*{box-sizing:border-box}
+body{
+  margin:0; font-family:"Rubik",Arial,sans-serif; color:var(--ink); line-height:1.6;
+  background-color:var(--bg);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:24px 24px;
+}
+header{max-width:860px;margin:0 auto;padding:28px 16px 4px}
+h1{margin:0;font-size:2rem}
+.sub{color:var(--muted);margin:4px 0 0}
+.score{margin-top:10px;font-weight:500;color:var(--pen)}
+nav{max-width:860px;margin:12px auto 0;padding:0 16px;display:flex;gap:6px;flex-wrap:wrap}
+nav button{font:inherit;border:1.5px solid var(--line);background:var(--card);color:var(--ink);padding:7px 14px;border-radius:20px;cursor:pointer}
+nav button.active{background:var(--pen);border-color:var(--pen);color:var(--onpen)}
+main{max-width:860px;margin:0 auto;padding:16px}
+.intro{background:var(--pen-soft);border-radius:10px;padding:12px 16px;margin-bottom:16px}
+.ex{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px;margin-bottom:18px}
+.ex h3{margin:0 0 8px;font-size:1.15rem}
+.fig{display:flex;justify-content:center;margin:8px 0}
+.fig svg{width:100%;max-width:400px;height:auto;direction:ltr}
+.part{border-top:1px dashed var(--line);padding:10px 0}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:6px}
+input.ans{font:inherit;width:120px;padding:6px 8px;border:1.5px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);direction:ltr;text-align:center}
+input.ans.right{border-color:var(--ok);background:var(--ok-soft)}
+button.act{font:inherit;padding:6px 14px;border-radius:8px;border:none;background:var(--pen);color:var(--onpen);cursor:pointer}
+button.ghost{font:inherit;padding:6px 14px;border-radius:8px;border:1.5px solid var(--pen);background:transparent;color:var(--pen);cursor:pointer;margin-top:8px}
+button.choice{font:inherit;padding:6px 12px;border-radius:8px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+.choice.right{border-color:var(--ok);background:var(--ok-soft)}
+.choice.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.fb{font-weight:500}
+.fb.ok{color:var(--ok)} .fb.no{color:var(--bad)}
+.sol{display:none;margin-top:10px;background:var(--bg);border-right:4px solid var(--hl);border-radius:8px;padding:10px 14px}
+.sol.show{display:block}
+.sol ol{margin:0;padding-inline-start:22px}
+.sol li{margin:4px 0}
+.m{direction:ltr;unicode-bidi:isolate;white-space:nowrap;font-family:"Cambria Math","Times New Roman",serif;font-size:1.06em}
+.fr{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;margin:0 2px;line-height:1.15}
+.fr>span:first-child{border-bottom:1.2px solid currentColor;padding:0 3px}
+table.proof{width:100%;border-collapse:collapse;margin-top:8px}
+.proof th,.proof td{border:1px solid var(--line);padding:6px 8px;text-align:right;vertical-align:middle}
+.proof th{background:var(--pen-soft)}
+.proof td:first-child{width:30px;text-align:center}
+.proof select{font:inherit;font-size:.92rem;width:100%;padding:4px;border-radius:6px;border:1.5px solid var(--line);background:var(--card);color:var(--ink)}
+.proof select.right{border-color:var(--ok);background:var(--ok-soft)}
+.proof select.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.given{margin:4px 0}
+.calc{margin-top:12px;font-weight:500}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--hl);outline-offset:2px}
+svg .sg{stroke:var(--ink);stroke-width:2;stroke-linecap:round}
+svg .aux{stroke:var(--pen);stroke-width:2;stroke-dasharray:6 4}
+svg .pt{fill:var(--ink);font-weight:700;font-size:15px}
+svg .sd{fill:var(--pen);font-size:13px;font-weight:500}
+svg .arc{fill:none;stroke:var(--hl);stroke-width:2}
+svg .mk{fill:none;stroke:var(--ink);stroke-width:1.5}
+svg .dot{fill:var(--ink)}
+</style>
+</head>
+<body>
+<header>
+  <h1>דמיון משולשים</h1>
+  <p class="sub">תרגול לכיתה ט׳ עם דגש על יחס הדמיון. השרטוטים אינם בקנה מידה. אפשר להקליד מספר עשרוני או שבר (למשל 5/2).</p>
+  <div class="score" id="score"></div>
+</header>
+<nav id="nav"></nav>
+<main id="main"></main>
+
+<script>
+// ---------- עזרי תצוגה ----------
+const fmt = s => s.replace(/\$(.+?)\$/g, (_, m) =>
+  '<span class="m">' + m.replace(/\[\[(.+?)\|(.+?)\]\]/g, '<span class="fr"><span>$1</span><span>$2</span></span>') + '</span>');
+
+function fig(f){
+  const P=f.pts, W=f.w||340, H=f.h||220, names=Object.keys(P);
+  const cen=list=>{let x=0,y=0;list.forEach(n=>{x+=P[n][0];y+=P[n][1]});return [x/list.length,y/list.length]};
+  const G=cen(names);
+  const grp=(...ns)=>{const g=(f.groups||[]).find(g=>ns.every(n=>g.includes(n)));return g?cen(g):G};
+  const u=(a,b)=>{const dx=b[0]-a[0],dy=b[1]-a[1],l=Math.hypot(dx,dy)||1;return [dx/l,dy/l]};
+  const r=n=>n.toFixed(1);
+  let s=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="שרטוט">`;
+  (f.segs||[]).forEach(sg=>{const a=P[sg[0]],b=P[sg[1]];s+=`<line class="sg" x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}"/>`});
+  (f.aux||[]).forEach(sg=>{const a=P[sg[0]],b=P[sg[1]];s+=`<line class="aux" x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}"/>`});
+  (f.right||[]).forEach(([v,a,b])=>{const V=P[v],u1=u(V,P[a]),u2=u(V,P[b]),k=11;
+    s+=`<path class="mk" d="M${r(V[0]+u1[0]*k)},${r(V[1]+u1[1]*k)} L${r(V[0]+u1[0]*k+u2[0]*k)},${r(V[1]+u1[1]*k+u2[1]*k)} L${r(V[0]+u2[0]*k)},${r(V[1]+u2[1]*k)}"/>`});
+  (f.arcs||[]).forEach(([v,a,b,cnt,lab])=>{const V=P[v],u1=u(V,P[a]),u2=u(V,P[b]);
+    const sw=(u1[0]*u2[1]-u1[1]*u2[0])>0?1:0;
+    for(let i=0;i<(cnt||1);i++){const R=20+i*5;
+      s+=`<path class="arc" d="M${r(V[0]+u1[0]*R)},${r(V[1]+u1[1]*R)} A${R},${R} 0 0 ${sw} ${r(V[0]+u2[0]*R)},${r(V[1]+u2[1]*R)}"/>`;}
+    if(lab){let bx=u1[0]+u2[0],by=u1[1]+u2[1];const l=Math.hypot(bx,by)||1;
+      s+=`<text class="sd" x="${r(V[0]+bx/l*38)}" y="${r(V[1]+by/l*38)}" text-anchor="middle" dy=".35em">${lab}</text>`;}});
+  (f.par||[]).forEach(([a,b])=>{const A=P[a],B=P[b],d=u(A,B),m=[(A[0]+B[0])/2,(A[1]+B[1])/2],n=[-d[1],d[0]];
+    s+=`<path class="mk" d="M${r(m[0]-d[0]*3+n[0]*5)},${r(m[1]-d[1]*3+n[1]*5)} L${r(m[0]+d[0]*5)},${r(m[1]+d[1]*5)} L${r(m[0]-d[0]*3-n[0]*5)},${r(m[1]-d[1]*3-n[1]*5)}"/>`});
+  (f.sides||[]).forEach(([ab,txt])=>{const a=ab[0],b=ab[1],A=P[a],B=P[b],c=grp(a,b);
+    const m=[(A[0]+B[0])/2,(A[1]+B[1])/2],d=u(A,B);let n=[-d[1],d[0]];
+    if(n[0]*(m[0]-c[0])+n[1]*(m[1]-c[1])<0)n=[-n[0],-n[1]];
+    s+=`<text class="sd" x="${r(m[0]+n[0]*13)}" y="${r(m[1]+n[1]*13)}" text-anchor="middle" dy=".35em">${txt}</text>`});
+  names.forEach(n=>{const p=P[n];let dx,dy;
+    if(p.length>2){dx=p[2];dy=p[3]}else{const d=u(grp(n),p);dx=d[0]*14;dy=d[1]*14}
+    s+=`<circle class="dot" cx="${p[0]}" cy="${p[1]}" r="2.5"/><text class="pt" x="${r(p[0]+dx)}" y="${r(p[1]+dy)}" text-anchor="middle" dy=".35em">${n}</text>`});
+  return s+'</svg>';
+}
+
+// ---------- שרטוטים קבועים ----------
+const parFig=(sides=[],par=true)=>({pts:{A:[160,22],B:[40,200],C:[290,200],D:[112,92],E:[212,92]},
+  segs:['AB','AC','BC','DE'],par:par?[['D','E'],['B','C']]:[],sides});
+const hourFig=(sides=[])=>({pts:{A:[60,30],B:[170,30],O:[120,90,18,0],D:[210,180],C:[45,180]},
+  groups:[['A','B','O'],['C','D','O']],segs:['AB','CD','AD','BC'],par:[['A','B'],['C','D']],sides,w:260,h:210});
+const antiFig=(sides=[])=>({pts:{A:[74,190],B:[250,58],C:[250,190],D:[144,137],E:[184,190]},
+  segs:['AB','BC','CA','DE'],arcs:[['E','A','D',1],['B','A','C',1]],sides,w:300,h:215});
+const trapFig=(sides=[])=>({pts:{D:[30,190],C:[290,190],A:[110,40],B:[214,40],O:[161,83,0,-15]},
+  segs:['AB','BC','CD','DA','AC','BD'],par:[['A','B'],['D','C']],sides,w:320,h:215});
+const altFig=(sides=[])=>({pts:{A:[20,190],B:[295,190],D:[119,190],C:[119,58]},
+  segs:['AB','AC','BC','CD'],right:[['C','A','B'],['D','C','B']],sides,w:320,h:215});
+const perpFig=(sides=[])=>({pts:{A:[40,190],C:[240,190],B:[240,40],D:[120,130],E:[165,190]},
+  segs:['AC','CB','BA','DE'],right:[['C','A','B'],['D','A','E']],sides,w:280,h:215});
+const pairFig=(sides=[],arcs=[])=>({pts:{A:[20,200],B:[140,200],C:[55,90],D:[175,205],E:[349,205],F:[226,45]},
+  groups:[['A','B','C'],['D','E','F']],segs:['AB','BC','CA','DE','EF','FD'],sides,arcs,w:370,h:222});
+const rightPair=(sides=[])=>({pts:{B:[25,195],A:[25,123],C:[121,195],E:[170,195],D:[170,87],F:[314,195]},
+  groups:[['A','B','C'],['D','E','F']],segs:['AB','BC','CA','DE','EF','FD'],right:[['B','A','C'],['E','D','F']],sides,w:340,h:215});
+
+// ---------- נימוקים להוכחות ----------
+const R=[
+ 'נתון',
+ 'זווית משותפת',
+ 'זוויות קודקודיות שוות',
+ 'זוויות מתאימות בין ישרים מקבילים שוות',
+ 'זוויות מתחלפות בין ישרים מקבילים שוות',
+ 'אם זוויות מתאימות שוות, הישרים מקבילים',
+ 'הגדרת ניצב (זווית ישרה = 90°)',
+ 'סכום הזוויות במשולש הוא 180°',
+ 'חישוב מהנתונים',
+ 'משפט דמיון ז.ז',
+ 'משפט דמיון צ.ז.צ',
+ 'משפט דמיון צ.צ.צ',
+ 'במשולשים דומים הזוויות המתאימות שוות',
+ 'במשולשים דומים הצלעות המתאימות פרופורציוניות',
+ 'מכפלת קצוות שווה למכפלת אמצעים'
+];
+
+// ---------- התרגילים ----------
+const TABS=[
+{name:'זיהוי ויחס',
+ intro:`שני משולשים דומים אם מתקיים אחד ממשפטי הדמיון: <b>ז.ז</b> (שתי זוויות שוות), <b>צ.ז.צ</b> (שתי צלעות פרופורציוניות והזווית שביניהן שווה), <b>צ.צ.צ</b> (שלוש צלעות פרופורציוניות). <b>יחס הדמיון</b> $k$ הוא היחס בין צלעות מתאימות. כותבים את הדמיון לפי סדר ההתאמה של הקודקודים!`,
+ ex:[
+  {title:'צ.צ.צ',fig:rightPair([['AB','6'],['BC','8'],['CA','10'],['DE','9'],['EF','12'],['FD','15']]),
+   text:`נתונים שני המשולשים שבשרטוט.`,
+   parts:[
+    {q:`לפי איזה משפט המשולשים דומים?`,choices:['ז.ז','צ.ז.צ','צ.צ.צ','הם אינם דומים'],ans:2},
+    {q:`מהו יחס הדמיון של $ΔDEF$ ל־$ΔABC$?`,ans:1.5},
+    {q:`איזו זווית ב־$ΔDEF$ שווה ל־$∠C$?`,choices:['$∠D$','$∠E$','$∠F$'],ans:2}],
+   sol:[`נסדר את הצלעות מהקטנה לגדולה: ב־$ΔABC$: 6, 8, 10. ב־$ΔDEF$: 9, 12, 15.`,
+        `$[[9|6]] = [[12|8]] = [[15|10]] = 1.5$. כל היחסים שווים, לכן $ΔABC ∼ ΔDEF$ לפי צ.צ.צ.`,
+        `יחס הדמיון: $k = 1.5$.`,
+        `ההתאמה: $AB↔DE$, $BC↔EF$, $AC↔DF$, ולכן $A↔D$, $B↔E$, $C↔F$, כלומר $∠C = ∠F$.`]},
+  {title:'ז.ז',fig:pairFig([],[['A','B','C',1,'50°'],['B','A','C',1,'70°'],['D','E','F',1,'50°'],['F','D','E',1,'60°']]),
+   text:`ב־$ΔABC$: $∠A = 50°$, $∠B = 70°$. ב־$ΔDEF$: $∠D = 50°$, $∠F = 60°$. נתון: $AB = 4$, $BC = 6$, $DE = 10$.`,
+   parts:[
+    {q:`לפי איזה משפט המשולשים דומים?`,choices:['ז.ז','צ.ז.צ','צ.צ.צ'],ans:0},
+    {q:`מהו יחס הדמיון $[[DE|AB]]$?`,ans:2.5},
+    {q:`חשבו את $EF$.`,ans:15}],
+   sol:[`ב־$ΔABC$: $∠C = 180° − 50° − 70° = 60°$.`,
+        `$∠A = ∠D = 50°$ ו־$∠C = ∠F = 60°$, לכן $ΔABC ∼ ΔDEF$ לפי ז.ז (ההתאמה $A↔D$, $B↔E$, $C↔F$).`,
+        `$k = [[DE|AB]] = [[10|4]] = 2.5$.`,
+        `$BC$ מתאימה ל־$EF$: $EF = 2.5 · 6 = 15$.`]},
+  {title:'צ.ז.צ',fig:pairFig([['AB','4'],['CA','6'],['DE','6'],['FD','9']],[['A','B','C',1,'40°'],['D','E','F',1,'40°']]),
+   text:`נתון: $AB = 4$, $AC = 6$, $∠A = 40°$, $DE = 6$, $DF = 9$, $∠D = 40°$, $BC = 5$.`,
+   parts:[
+    {q:`לפי איזה משפט המשולשים דומים?`,choices:['ז.ז','צ.ז.צ','צ.צ.צ'],ans:1},
+    {q:`מהו יחס הדמיון של $ΔDEF$ ל־$ΔABC$?`,ans:1.5},
+    {q:`חשבו את $EF$.`,ans:7.5}],
+   sol:[`$[[DE|AB]] = [[6|4]] = 1.5$ וגם $[[DF|AC]] = [[9|6]] = 1.5$.`,
+        `הזווית שבין הצלעות שווה: $∠A = ∠D = 40°$, לכן $ΔABC ∼ ΔDEF$ לפי צ.ז.צ.`,
+        `$EF = 1.5 · BC = 1.5 · 5 = 7.5$.`]},
+  {title:'האם דומים?',
+   text:`במשולש אחד הצלעות הן 4, 6, 8 ובמשולש השני 6, 9, 10.`,
+   parts:[{q:`האם המשולשים דומים?`,choices:['כן, לפי צ.צ.צ','לא'],ans:1}],
+   sol:[`נסדר מהקטנה לגדולה ונחלק: $[[6|4]] = 1.5$, $[[9|6]] = 1.5$, אבל $[[10|8]] = 1.25$.`,
+        `היחסים אינם כולם שווים, לכן המשולשים אינם דומים.`,
+        `שימו לב: בצ.צ.צ לא מספיק ששני יחסים שווים, צריך שכל שלושת היחסים יהיו שווים.`]},
+  {title:'סדר הקודקודים',
+   text:`ב־$ΔABC$: $AB = 8$, $BC = 12$, $AC = 10$. ב־$ΔPQR$: $PQ = 15$, $QR = 18$, $PR = 12$.`,
+   parts:[
+    {q:`מהי הכתיבה הנכונה של הדמיון?`,choices:['$ΔABC ∼ ΔPQR$','$ΔABC ∼ ΔPRQ$','$ΔABC ∼ ΔQPR$','$ΔABC ∼ ΔRQP$'],ans:1},
+    {q:`מהו יחס הדמיון של $ΔPQR$ ל־$ΔABC$?`,ans:1.5},
+    {q:`איזו זווית שווה ל־$∠B$?`,choices:['$∠P$','$∠Q$','$∠R$'],ans:2}],
+   sol:[`נתאים קטנה לקטנה: $AB = 8 ↔ PR = 12$. בינונית לבינונית: $AC = 10 ↔ PQ = 15$. גדולה לגדולה: $BC = 12 ↔ QR = 18$.`,
+        `כל היחסים שווים ל־1.5, לכן המשולשים דומים לפי צ.צ.צ.`,
+        `$A$ משותף ל־$AB$ ול־$AC$, והקודקוד המשותף לצלעות המתאימות $PR$ ו־$PQ$ הוא $P$, לכן $A↔P$. באותו אופן $B↔R$ ו־$C↔Q$.`,
+        `לכן $ΔABC ∼ ΔPRQ$, ו־$∠B = ∠R$.`]},
+  {title:'כתיבת הפרופורציה',
+   text:`נתון $ΔABC ∼ ΔKLM$ (לפי סדר הקודקודים). $AB = 6$, $KL = 9$, $AC = 8$, $LM = 15$.`,
+   parts:[
+    {q:`איזו פרופורציה נכונה?`,choices:['$[[AB|KL]] = [[BC|LM]] = [[AC|KM]]$','$[[AB|LM]] = [[BC|KL]] = [[AC|KM]]$','$[[AB|KM]] = [[BC|KL]] = [[AC|LM]]$'],ans:0},
+    {q:`חשבו את $KM$.`,ans:12},
+    {q:`חשבו את $BC$.`,ans:10}],
+   sol:[`לפי סדר הקודקודים: $A↔K$, $B↔L$, $C↔M$, לכן $AB↔KL$, $BC↔LM$, $AC↔KM$.`,
+        `$k = [[KL|AB]] = [[9|6]] = 1.5$.`,
+        `$KM = 1.5 · AC = 1.5 · 8 = 12$.`,
+        `$BC = [[LM|1.5]] = [[15|1.5]] = 10$.`]}
+ ]},
+
+{name:'חישוב צלעות',
+ intro:`שלבי עבודה: (1) מוצאים זוג משולשים דומים ומנמקים. (2) כותבים את הדמיון לפי סדר הקודקודים. (3) כותבים פרופורציה של צלעות מתאימות ומציבים. שימו לב: במשולש בתוך משולש, הצלע של המשולש הגדול היא כל הקטע, למשל $AB = AD + DB$.`,
+ ex:[
+  {title:'קטע מקביל לצלע',fig:parFig([['AD','4'],['DB','6'],['DE','5'],['AE','3']]),
+   text:`במשולש $ABC$, $DE ∥ BC$. נתון: $AD = 4$, $DB = 6$, $DE = 5$, $AE = 3$.`,
+   parts:[{q:`חשבו את $BC$.`,ans:12.5},{q:`חשבו את $EC$.`,ans:4.5}],
+   sol:[`$DE ∥ BC$, לכן $∠ADE = ∠ABC$ (זוויות מתאימות), ו־$∠A$ משותפת. לכן $ΔADE ∼ ΔABC$ (ז.ז).`,
+        `$AB = AD + DB = 4 + 6 = 10$, ולכן $k = [[AB|AD]] = [[10|4]] = 2.5$.`,
+        `$BC = 2.5 · DE = 2.5 · 5 = 12.5$.`,
+        `$AC = 2.5 · AE = 2.5 · 3 = 7.5$, ולכן $EC = 7.5 − 3 = 4.5$.`]},
+  {title:'צורת שעון חול',fig:hourFig([['AO','6'],['OD','9'],['AB','8'],['BO','5']]),
+   text:`הקטעים $AD$ ו־$BC$ נחתכים בנקודה $O$, ו־$AB ∥ CD$. נתון: $AO = 6$, $OD = 9$, $AB = 8$, $BO = 5$.`,
+   parts:[{q:`חשבו את $CD$.`,ans:12},{q:`חשבו את $OC$.`,ans:7.5}],
+   sol:[`$∠BAO = ∠CDO$ (מתחלפות, $AB ∥ CD$), $∠AOB = ∠DOC$ (קודקודיות). לכן $ΔAOB ∼ ΔDOC$ (ז.ז).`,
+        `ההתאמה: $A↔D$, $O↔O$, $B↔C$. יחס הדמיון $k = [[OD|AO]] = [[9|6]] = 1.5$.`,
+        `$CD = 1.5 · AB = 1.5 · 8 = 12$.`,
+        `$OC = 1.5 · BO = 1.5 · 5 = 7.5$.`]},
+  {title:'זווית שווה (לא מקביל!)',fig:antiFig([['AD','4'],['AE','5']]),
+   text:`במשולש $ABC$ הנקודה $D$ על $AB$ והנקודה $E$ על $AC$, כך ש־$∠AED = ∠ABC$. נתון: $AD = 4$, $AE = 5$, $AB = 10$, $DE = 3$. שימו לב: $DE$ <b>אינו</b> מקביל ל־$BC$.`,
+   parts:[
+    {q:`מהי כתיבת הדמיון הנכונה?`,choices:['$ΔADE ∼ ΔABC$','$ΔAED ∼ ΔABC$','$ΔAED ∼ ΔACB$'],ans:1},
+    {q:`חשבו את $AC$.`,ans:8},{q:`חשבו את $BC$.`,ans:6}],
+   sol:[`$∠AED = ∠ABC$ (נתון) ו־$∠A$ משותפת, לכן $ΔAED ∼ ΔABC$ (ז.ז).`,
+        `ההתאמה: $A↔A$, $E↔B$, $D↔C$. לכן $AE↔AB$, $AD↔AC$, $ED↔BC$.`,
+        `$k = [[AB|AE]] = [[10|5]] = 2$.`,
+        `$AC = 2 · AD = 2 · 4 = 8$, $BC = 2 · ED = 2 · 3 = 6$.`,
+        `טעות נפוצה: לחשוב ש־$AD$ מתאימה ל־$AB$. כאן $AD$ מתאימה ל־$AC$!`]},
+  {title:'עם נעלם',fig:parFig([['AD','x'],['DB','3'],['DE','2x−4'],['BC','x+6']]),
+   text:`במשולש $ABC$, $DE ∥ BC$. נתון: $AD = x$, $DB = 3$, $DE = 2x − 4$, $BC = x + 6$.`,
+   parts:[{q:`מצאו את $x$.`,ans:6},{q:`חשבו את $DE$.`,ans:8},{q:`חשבו את $BC$.`,ans:12}],
+   sol:[`$ΔADE ∼ ΔABC$ (ז.ז, כמו בתרגיל 1), ולכן $[[AD|AB]] = [[DE|BC]]$.`,
+        `$[[x|x + 3]] = [[2x − 4|x + 6]]$`,
+        `כפל בהצלבה: $x(x + 6) = (2x − 4)(x + 3)$`,
+        `$x² + 6x = 2x² + 2x − 12$, כלומר $x² − 4x − 12 = 0$, כלומר $(x − 6)(x + 2) = 0$.`,
+        `$x = 6$ (הפתרון $x = −2$ נפסל, אורך חייב להיות חיובי).`,
+        `$DE = 2·6 − 4 = 8$, $BC = 6 + 6 = 12$. בדיקה: $[[6|9]] = [[8|12]]$ ✓`]},
+  {title:'קטע חלקי',fig:parFig([['AD','5'],['DB','x'],['AE','4'],['EC','6']]),
+   text:`$DE ∥ BC$. נתון: $AD = 5$, $DB = x$, $AE = 4$, $EC = 6$.`,
+   parts:[{q:`מצאו את $x$.`,ans:7.5}],
+   sol:[`$ΔADE ∼ ΔABC$, לכן $[[AD|AB]] = [[AE|AC]]$.`,
+        `$AC = 4 + 6 = 10$, $AB = 5 + x$.`,
+        `$[[5|5 + x]] = [[4|10]]$, כלומר $4(5 + x) = 50$, כלומר $5 + x = 12.5$, ולכן $x = 7.5$.`]},
+  {title:'אלכסוני טרפז',fig:trapFig([['AB','6'],['DC','15']]),
+   text:`בטרפז $ABCD$ ($AB ∥ DC$) האלכסונים נחתכים בנקודה $O$. נתון: $AB = 6$, $DC = 15$, $AC = 14$, $BD = 21$.`,
+   parts:[{q:`מהו יחס הדמיון $[[AB|DC]]$?`,ans:0.4},{q:`חשבו את $AO$.`,ans:4},{q:`חשבו את $OC$.`,ans:10},{q:`חשבו את $BO$.`,ans:6}],
+   sol:[`$∠OAB = ∠OCD$ (מתחלפות, $AB ∥ DC$), $∠AOB = ∠COD$ (קודקודיות). לכן $ΔAOB ∼ ΔCOD$ (ז.ז).`,
+        `$k = [[AB|CD]] = [[6|15]] = [[2|5]] = 0.4$.`,
+        `לכן $AO : OC = 2 : 5$. האלכסון $AC = 14$ מתחלק ל־7 חלקים, כל חלק שווה 2.`,
+        `$AO = 2 · 2 = 4$, $OC = 5 · 2 = 10$.`,
+        `באותו אופן $BO : OD = 2 : 5$, $BD = 21$, כל חלק שווה 3, ולכן $BO = 6$.`]}
+ ]},
+
+{name:'היקף ושטח',
+ intro:`אם יחס הדמיון הוא $k$: יחס ההיקפים שווה ל־$k$, יחס הגבהים, התיכונים וחוצי הזווית המתאימים שווה ל־$k$, ויחס השטחים שווה ל־$k²$.`,
+ ex:[
+  {title:'היקף ושטח מיחס דמיון',
+   text:`נתון $ΔABC ∼ ΔDEF$ ויחס הדמיון $[[DE|AB]] = [[3|2]]$. היקף $ΔABC$ הוא 24 ושטחו 20.`,
+   parts:[{q:`מהו היקף $ΔDEF$?`,ans:36},{q:`מהו שטח $ΔDEF$?`,ans:45}],
+   sol:[`יחס ההיקפים שווה ליחס הדמיון: $P<sub>DEF</sub> = [[3|2]] · 24 = 36$.`,
+        `יחס השטחים שווה לריבוע יחס הדמיון: $([[3|2]])² = [[9|4]]$.`,
+        `$S<sub>DEF</sub> = [[9|4]] · 20 = 45$.`]},
+  {title:'יחס דמיון מיחס שטחים',
+   text:`שטחיהם של שני משולשים דומים הם 16 ו־36.`,
+   parts:[{q:`מהו יחס הדמיון של הקטן לגדול?`,ans:2/3},
+          {q:`צלע במשולש הקטן היא 8. מה אורך הצלע המתאימה במשולש הגדול?`,ans:12},
+          {q:`היקף המשולש הגדול הוא 45. מהו היקף הקטן?`,ans:30}],
+   sol:[`$k² = [[16|36]]$, ולכן $k = [[4|6]] = [[2|3]]$.`,
+        `$8 · [[3|2]] = 12$.`,
+        `$45 · [[2|3]] = 30$.`]},
+  {title:'גבהים מתאימים',
+   text:`$ΔABC ∼ ΔA'B'C'$, $BC = 10$, $B'C' = 15$. הגובה לצלע $BC$ הוא $AH = 6$.`,
+   parts:[{q:`חשבו את הגובה המתאים $A'H'$.`,ans:9},{q:`חשבו את שטח $ΔABC$.`,ans:30},{q:`חשבו את שטח $ΔA'B'C'$.`,ans:67.5}],
+   sol:[`$k = [[15|10]] = 1.5$. הגבהים המתאימים ביחס הדמיון: $A'H' = 1.5 · 6 = 9$.`,
+        `$S<sub>ABC</sub> = [[10 · 6|2]] = 30$.`,
+        `$S<sub>A'B'C'</sub> = [[15 · 9|2]] = 67.5$. בדיקה: $1.5² · 30 = 2.25 · 30 = 67.5$ ✓`]},
+  {title:'שטח משולש וטרפז',fig:parFig(),
+   text:`$DE ∥ BC$, $AD : DB = 2 : 3$, ושטח $ΔADE$ הוא 8.`,
+   parts:[{q:`מהו יחס הדמיון $[[AD|AB]]$?`,ans:0.4},{q:`חשבו את שטח $ΔABC$.`,ans:50},{q:`חשבו את שטח הטרפז $DECB$.`,ans:42}],
+   sol:[`$ΔADE ∼ ΔABC$ (ז.ז).`,
+        `$AD = 2t$, $DB = 3t$, לכן $AB = 5t$ ו־$k = [[AD|AB]] = [[2|5]]$.`,
+        `יחס השטחים $([[2|5]])² = [[4|25]]$, לכן $S<sub>ABC</sub> = 8 · [[25|4]] = 50$.`,
+        `$S<sub>DECB</sub> = 50 − 8 = 42$.`,
+        `טעות נפוצה: לקחת יחס $[[2|3]]$. יחס הדמיון הוא בין צלע במשולש הקטן לכל הצלע המתאימה בגדול.`]},
+  {title:'תיכונים מתאימים',
+   text:`$ΔABC ∼ ΔKLM$. התיכון לצלע $BC$ אורכו 9, והתיכון המתאים לו ב־$ΔKLM$ אורכו 6. היקף $ΔABC$ הוא 27, ושטח $ΔKLM$ הוא 20.`,
+   parts:[{q:`מהו יחס הדמיון של $ΔKLM$ ל־$ΔABC$?`,ans:2/3},{q:`מהו היקף $ΔKLM$?`,ans:18},{q:`מהו שטח $ΔABC$?`,ans:45}],
+   sol:[`$k = [[6|9]] = [[2|3]]$.`,
+        `$P<sub>KLM</sub> = [[2|3]] · 27 = 18$.`,
+        `$S<sub>ABC</sub> = 20 · ([[3|2]])² = 20 · [[9|4]] = 45$.`]},
+  {title:'מיחס היקפים לשטחים',
+   text:`יחס ההיקפים של שני משולשים דומים הוא $3 : 5$. סכום שטחיהם 102.`,
+   parts:[{q:`מהו שטח המשולש הקטן?`,ans:27},{q:`מהו שטח המשולש הגדול?`,ans:75}],
+   sol:[`יחס הדמיון $[[3|5]]$, ולכן יחס השטחים $[[9|25]]$.`,
+        `נסמן את השטחים $9t$ ו־$25t$: $9t + 25t = 102$, כלומר $34t = 102$, ולכן $t = 3$.`,
+        `השטחים: $9 · 3 = 27$ ו־$25 · 3 = 75$.`]}
+ ]},
+
+{name:'ישר זווית',
+ intro:`במשולש ישר זווית, הגובה ליתר יוצר שלושה משולשים דומים: $ΔACB ∼ ΔADC ∼ ΔCDB$. מהם נובע: $CD² = AD · DB$, $AC² = AD · AB$, $BC² = DB · AB$. כדאי תמיד להגיע לזה דרך הדמיון.`,
+ ex:[
+  {title:'הגובה ליתר',fig:altFig([['AD','9'],['DB','16']]),
+   text:`$∠ACB = 90°$, $CD ⟂ AB$, $AD = 9$, $DB = 16$.`,
+   parts:[{q:`חשבו את $CD$.`,ans:12},{q:`חשבו את $AC$.`,ans:15},{q:`חשבו את $BC$.`,ans:20},{q:`חשבו את שטח $ΔABC$.`,ans:150}],
+   sol:[`$ΔADC ∼ ΔCDB$, לכן $[[AD|CD]] = [[CD|DB]]$, כלומר $CD² = 9 · 16 = 144$ ו־$CD = 12$.`,
+        `$ΔADC ∼ ΔACB$, לכן $[[AD|AC]] = [[AC|AB]]$, כלומר $AC² = 9 · 25 = 225$ ו־$AC = 15$.`,
+        `$ΔCDB ∼ ΔACB$, לכן $[[DB|CB]] = [[CB|AB]]$, כלומר $BC² = 16 · 25 = 400$ ו־$BC = 20$.`,
+        `$S = [[AC · BC|2]] = [[15 · 20|2]] = 150$ (וגם $[[AB · CD|2]] = [[25 · 12|2]] = 150$ ✓).`]},
+  {title:'מניצב ויתר',fig:altFig(),
+   text:`$∠ACB = 90°$, $CD ⟂ AB$, $AC = 6$, $AB = 10$.`,
+   parts:[{q:`חשבו את $AD$.`,ans:3.6},{q:`חשבו את $DB$.`,ans:6.4},{q:`חשבו את $CD$.`,ans:4.8},{q:`חשבו את $BC$.`,ans:8}],
+   sol:[`$ΔADC ∼ ΔACB$, לכן $AC² = AD · AB$: $36 = 10 · AD$, ולכן $AD = 3.6$.`,
+        `$DB = 10 − 3.6 = 6.4$.`,
+        `$CD² = AD · DB = 3.6 · 6.4 = 23.04$, ולכן $CD = 4.8$.`,
+        `$BC² = DB · AB = 6.4 · 10 = 64$, ולכן $BC = 8$ (בדיקה בפיתגורס: $6² + 8² = 10²$ ✓).`]},
+  {title:'אנך מנקודה על היתר',fig:perpFig([['AD','4'],['CB','6']]),
+   text:`$∠ACB = 90°$, $AC = 8$, $BC = 6$, $AB = 10$. הנקודה $D$ על $AB$, הנקודה $E$ על $AC$, ו־$DE ⟂ AB$. נתון $AD = 4$.`,
+   parts:[{q:`מהי כתיבת הדמיון הנכונה?`,choices:['$ΔADE ∼ ΔACB$','$ΔADE ∼ ΔABC$','$ΔAED ∼ ΔACB$'],ans:0},
+          {q:`חשבו את $DE$.`,ans:3},{q:`חשבו את $AE$.`,ans:5},{q:`חשבו את $EC$.`,ans:3}],
+   sol:[`$∠ADE = ∠ACB = 90°$ ו־$∠A$ משותפת, לכן $ΔADE ∼ ΔACB$ (ז.ז). ההתאמה: $A↔A$, $D↔C$, $E↔B$.`,
+        `$k = [[AD|AC]] = [[4|8]] = [[1|2]]$.`,
+        `$DE = [[1|2]] · CB = 3$, $AE = [[1|2]] · AB = 5$.`,
+        `$EC = AC − AE = 8 − 5 = 3$.`]},
+  {title:'עם נעלם',fig:altFig([['AD','x'],['DB','x+5']]),
+   text:`$∠ACB = 90°$, $CD ⟂ AB$, $AD = x$, $DB = x + 5$, $CD = 6$.`,
+   parts:[{q:`מצאו את $x$.`,ans:4},{q:`חשבו את $AB$.`,ans:13}],
+   sol:[`$ΔADC ∼ ΔCDB$, לכן $CD² = AD · DB$.`,
+        `$36 = x(x + 5)$, כלומר $x² + 5x − 36 = 0$, כלומר $(x + 9)(x − 4) = 0$.`,
+        `$x = 4$ ($x = −9$ נפסל).`,
+        `$AB = 4 + 9 = 13$.`]}
+ ]},
+
+{name:'בעיות מילוליות',
+ intro:`בבעיות מהחיים מחפשים שני משולשים דומים. בדרך כלל יש זווית ישרה (עמוד, אדם או בניין ניצבים לקרקע) וזווית שווה (קרני שמש מקבילות, זווית פגיעה במראה, זווית משותפת).`,
+ ex:[
+  {title:'צל של עץ',fig:{pts:{A:[40,130],B:[40,190],C:[130,190],D:[180,30],E:[180,190],F:[330,190]},groups:[['A','B','C'],['D','E','F']],
+     segs:['AB','BC','DE','EF'],aux:['AC','DF'],right:[['B','A','C'],['E','D','F']],sides:[['AB','2'],['BC','3'],['EF','18'],['DE','h']],w:350,h:215},
+   text:`מקל שגובהו 2 מ' מטיל צל של 3 מ'. באותה שעה עץ מטיל צל של 18 מ'.`,
+   parts:[{q:`מהו גובה העץ (במטרים)?`,ans:12}],
+   sol:[`קרני השמש מקבילות, לכן הזווית שבין הקרן לקרקע שווה בשני המשולשים, ושניהם ישרי זווית. לכן הם דומים (ז.ז).`,
+        `$[[h|2]] = [[18|3]]$, ולכן $h = 12$ מ'.`]},
+  {title:'מראה על הקרקע',fig:{pts:{A:[30,120],B:[30,190],M:[100,190,0,16],C:[320,190],D:[320,20]},groups:[['A','B','M'],['D','C','M']],
+     segs:['AB','BM','MC','CD'],aux:['AM','MD'],right:[['B','A','M'],['C','D','M']],arcs:[['M','A','B',1],['M','D','C',1]],
+     sides:[['AB','1.6'],['BM','2'],['MC','25'],['CD','h']],w:345,h:215},
+   text:`דנה מניחה מראה על הקרקע ומתרחקת ממנה 2 מ', עד שהיא רואה במראה את ראש הבניין. גובה עיניה 1.6 מ', והמרחק מהמראה לבניין 25 מ'. זווית הפגיעה במראה שווה לזווית ההחזרה.`,
+   parts:[{q:`מהו גובה הבניין (במטרים)?`,ans:20}],
+   sol:[`$∠AMB = ∠DMC$ (פגיעה = החזרה), $∠B = ∠C = 90°$, לכן $ΔABM ∼ ΔDCM$ (ז.ז).`,
+        `$[[DC|AB]] = [[CM|BM]]$, כלומר $[[h|1.6]] = [[25|2]]$, ולכן $h = 1.6 · 12.5 = 20$ מ'.`]},
+  {title:'עמוד תאורה',fig:{pts:{L:[30,70],P:[30,190],Q:[150,190],H:[150,150],S:[210,190]},groups:[['L','P','S']],
+     segs:['LP','PS','QH'],aux:['LS'],right:[['P','L','S'],['Q','H','S']],sides:[['LP','h'],['QH','1.8'],['PQ','4'],['QS','2']],w:240,h:215},
+   text:`אדם שגובהו 1.8 מ' עומד במרחק 4 מ' מעמוד תאורה, ואורך הצל שלו 2 מ'.`,
+   parts:[{q:`מהו גובה העמוד (במטרים)?`,ans:5.4}],
+   sol:[`$∠S$ משותפת, $∠P = ∠Q = 90°$, לכן $ΔHQS ∼ ΔLPS$ (ז.ז).`,
+        `$PS = 4 + 2 = 6$.`,
+        `$[[h|1.8]] = [[6|2]]$, ולכן $h = 5.4$ מ'.`]},
+  {title:'הגדלה במכונת צילום',
+   text:`משולש שצלעותיו 5, 7, 9 ס"מ הוגדל במכונת צילום כך שהצלע הקצרה שלו היא 7.5 ס"מ.`,
+   parts:[{q:`מה אורך הצלע הארוכה אחרי ההגדלה?`,ans:13.5},{q:`מהו ההיקף אחרי ההגדלה?`,ans:31.5},{q:`פי כמה גדל השטח?`,ans:2.25}],
+   sol:[`$k = [[7.5|5]] = 1.5$.`,
+        `הצלע הארוכה: $9 · 1.5 = 13.5$.`,
+        `היקף: $(5 + 7 + 9) · 1.5 = 21 · 1.5 = 31.5$.`,
+        `השטח גדל פי $k² = 1.5² = 2.25$.`]},
+  {title:'מפה',
+   text:`על מפה בקנה מידה 1:2000 מסומנת חלקה משולשת ישרת זווית שניצביה 3 ס"מ ו־4 ס"מ.`,
+   parts:[{q:`מה אורך היתר של החלקה במציאות (במטרים)?`,ans:100},{q:`מהו שטח החלקה במציאות (במ"ר)?`,ans:2400}],
+   sol:[`החלקה במציאות דומה למשולש שבמפה ביחס $k = 2000$.`,
+        `היתר במפה הוא 5 ס"מ (פיתגורס), ובמציאות $5 · 2000 = 10000$ ס"מ, כלומר 100 מ'.`,
+        `הניצבים במציאות: 60 מ' ו־80 מ', ולכן השטח $[[60 · 80|2]] = 2400$ מ"ר.`,
+        `בדיקה ביחס שטחים: שטח במפה 6 סמ"ר, $6 · 2000² = 24,000,000$ סמ"ר, שהם 2400 מ"ר ✓`]}
+ ]},
+
+{name:'הוכחות',
+ intro:`בחרו לכל טענה את הנימוק המתאים מהרשימה ולחצו "בדיקת ההוכחה". ברוב ההוכחות המבנה הוא: שתי טענות על זוויות (או צלעות), משולשים דומים, ואז מסקנה (צלעות פרופורציוניות, זוויות שוות או מכפלה). אחרי ההוכחה יש סעיף חישוב.`,
+ ex:[
+  {title:'קטע מקביל יוצר משולש דומה',fig:parFig(),proof:true,
+   given:`$DE ∥ BC$, הנקודה $D$ על $AB$ והנקודה $E$ על $AC$.`,prove:`$ΔADE ∼ ΔABC$`,
+   steps:[[`$DE ∥ BC$`,0],[`$∠ADE = ∠ABC$`,3],[`$∠A = ∠A$`,1],[`$ΔADE ∼ ΔABC$`,9]],
+   parts:[{q:`נתון $AD = 3$, $AB = 7.5$, $DE = 4$. חשבו את $BC$.`,ans:10}],
+   sol:[`חישוב: $k = [[7.5|3]] = 2.5$, ולכן $BC = 2.5 · 4 = 10$.`]},
+  {title:'הוכחת מכפלה בשעון חול',fig:hourFig(),proof:true,
+   given:`$AB ∥ CD$, הקטעים $AD$ ו־$BC$ נחתכים בנקודה $O$.`,prove:`$AO · OC = BO · OD$`,
+   steps:[[`$AB ∥ CD$`,0],[`$∠BAO = ∠CDO$`,4],[`$∠AOB = ∠DOC$`,2],[`$ΔAOB ∼ ΔDOC$`,9],[`$[[AO|DO]] = [[BO|CO]]$`,13],[`$AO · OC = BO · OD$`,14]],
+   parts:[{q:`נתון $AO = 4$, $OD = 6$, $BO = 5$. חשבו את $OC$.`,ans:7.5}],
+   sol:[`חישוב: $4 · OC = 5 · 6$, ולכן $OC = 7.5$.`]},
+  {title:'הוכחת מקבילות (צ.ז.צ)',fig:parFig([['AD','3'],['DB','6'],['AE','4'],['EC','8']],false),proof:true,
+   given:`$AD = 3$, $DB = 6$, $AE = 4$, $EC = 8$.`,prove:`$DE ∥ BC$`,
+   steps:[[`$AD = 3$, $AB = 9$, $AE = 4$, $AC = 12$`,[0,8]],[`$[[AD|AB]] = [[AE|AC]] = [[1|3]]$`,8],[`$∠A = ∠A$`,1],[`$ΔADE ∼ ΔABC$`,10],[`$∠ADE = ∠ABC$`,12],[`$DE ∥ BC$`,5]],
+   parts:[{q:`נתון $DE = 5$. חשבו את $BC$.`,ans:15}],
+   sol:[`חישוב: $k = [[AB|AD]] = 3$, ולכן $BC = 3 · 5 = 15$.`]},
+  {title:'זווית שווה ומכפלת צלעות',fig:antiFig(),proof:true,
+   given:`$∠AED = ∠ABC$`,prove:`$AD · AB = AE · AC$`,
+   steps:[[`$∠AED = ∠ABC$`,0],[`$∠A = ∠A$`,1],[`$ΔAED ∼ ΔABC$`,9],[`$[[AE|AB]] = [[AD|AC]]$`,13],[`$AD · AB = AE · AC$`,14]],
+   parts:[{q:`נתון $AD = 6$, $AE = 8$, $AC = 9$. חשבו את $AB$.`,ans:12}],
+   sol:[`חישוב: $6 · AB = 8 · 9 = 72$, ולכן $AB = 12$.`]},
+  {title:'הגובה ליתר',fig:altFig(),proof:true,
+   given:`$∠ACB = 90°$, $CD ⟂ AB$`,prove:`$CD² = AD · DB$`,
+   steps:[[`$∠ACB = 90°$, $CD ⟂ AB$`,0],[`$∠ADC = ∠CDB = 90°$`,6],[`$∠ACD = 90° − ∠A$ וגם $∠B = 90° − ∠A$, לכן $∠ACD = ∠B$`,7],[`$ΔADC ∼ ΔCDB$`,9],[`$[[AD|CD]] = [[CD|DB]]$`,13],[`$CD² = AD · DB$`,14]],
+   parts:[{q:`נתון $AD = 4$, $DB = 9$. חשבו את $CD$.`,ans:6}],
+   sol:[`חישוב: $CD² = 4 · 9 = 36$, ולכן $CD = 6$.`]},
+  {title:'הוכחת זווית שווה (צ.צ.צ)',fig:pairFig([['AB','6'],['BC','8'],['CA','10'],['DE','9'],['EF','12'],['FD','15']]),proof:true,
+   given:`$AB = 6$, $BC = 8$, $AC = 10$, $DE = 9$, $EF = 12$, $DF = 15$`,prove:`$∠BAC = ∠EDF$`,
+   steps:[[`$AB = 6$, $BC = 8$, $AC = 10$, $DE = 9$, $EF = 12$, $DF = 15$`,0],[`$[[DE|AB]] = [[EF|BC]] = [[DF|AC]] = [[3|2]]$`,8],[`$ΔABC ∼ ΔDEF$`,11],[`$∠BAC = ∠EDF$`,12]],
+   parts:[{q:`שטח $ΔABC$ הוא 24. מהו שטח $ΔDEF$?`,ans:54}],
+   sol:[`חישוב: $24 · ([[3|2]])² = 24 · 2.25 = 54$.`]},
+  {title:'אלכסוני טרפז',fig:trapFig(),proof:true,
+   given:`טרפז $ABCD$ ($AB ∥ DC$), האלכסונים נחתכים בנקודה $O$.`,prove:`$[[AO|OC]] = [[AB|DC]]$`,
+   steps:[[`$AB ∥ DC$`,0],[`$∠OAB = ∠OCD$`,4],[`$∠AOB = ∠COD$`,2],[`$ΔAOB ∼ ΔCOD$`,9],[`$[[AO|CO]] = [[AB|CD]]$`,13]],
+   parts:[{q:`נתון $AB = 4$, $DC = 10$, $AC = 21$. חשבו את $AO$.`,ans:6}],
+   sol:[`חישוב: $AO : OC = 4 : 10 = 2 : 5$, האלכסון מתחלק ל־7 חלקים של 3, ולכן $AO = 6$.`]},
+  {title:'אנך ליתר ומכפלת צלעות',fig:perpFig(),proof:true,
+   given:`$∠ACB = 90°$, $DE ⟂ AB$ ($D$ על $AB$, $E$ על $AC$)`,prove:`$AD · AB = AE · AC$`,
+   steps:[[`$∠ACB = 90°$, $DE ⟂ AB$`,0],[`$∠ADE = 90° = ∠ACB$`,6],[`$∠A = ∠A$`,1],[`$ΔADE ∼ ΔACB$`,9],[`$[[AD|AC]] = [[AE|AB]]$`,13],[`$AD · AB = AE · AC$`,14]],
+   parts:[{q:`נתון $AC = 8$, $AB = 10$, $AE = 5$. חשבו את $AD$.`,ans:4}],
+   sol:[`חישוב: $AD · 10 = 5 · 8 = 40$, ולכן $AD = 4$.`]}
+ ]}
+];
+
+// ---------- בניית הדף ----------
+const PARTS={}, PROOFS={}, solved=new Set(); let total=0;
+const LET='אבגדהוזח';
+
+function renderEx(e,id,num){
+  let h=`<div class="ex"><h3>תרגיל ${num}${e.title?': '+e.title:''}</h3>`;
+  if(e.fig) h+=`<div class="fig">${fig(e.fig)}</div>`;
+  if(e.text) h+=`<div>${fmt(e.text)}</div>`;
+  if(e.proof){
+    PROOFS[id]=e; total++;
+    h+=`<div class="given"><b>נתון:</b> ${fmt(e.given)}</div><div class="given"><b>צריך להוכיח:</b> ${fmt(e.prove)}</div>`;
+    h+=`<table class="proof"><thead><tr><th>#</th><th>טענה</th><th>נימוק</th></tr></thead><tbody>`;
+    e.steps.forEach((st,k)=>{
+      h+=`<tr><td>${k+1}</td><td>${fmt(st[0])}</td><td><select data-proof="${id}" data-r="${k}" aria-label="נימוק לטענה ${k+1}"><option value="">בחרו נימוק…</option>${R.map((x,ri)=>`<option value="${ri}">${x}</option>`).join('')}</select></td></tr>`;
+    });
+    h+=`</tbody></table><div class="row"><button class="act" data-pcheck="${id}">בדיקת ההוכחה</button><span class="fb" id="pfb-${id}"></span></div>`;
+    if(e.parts) h+=`<div class="calc">סעיף חישוב</div>`;
+  }
+  (e.parts||[]).forEach((p,j)=>{
+    const pid=id+'-'+j; PARTS[pid]=p; total++;
+    h+=`<div class="part"><div>${LET[j]}. ${fmt(p.q)}</div><div class="row">`;
+    if(p.choices) p.choices.forEach((c,k)=>h+=`<button class="choice" data-pid="${pid}" data-k="${k}">${fmt(c)}</button>`);
+    else h+=`<input class="ans" id="in-${pid}" inputmode="decimal" aria-label="תשובה לסעיף ${LET[j]}"><button class="act" data-check="${pid}">בדיקה</button>`;
+    h+=`<span class="fb" id="fb-${pid}"></span></div></div>`;
+  });
+  let lines=[];
+  if(e.proof) lines=e.steps.map(st=>`${st[0]} &nbsp;|&nbsp; <i>${R[[].concat(st[1])[0]]}</i>`);
+  lines=lines.concat(e.sol||[]);
+  h+=`<button class="ghost" data-sol="${id}">הצגת פתרון מלא</button><div class="sol" id="sol-${id}"><ol>${lines.map(l=>'<li>'+fmt(l)+'</li>').join('')}</ol></div></div>`;
+  return h;
+}
+
+function show(i){
+  document.querySelectorAll('nav button').forEach((b,j)=>{b.classList.toggle('active',i===j);b.setAttribute('aria-pressed',i===j)});
+  document.querySelectorAll('main section').forEach((s,j)=>s.hidden=j!==i);
+  window.scrollTo({top:0});
+}
+function upd(){document.getElementById('score').textContent=`פתרתם נכון ${solved.size} מתוך ${total} סעיפים`}
+
+function parseNum(s){
+  s=s.trim().replace(/,/g,'.').replace(/\s/g,'').replace('−','-');
+  if(!s) return NaN;
+  if(s.includes('/')){const [a,b]=s.split('/');return parseFloat(a)/parseFloat(b)}
+  return Number(s);
+}
+function checkNum(pid){
+  const p=PARTS[pid], inp=document.getElementById('in-'+pid), fb=document.getElementById('fb-'+pid);
+  const v=parseNum(inp.value);
+  if(isNaN(v)){fb.className='fb no';fb.textContent='הקלידו מספר';return}
+  if(Math.abs(v-p.ans)<0.011){fb.className='fb ok';fb.textContent='נכון! ✓';inp.classList.add('right');solved.add(pid);upd()}
+  else{fb.className='fb no';fb.textContent='לא נכון, נסו שוב';inp.classList.remove('right')}
+}
+function checkChoice(btn){
+  const pid=btn.dataset.pid, p=PARTS[pid], k=+btn.dataset.k, fb=document.getElementById('fb-'+pid);
+  if(k===p.ans){btn.classList.add('right');fb.className='fb ok';fb.textContent='נכון! ✓';solved.add(pid);upd()}
+  else{btn.classList.add('wrong');fb.className='fb no';fb.textContent='לא נכון, נסו שוב'}
+}
+function checkProof(id){
+  const pr=PROOFS[id], fb=document.getElementById('pfb-'+id);
+  let all=true, empty=false;
+  document.querySelectorAll(`select[data-proof="${id}"]`).forEach(sel=>{
+    const k=+sel.dataset.r;
+    sel.classList.remove('right','wrong');
+    if(sel.value===''){empty=true;all=false;return}
+    const ok=[].concat(pr.steps[k][1]).includes(+sel.value);
+    sel.classList.add(ok?'right':'wrong'); if(!ok) all=false;
+  });
+  if(all){fb.className='fb ok';fb.textContent='ההוכחה נכונה! ✓';solved.add('p'+id);upd()}
+  else if(empty){fb.className='fb no';fb.textContent='בחרו נימוק לכל השורות'}
+  else{fb.className='fb no';fb.textContent='יש נימוקים שגויים (מסומנים באדום). נסו לתקן'}
+}
+
+document.addEventListener('click',ev=>{
+  const t=ev.target.closest('button'); if(!t) return;
+  if(t.dataset.check) checkNum(t.dataset.check);
+  else if(t.dataset.pid) checkChoice(t);
+  else if(t.dataset.pcheck) checkProof(t.dataset.pcheck);
+  else if(t.dataset.sol){
+    const s=document.getElementById('sol-'+t.dataset.sol);
+    s.classList.toggle('show');
+    t.textContent=s.classList.contains('show')?'הסתרת הפתרון':'הצגת פתרון מלא';
+  }
+});
+document.addEventListener('keydown',ev=>{
+  if(ev.key==='Enter'&&ev.target.matches('input.ans')) checkNum(ev.target.id.slice(3));
+});
+
+(function build(){
+  const nav=document.getElementById('nav'), main=document.getElementById('main');
+  TABS.forEach((t,ti)=>{
+    const b=document.createElement('button'); b.textContent=t.name; b.onclick=()=>show(ti); nav.appendChild(b);
+    const sec=document.createElement('section');
+    let h=`<div class="intro">${fmt(t.intro)}</div>`;
+    t.ex.forEach((e,i)=>h+=renderEx(e,ti+'-'+i,i+1));
+    sec.innerHTML=h; main.appendChild(sec);
+  });
+  show(0); upd();
+})();
+</script>
+</body>
+</html>
