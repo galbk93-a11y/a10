@@ -3,552 +3,1114 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>תרגול דמיון משולשים – כיתה ט׳</title>
+<title>שטח בעזרת אינטגרל – תרגול</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#eef2f7; --grid:#dde4ee; --card:#ffffff; --ink:#1f2a44; --muted:#5b6782;
-  --pen:#2f5bd3; --onpen:#ffffff; --pen-soft:#e3eafb; --ok:#1f8a5b; --ok-soft:#e1f3ea;
-  --bad:#c2412d; --bad-soft:#fbe7e3; --hl:#d99a00; --line:#c9d3e3;
+  --bg:#eef0f3; --gridline:#dde1e7; --card:#ffffff; --text:#1f2430; --muted:#5d6574; --line:#d3d8e0;
+  --ink:#d6336c; --accent:#7048e8; --accent-soft:rgba(151,117,250,.28); --curve:#e03131;
+  --ok:#2b8a3e; --ok-bg:#ebfbee; --bad:#c92a2a; --bad-bg:#fff5f5; --grid:#e9ecf1; --axis:#3b4252; --curve2:#1971c2; --neg-soft:rgba(224,49,49,.22);
   color-scheme: light;
   box-sizing:border-box;
   padding-top:env(safe-area-inset-top,0px);
   padding-bottom:env(safe-area-inset-bottom,0px);
 }
-html{scroll-padding-top:env(safe-area-inset-top,0px)}
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
-    --bg:#141a26; --grid:#1b2332; --card:#1d2535; --ink:#e7ecf5; --muted:#9aa6bf;
-    --pen:#7ea2ff; --onpen:#0f1729; --pen-soft:#25324f; --ok:#4cc38a; --ok-soft:#173327;
-    --bad:#ff7a63; --bad-soft:#3a1f1b; --hl:#f2c14e; --line:#334058;
+    --bg:#16181d; --gridline:#22252d; --card:#1f222a; --text:#e9ebf0; --muted:#a5abb8; --line:#343946;
+    --ink:#f783ac; --accent:#b197fc; --accent-soft:rgba(177,151,252,.28); --curve:#ff8787;
+    --ok:#8ce99a; --ok-bg:#1d3326; --bad:#ffa8a8; --bad-bg:#3a1f23; --grid:#2a2e37; --axis:#c1c6d2; --curve2:#74c0fc; --neg-soft:rgba(255,135,135,.25);
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"]{
-  --bg:#141a26; --grid:#1b2332; --card:#1d2535; --ink:#e7ecf5; --muted:#9aa6bf;
-  --pen:#7ea2ff; --onpen:#0f1729; --pen-soft:#25324f; --ok:#4cc38a; --ok-soft:#173327;
-  --bad:#ff7a63; --bad-soft:#3a1f1b; --hl:#f2c14e; --line:#334058;
-  color-scheme: dark;
+    --bg:#16181d; --gridline:#22252d; --card:#1f222a; --text:#e9ebf0; --muted:#a5abb8; --line:#343946;
+    --ink:#f783ac; --accent:#b197fc; --accent-soft:rgba(177,151,252,.28); --curve:#ff8787;
+    --ok:#8ce99a; --ok-bg:#1d3326; --bad:#ffa8a8; --bad-bg:#3a1f23; --grid:#2a2e37; --axis:#c1c6d2; --curve2:#74c0fc; --neg-soft:rgba(255,135,135,.25);
+    color-scheme: dark;
 }
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
 *{box-sizing:border-box}
-html{background:var(--bg)}
-body{
-  margin:0; font-family:"Rubik",Arial,"Segoe UI",sans-serif; color:var(--ink); line-height:1.6;
+body{margin:0;color:var(--text);font-family:"Rubik","Assistant","Arial Hebrew",Arial,sans-serif;
   background-color:var(--bg);
-  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
-  background-size:24px 24px;
-  overflow-x:hidden;
-}
-header{max-width:860px;margin:0 auto;padding:28px 16px 4px}
-h1{margin:0;font-size:2rem}
-.sub{color:var(--muted);margin:4px 0 0}
-.score{margin-top:10px;font-weight:500;color:var(--pen)}
-nav{max-width:860px;margin:12px auto 0;padding:0 16px;display:flex;gap:6px;flex-wrap:wrap}
-nav button{font:inherit;border:1.5px solid var(--line);background:var(--card);color:var(--ink);padding:7px 14px;border-radius:20px;cursor:pointer}
-nav button.active{background:var(--pen);border-color:var(--pen);color:var(--onpen)}
-main{max-width:860px;margin:0 auto;padding:16px}
-.intro{background:var(--pen-soft);border-radius:10px;padding:12px 16px;margin-bottom:16px}
-.ex{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px;margin-bottom:18px}
-.ex h3{margin:0 0 8px;font-size:1.15rem}
-.fig{display:flex;justify-content:center;margin:8px 0}
-.fig svg{width:100%;max-width:400px;height:auto;direction:ltr}
-.part{border-top:1px dashed var(--line);padding:10px 0}
-.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:6px}
-input.ans{font:inherit;width:120px;padding:6px 8px;border:1.5px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);direction:ltr;text-align:center}
-input.ans.right{border-color:var(--ok);background:var(--ok-soft)}
-button.act{font:inherit;padding:6px 14px;border-radius:8px;border:none;background:var(--pen);color:var(--onpen);cursor:pointer}
-button.ghost{font:inherit;padding:6px 14px;border-radius:8px;border:1.5px solid var(--pen);background:transparent;color:var(--pen);cursor:pointer;margin-top:8px}
-button.choice{font:inherit;padding:6px 12px;border-radius:8px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
-.choice.right{border-color:var(--ok);background:var(--ok-soft)}
-.choice.wrong{border-color:var(--bad);background:var(--bad-soft)}
-.fb{font-weight:500}
-.fb.ok{color:var(--ok)} .fb.no{color:var(--bad)}
-.sol{display:none;margin-top:10px;background:var(--bg);border-right:4px solid var(--hl);border-radius:8px;padding:10px 14px}
-.sol.show{display:block}
-.sol ol{margin:0;padding-inline-start:22px}
-.sol li{margin:4px 0}
-.m{direction:ltr;unicode-bidi:isolate;white-space:nowrap;font-family:"Cambria Math","Times New Roman",serif;font-size:1.06em}
-.fr{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;margin:0 2px;line-height:1.15}
-.fr>span:first-child{border-bottom:1.2px solid currentColor;padding:0 3px}
-.tablewrap{overflow-x:auto}
-table.proof{width:100%;border-collapse:collapse;margin-top:8px}
-.proof th,.proof td{border:1px solid var(--line);padding:6px 8px;text-align:right;vertical-align:middle}
-.proof th{background:var(--pen-soft)}
-.proof td:first-child{width:30px;text-align:center}
-.proof select{font:inherit;font-size:.92rem;width:100%;min-width:150px;padding:4px;border-radius:6px;border:1.5px solid var(--line);background:var(--card);color:var(--ink)}
-.proof select.right{border-color:var(--ok);background:var(--ok-soft)}
-.proof select.wrong{border-color:var(--bad);background:var(--bad-soft)}
-.given{margin:4px 0}
-.calc{margin-top:12px;font-weight:500}
-.note{color:var(--muted);margin:8px 0}
-button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--hl);outline-offset:2px}
-svg .sg{stroke:var(--ink);stroke-width:2;stroke-linecap:round}
-svg .aux{stroke:var(--pen);stroke-width:2;stroke-dasharray:6 4}
-svg .pt{fill:var(--ink);font-weight:700;font-size:15px}
-svg .sd{fill:var(--pen);font-size:13px;font-weight:500}
-svg .arc{fill:none;stroke:var(--hl);stroke-width:2}
-svg .mk{fill:none;stroke:var(--ink);stroke-width:1.5}
-svg .dot{fill:var(--ink)}
+  background-image:linear-gradient(var(--gridline) 1px,transparent 1px),linear-gradient(90deg,var(--gridline) 1px,transparent 1px);
+  background-size:22px 22px;padding:0 12px}
+header{max-width:760px;margin:0 auto;padding:22px 4px 4px}
+h1{font-size:1.6rem;margin:0 0 4px;font-weight:700}
+.sub{color:var(--muted);margin:0;font-size:.98rem}
+.tabs{max-width:760px;margin:14px auto;display:flex;gap:6px;flex-wrap:wrap}
+.tab{border:1.5px solid var(--line);background:var(--card);color:var(--text);padding:8px 12px;border-radius:10px;font:inherit;font-size:.92rem;cursor:pointer}
+.tab.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.tab:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+main{max-width:760px;margin:0 auto 40px}
+.rule{background:var(--card);border:2px solid var(--ink);border-radius:12px;padding:12px 14px;margin-bottom:16px}
+.rule b{color:var(--ink)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:14px}
+.card h3{margin:0 0 6px;font-size:1.05rem;font-weight:500;color:var(--muted)}
+.fx{font-size:1.3rem;margin:6px 0 10px}
+.m{direction:ltr;unicode-bidi:isolate;display:inline-block}
+.fr{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;font-size:.92em;margin:0 2px;line-height:1.15}
+.fr>span:first-child{border-bottom:1.5px solid currentColor;padding:0 3px}
+.fr>span:last-child{padding:0 3px}
+.lim{display:inline-flex;flex-direction:column;font-size:.62em;vertical-align:middle;line-height:1.2;margin:0 2px}
+.int{font-size:1.25em}
+.hl{background:var(--accent-soft);border-radius:4px;padding:0 3px}
+svg{direction:ltr;width:100%;height:auto;display:block;background:var(--card);border:1px solid var(--line);border-radius:10px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:10px}
+input{flex:1;min-width:120px;padding:9px 10px;border:1.5px solid var(--line);border-radius:8px;background:var(--bg);color:var(--text);font:inherit;font-size:1rem;direction:ltr;text-align:left}
+button.b{padding:9px 14px;border:none;border-radius:8px;background:var(--accent);color:#fff;font:inherit;font-size:.95rem;cursor:pointer}
+button.g{background:transparent;color:var(--accent);border:1.5px solid var(--accent)}
+.fb{margin-top:8px;padding:8px 10px;border-radius:8px;display:none}
+.fb.ok{display:block;background:var(--ok-bg);color:var(--ok)}
+.fb.bad{display:block;background:var(--bad-bg);color:var(--bad)}
+.hint,.sol{display:none;margin-top:10px;padding:10px 12px;border-radius:10px;background:var(--bg);border:1px dashed var(--line)}
+.sol ol{margin:0;padding-inline-start:20px}
+.sol li{margin:6px 0;line-height:1.95}
+.ans{font-weight:700;color:var(--ink)}
+.secs{max-width:760px;margin:14px auto 0;display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.sec{border:2px solid var(--ink);background:var(--card);color:var(--ink);padding:10px 8px;border-radius:12px;font:inherit;font-weight:700;font-size:.98rem;cursor:pointer}
+.sec.active{background:var(--ink);color:#fff}
+.fin{display:none;margin-top:10px;padding:8px 12px;border-radius:10px;background:var(--bg);border:1.5px solid var(--ink)}
+@media (prefers-reduced-motion: reduce){*{scroll-behavior:auto}}
 </style>
 </head>
 <body>
 <header>
-  <h1>דמיון משולשים</h1>
-  <p class="sub">תרגול לכיתה ט׳ עם דגש על יחס הדמיון. השרטוטים אינם בקנה מידה. אפשר להקליד מספר עשרוני או שבר (למשל 5/2).</p>
-  <div class="score" id="score"></div>
+  <h1 id="ttl"></h1>
+  <p class="sub">כיתה יא, 5 יח"ל. שרטטו, מצאו נקודות חיתוך, ורק אז חשבו את האינטגרל.</p>
 </header>
-<nav id="nav"></nav>
+<nav class="secs" id="secs"></nav>
+<nav class="tabs" id="tabs"></nav>
 <main id="main"></main>
 
 <script>
-const fmt = s => s.replace(/\$(.+?)\$/g, (_, m) =>
-  '<span class="m">' + m.replace(/\[\[(.+?)\|(.+?)\]\]/g, '<span class="fr"><span>$1</span><span>$2</span></span>') + '</span>');
+const fr=(a,b)=>`<span class="fr"><span>${a}</span><span>${b}</span></span>`;
+const M=s=>`<span class="m">${s}</span>`;
+const HL=s=>`<span class="hl">${s}</span>`;
+const lim=(a,b)=>`<span class="lim"><span>${b}</span><span>${a}</span></span>`;
+const I=(a,b)=>`<span class="int">∫${lim(a,b)}</span>`;
+const EV=(e,a,b)=>`[ ${e} ]${lim(a,b)}`;
+const H='½';
 
-function fig(f){
-  const P=f.pts, W=f.w||340, H=f.h||220, names=Object.keys(P);
-  const cen=list=>{let x=0,y=0;list.forEach(n=>{x+=P[n][0];y+=P[n][1]});return [x/list.length,y/list.length]};
-  const G=cen(names);
-  const grp=(...ns)=>{const g=(f.groups||[]).find(g=>ns.every(n=>g.includes(n)));return g?cen(g):G};
-  const u=(a,b)=>{const dx=b[0]-a[0],dy=b[1]-a[1],l=Math.hypot(dx,dy)||1;return [dx/l,dy/l]};
-  const r=n=>n.toFixed(1);
-  let s=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="שרטוט">`;
-  (f.segs||[]).forEach(sg=>{const a=P[sg[0]],b=P[sg[1]];s+=`<line class="sg" x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}"/>`});
-  (f.aux||[]).forEach(sg=>{const a=P[sg[0]],b=P[sg[1]];s+=`<line class="aux" x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}"/>`});
-  (f.right||[]).forEach(([v,a,b])=>{const V=P[v],u1=u(V,P[a]),u2=u(V,P[b]),k=11;
-    s+=`<path class="mk" d="M${r(V[0]+u1[0]*k)},${r(V[1]+u1[1]*k)} L${r(V[0]+u1[0]*k+u2[0]*k)},${r(V[1]+u1[1]*k+u2[1]*k)} L${r(V[0]+u2[0]*k)},${r(V[1]+u2[1]*k)}"/>`});
-  (f.arcs||[]).forEach(([v,a,b,cnt,lab])=>{const V=P[v],u1=u(V,P[a]),u2=u(V,P[b]);
-    const sw=(u1[0]*u2[1]-u1[1]*u2[0])>0?1:0;
-    for(let i=0;i<(cnt||1);i++){const R=20+i*5;
-      s+=`<path class="arc" d="M${r(V[0]+u1[0]*R)},${r(V[1]+u1[1]*R)} A${R},${R} 0 0 ${sw} ${r(V[0]+u2[0]*R)},${r(V[1]+u2[1]*R)}"/>`;}
-    if(lab){let bx=u1[0]+u2[0],by=u1[1]+u2[1];const l=Math.hypot(bx,by)||1;
-      s+=`<text class="sd" x="${r(V[0]+bx/l*38)}" y="${r(V[1]+by/l*38)}" text-anchor="middle" dy=".35em">${lab}</text>`;}});
-  (f.par||[]).forEach(([a,b])=>{const A=P[a],B=P[b],d=u(A,B),m=[(A[0]+B[0])/2,(A[1]+B[1])/2],n=[-d[1],d[0]];
-    s+=`<path class="mk" d="M${r(m[0]-d[0]*3+n[0]*5)},${r(m[1]-d[1]*3+n[1]*5)} L${r(m[0]+d[0]*5)},${r(m[1]+d[1]*5)} L${r(m[0]-d[0]*3-n[0]*5)},${r(m[1]-d[1]*3-n[1]*5)}"/>`});
-  (f.sides||[]).forEach(([ab,txt])=>{const a=ab[0],b=ab[1],A=P[a],B=P[b],c=grp(a,b);
-    const m=[(A[0]+B[0])/2,(A[1]+B[1])/2],d=u(A,B);let n=[-d[1],d[0]];
-    if(n[0]*(m[0]-c[0])+n[1]*(m[1]-c[1])<0)n=[-n[0],-n[1]];
-    s+=`<text class="sd" x="${r(m[0]+n[0]*13)}" y="${r(m[1]+n[1]*13)}" text-anchor="middle" dy=".35em">${txt}</text>`});
-  names.forEach(n=>{const p=P[n];let dx,dy;
-    if(p.length>2){dx=p[2];dy=p[3]}else{const d=u(grp(n),p);dx=d[0]*14;dy=d[1]*14}
-    s+=`<circle class="dot" cx="${p[0]}" cy="${p[1]}" r="2.5"/><text class="pt" x="${r(p[0]+dx)}" y="${r(p[1]+dy)}" text-anchor="middle" dy=".35em">${n}</text>`});
-  return s+'</svg>';
-}
-
-const parFig=(sides=[],par=true)=>({pts:{A:[160,22],B:[40,200],C:[290,200],D:[112,92],E:[212,92]},
-  segs:['AB','AC','BC','DE'],par:par?[['D','E'],['B','C']]:[],sides});
-const hourFig=(sides=[])=>({pts:{A:[60,30],B:[170,30],O:[120,90,18,0],D:[210,180],C:[45,180]},
-  groups:[['A','B','O'],['C','D','O']],segs:['AB','CD','AD','BC'],par:[['A','B'],['C','D']],sides,w:260,h:210});
-const antiFig=(sides=[])=>({pts:{A:[74,190],B:[250,58],C:[250,190],D:[144,137],E:[184,190]},
-  segs:['AB','BC','CA','DE'],arcs:[['E','A','D',1],['B','A','C',1]],sides,w:300,h:215});
-const trapFig=(sides=[])=>({pts:{D:[30,190],C:[290,190],A:[110,40],B:[214,40],O:[161,83,0,-15]},
-  segs:['AB','BC','CD','DA','AC','BD'],par:[['A','B'],['D','C']],sides,w:320,h:215});
-const altFig=(sides=[])=>({pts:{A:[20,190],B:[295,190],D:[119,190],C:[119,58]},
-  segs:['AB','AC','BC','CD'],right:[['C','A','B'],['D','C','B']],sides,w:320,h:215});
-const perpFig=(sides=[])=>({pts:{A:[40,190],C:[240,190],B:[240,40],D:[120,130],E:[165,190]},
-  segs:['AC','CB','BA','DE'],right:[['C','A','B'],['D','A','E']],sides,w:280,h:215});
-const pairFig=(sides=[],arcs=[])=>({pts:{A:[20,200],B:[140,200],C:[55,90],D:[175,205],E:[349,205],F:[226,45]},
-  groups:[['A','B','C'],['D','E','F']],segs:['AB','BC','CA','DE','EF','FD'],sides,arcs,w:370,h:222});
-const rightPair=(sides=[])=>({pts:{B:[25,195],A:[25,123],C:[121,195],E:[170,195],D:[170,87],F:[314,195]},
-  groups:[['A','B','C'],['D','E','F']],segs:['AB','BC','CA','DE','EF','FD'],right:[['B','A','C'],['E','D','F']],sides,w:340,h:215});
-
-const R=[
- 'נתון',
- 'זווית משותפת',
- 'זוויות קודקודיות שוות',
- 'זוויות מתאימות בין ישרים מקבילים שוות',
- 'זוויות מתחלפות בין ישרים מקבילים שוות',
- 'אם זוויות מתאימות שוות, הישרים מקבילים',
- 'הגדרת ניצב (זווית ישרה = 90°)',
- 'סכום הזוויות במשולש הוא 180°',
- 'חישוב מהנתונים',
- 'משפט דמיון ז.ז',
- 'משפט דמיון צ.ז.צ',
- 'משפט דמיון צ.צ.צ',
- 'במשולשים דומים הזוויות המתאימות שוות',
- 'במשולשים דומים הצלעות המתאימות פרופורציוניות',
- 'מכפלת קצוות שווה למכפלת אמצעים'
-];
-
-const TABS=[
-{name:'זיהוי ויחס',
- intro:`שני משולשים דומים אם מתקיים אחד ממשפטי הדמיון: <b>ז.ז</b> (שתי זוויות שוות), <b>צ.ז.צ</b> (שתי צלעות פרופורציוניות והזווית שביניהן שווה), <b>צ.צ.צ</b> (שלוש צלעות פרופורציוניות). <b>יחס הדמיון</b> $k$ הוא היחס בין צלעות מתאימות. כותבים את הדמיון לפי סדר ההתאמה של הקודקודים!`,
- ex:[
-  {title:'צ.צ.צ',fig:rightPair([['AB','6'],['BC','8'],['CA','10'],['DE','9'],['EF','12'],['FD','15']]),
-   text:`נתונים שני המשולשים שבשרטוט.`,
-   parts:[
-    {q:`לפי איזה משפט המשולשים דומים?`,choices:['ז.ז','צ.ז.צ','צ.צ.צ','הם אינם דומים'],ans:2},
-    {q:`מהו יחס הדמיון של $ΔDEF$ ל־$ΔABC$?`,ans:1.5},
-    {q:`איזו זווית ב־$ΔDEF$ שווה ל־$∠C$?`,choices:['$∠D$','$∠E$','$∠F$'],ans:2}],
-   sol:[`נסדר את הצלעות מהקטנה לגדולה: ב־$ΔABC$: 6, 8, 10. ב־$ΔDEF$: 9, 12, 15.`,
-        `$[[9|6]] = [[12|8]] = [[15|10]] = 1.5$. כל היחסים שווים, לכן $ΔABC ∼ ΔDEF$ לפי צ.צ.צ.`,
-        `יחס הדמיון: $k = 1.5$.`,
-        `ההתאמה: $AB↔DE$, $BC↔EF$, $AC↔DF$, ולכן $A↔D$, $B↔E$, $C↔F$, כלומר $∠C = ∠F$.`]},
-  {title:'ז.ז',fig:pairFig([],[['A','B','C',1,'50°'],['B','A','C',1,'70°'],['D','E','F',1,'50°'],['F','D','E',1,'60°']]),
-   text:`ב־$ΔABC$: $∠A = 50°$, $∠B = 70°$. ב־$ΔDEF$: $∠D = 50°$, $∠F = 60°$. נתון: $AB = 4$, $BC = 6$, $DE = 10$.`,
-   parts:[
-    {q:`לפי איזה משפט המשולשים דומים?`,choices:['ז.ז','צ.ז.צ','צ.צ.צ'],ans:0},
-    {q:`מהו יחס הדמיון $[[DE|AB]]$?`,ans:2.5},
-    {q:`חשבו את $EF$.`,ans:15}],
-   sol:[`ב־$ΔABC$: $∠C = 180° − 50° − 70° = 60°$.`,
-        `$∠A = ∠D = 50°$ ו־$∠C = ∠F = 60°$, לכן $ΔABC ∼ ΔDEF$ לפי ז.ז (ההתאמה $A↔D$, $B↔E$, $C↔F$).`,
-        `$k = [[DE|AB]] = [[10|4]] = 2.5$.`,
-        `$BC$ מתאימה ל־$EF$: $EF = 2.5 · 6 = 15$.`]},
-  {title:'צ.ז.צ',fig:pairFig([['AB','4'],['CA','6'],['DE','6'],['FD','9']],[['A','B','C',1,'40°'],['D','E','F',1,'40°']]),
-   text:`נתון: $AB = 4$, $AC = 6$, $∠A = 40°$, $DE = 6$, $DF = 9$, $∠D = 40°$, $BC = 5$.`,
-   parts:[
-    {q:`לפי איזה משפט המשולשים דומים?`,choices:['ז.ז','צ.ז.צ','צ.צ.צ'],ans:1},
-    {q:`מהו יחס הדמיון של $ΔDEF$ ל־$ΔABC$?`,ans:1.5},
-    {q:`חשבו את $EF$.`,ans:7.5}],
-   sol:[`$[[DE|AB]] = [[6|4]] = 1.5$ וגם $[[DF|AC]] = [[9|6]] = 1.5$.`,
-        `הזווית שבין הצלעות שווה: $∠A = ∠D = 40°$, לכן $ΔABC ∼ ΔDEF$ לפי צ.ז.צ.`,
-        `$EF = 1.5 · BC = 1.5 · 5 = 7.5$.`]},
-  {title:'האם דומים?',
-   text:`במשולש אחד הצלעות הן 4, 6, 8 ובמשולש השני 6, 9, 10.`,
-   parts:[{q:`האם המשולשים דומים?`,choices:['כן, לפי צ.צ.צ','לא'],ans:1}],
-   sol:[`נסדר מהקטנה לגדולה ונחלק: $[[6|4]] = 1.5$, $[[9|6]] = 1.5$, אבל $[[10|8]] = 1.25$.`,
-        `היחסים אינם כולם שווים, לכן המשולשים אינם דומים.`,
-        `שימו לב: בצ.צ.צ לא מספיק ששני יחסים שווים, צריך שכל שלושת היחסים יהיו שווים.`]},
-  {title:'סדר הקודקודים',
-   text:`ב־$ΔABC$: $AB = 8$, $BC = 12$, $AC = 10$. ב־$ΔPQR$: $PQ = 15$, $QR = 18$, $PR = 12$.`,
-   parts:[
-    {q:`מהי הכתיבה הנכונה של הדמיון?`,choices:['$ΔABC ∼ ΔPQR$','$ΔABC ∼ ΔPRQ$','$ΔABC ∼ ΔQPR$','$ΔABC ∼ ΔRQP$'],ans:1},
-    {q:`מהו יחס הדמיון של $ΔPQR$ ל־$ΔABC$?`,ans:1.5},
-    {q:`איזו זווית שווה ל־$∠B$?`,choices:['$∠P$','$∠Q$','$∠R$'],ans:2}],
-   sol:[`נתאים קטנה לקטנה: $AB = 8 ↔ PR = 12$. בינונית לבינונית: $AC = 10 ↔ PQ = 15$. גדולה לגדולה: $BC = 12 ↔ QR = 18$.`,
-        `כל היחסים שווים ל־1.5, לכן המשולשים דומים לפי צ.צ.צ.`,
-        `$A$ משותף ל־$AB$ ול־$AC$, והקודקוד המשותף לצלעות המתאימות $PR$ ו־$PQ$ הוא $P$, לכן $A↔P$. באותו אופן $B↔R$ ו־$C↔Q$.`,
-        `לכן $ΔABC ∼ ΔPRQ$, ו־$∠B = ∠R$.`]},
-  {title:'כתיבת הפרופורציה',
-   text:`נתון $ΔABC ∼ ΔKLM$ (לפי סדר הקודקודים). $AB = 6$, $KL = 9$, $AC = 8$, $LM = 15$.`,
-   parts:[
-    {q:`איזו פרופורציה נכונה?`,choices:['$[[AB|KL]] = [[BC|LM]] = [[AC|KM]]$','$[[AB|LM]] = [[BC|KL]] = [[AC|KM]]$','$[[AB|KM]] = [[BC|KL]] = [[AC|LM]]$'],ans:0},
-    {q:`חשבו את $KM$.`,ans:12},
-    {q:`חשבו את $BC$.`,ans:10}],
-   sol:[`לפי סדר הקודקודים: $A↔K$, $B↔L$, $C↔M$, לכן $AB↔KL$, $BC↔LM$, $AC↔KM$.`,
-        `$k = [[KL|AB]] = [[9|6]] = 1.5$.`,
-        `$KM = 1.5 · AC = 1.5 · 8 = 12$.`,
-        `$BC = [[LM|1.5]] = [[15|1.5]] = 10$.`]}
+const ABOVE=[
+ {name:'כלל 1: חזקה',
+  rule:`${M(`∫ ${fr('a','b')}·x<sup>n</sup> dx = ${fr('a·x<sup>n+1</sup>','b(n+1)')} + C`)} &nbsp; גם עבור n שלילי, למשל ${M(`${fr('4','x<sup>2</sup>')} = 4x<sup>−2</sup>`)}`,
+  ex:[
+  {f:x=>x*x/3, fx:fr('x<sup>2</sup>','3'), q:'חשבו את השטח המוגבל על ידי גרף הפונקציה, ציר ה‑x והישר x = 3.',
+   a:0,b:3, v:[-1,4,-1,4], val:3, ans:'3',
+   s:[`בתחום ${M('0 ≤ x ≤ 3')} הגרף מעל ציר ה‑x, ולכן השטח שווה לאינטגרל.`,
+      `${M(`S = ${I(0,3)} ${fr('x<sup>2</sup>','3')} dx`)}`,
+      `לפי כלל 1 (a = 1, b = 3, n = 2): ${M(`∫ ${fr('x<sup>2</sup>','3')} dx = ${fr('x<sup>3</sup>','3·3')} = ${fr('x<sup>3</sup>','9')}`)}`,
+      `${M(`S = ${EV(fr('x<sup>3</sup>','9'),0,3)} = ${fr('27','9')} − 0 = 3`)}`]},
+  {f:x=>4/(x*x), fx:fr('4','x<sup>2</sup>'), q:'חשבו את השטח המוגבל על ידי גרף הפונקציה, ציר ה‑x והישרים x = 1 ו‑x = 2.',
+   a:1,b:2, v:[0,3,-1,6], val:2, ans:'2',
+   s:[`נכתוב כחזקה שלילית: ${M(`${fr('4','x<sup>2</sup>')} = 4x<sup>−2</sup>`)}`,
+      `לפי כלל 1 עם n = −2: ${M(`∫ 4x<sup>−2</sup> dx = ${fr('4x<sup>−1</sup>','−1')} = −${fr('4','x')}`)}`,
+      `${M(`S = ${EV('−'+fr('4','x'),1,2)} = −2 − (−4) = 2`)}`]},
+  {f:x=>12-3*x*x, fx:'12 − 3x<sup>2</sup>', q:'חשבו את השטח המוגבל על ידי גרף הפונקציה וציר ה‑x.',
+   a:-2,b:2, v:[-3,3,-3,14], val:32, ans:'32',
+   s:[`חיתוך עם ציר ה‑x: ${M('12 − 3x<sup>2</sup> = 0 ⇒ x = ±2')}. בתחום הגרף מעל ציר ה‑x.`,
+      `פונקציה קדומה לפי כלל 1: ${M('12x − x<sup>3</sup>')}`,
+      `${M(`S = (24 − 8) − (−24 + 8) = 16 + 16 = 32`)}`]},
+  {f:x=>8/(x*x*x)-1, fx:`${fr('8','x<sup>3</sup>')} − 1`, q:'חשבו את השטח המוגבל על ידי גרף הפונקציה, ציר ה‑x והישר x = 1.',
+   a:1,b:2, v:[0,4,-2,8], val:2, ans:'2',
+   s:[`חיתוך עם ציר ה‑x: ${M(`${fr('8','x<sup>3</sup>')} = 1 ⇒ x<sup>3</sup> = 8 ⇒ x = 2`)}. בתחום ${M('1 ≤ x ≤ 2')} הגרף מעל הציר.`,
+      `${M(`${fr('8','x<sup>3</sup>')} = 8x<sup>−3</sup>`)}, ולפי כלל 1: ${M(`∫ 8x<sup>−3</sup> dx = ${fr('8x<sup>−2</sup>','−2')} = −${fr('4','x<sup>2</sup>')}`)}`,
+      `פונקציה קדומה: ${M(`−${fr('4','x<sup>2</sup>')} − x`)}`,
+      `${M(`S = (−1 − 2) − (−4 − 1) = −3 + 5 = 2`)}`]},
+  {f:x=>3*x*x, fx:'3x<sup>2</sup>', q:'חשבו את השטח המוגבל על ידי גרף הפונקציה, ציר ה‑x והישרים x = −1 ו‑x = 2.',
+   a:-1,b:2, v:[-1.5,2.5,-1,13], val:9, ans:'9', marks:[[0,'0']],
+   s:[`הגרף נוגע בציר ה‑x ב‑${M('x = 0')}, ולכן השטח בנוי משני חלקים. שניהם מעל הציר, ולכן אפשר לחשב באינטגרל אחד.`,
+      `פונקציה קדומה לפי כלל 1: ${M('x<sup>3</sup>')}`,
+      `${M(`S = ${EV('x<sup>3</sup>',-1,2)} = 8 − (−1) = 9`)}`]}
  ]},
-
-{name:'חישוב צלעות',
- intro:`שלבי עבודה: (1) מוצאים זוג משולשים דומים ומנמקים. (2) כותבים את הדמיון לפי סדר הקודקודים. (3) כותבים פרופורציה של צלעות מתאימות ומציבים. שימו לב: במשולש בתוך משולש, הצלע של המשולש הגדול היא כל הקטע, למשל $AB = AD + DB$.`,
- ex:[
-  {title:'קטע מקביל לצלע',fig:parFig([['AD','4'],['DB','6'],['DE','5'],['AE','3']]),
-   text:`במשולש $ABC$, $DE ∥ BC$. נתון: $AD = 4$, $DB = 6$, $DE = 5$, $AE = 3$.`,
-   parts:[{q:`חשבו את $BC$.`,ans:12.5},{q:`חשבו את $EC$.`,ans:4.5}],
-   sol:[`$DE ∥ BC$, לכן $∠ADE = ∠ABC$ (זוויות מתאימות), ו־$∠A$ משותפת. לכן $ΔADE ∼ ΔABC$ (ז.ז).`,
-        `$AB = AD + DB = 4 + 6 = 10$, ולכן $k = [[AB|AD]] = [[10|4]] = 2.5$.`,
-        `$BC = 2.5 · DE = 2.5 · 5 = 12.5$.`,
-        `$AC = 2.5 · AE = 2.5 · 3 = 7.5$, ולכן $EC = 7.5 − 3 = 4.5$.`]},
-  {title:'צורת שעון חול',fig:hourFig([['AO','6'],['OD','9'],['AB','8'],['BO','5']]),
-   text:`הקטעים $AD$ ו־$BC$ נחתכים בנקודה $O$, ו־$AB ∥ CD$. נתון: $AO = 6$, $OD = 9$, $AB = 8$, $BO = 5$.`,
-   parts:[{q:`חשבו את $CD$.`,ans:12},{q:`חשבו את $OC$.`,ans:7.5}],
-   sol:[`$∠BAO = ∠CDO$ (מתחלפות, $AB ∥ CD$), $∠AOB = ∠DOC$ (קודקודיות). לכן $ΔAOB ∼ ΔDOC$ (ז.ז).`,
-        `ההתאמה: $A↔D$, $O↔O$, $B↔C$. יחס הדמיון $k = [[OD|AO]] = [[9|6]] = 1.5$.`,
-        `$CD = 1.5 · AB = 1.5 · 8 = 12$.`,
-        `$OC = 1.5 · BO = 1.5 · 5 = 7.5$.`]},
-  {title:'זווית שווה (לא מקביל!)',fig:antiFig([['AD','4'],['AE','5']]),
-   text:`במשולש $ABC$ הנקודה $D$ על $AB$ והנקודה $E$ על $AC$, כך ש־$∠AED = ∠ABC$. נתון: $AD = 4$, $AE = 5$, $AB = 10$, $DE = 3$. שימו לב: $DE$ <b>אינו</b> מקביל ל־$BC$.`,
-   parts:[
-    {q:`מהי כתיבת הדמיון הנכונה?`,choices:['$ΔADE ∼ ΔABC$','$ΔAED ∼ ΔABC$','$ΔAED ∼ ΔACB$'],ans:1},
-    {q:`חשבו את $AC$.`,ans:8},{q:`חשבו את $BC$.`,ans:6}],
-   sol:[`$∠AED = ∠ABC$ (נתון) ו־$∠A$ משותפת, לכן $ΔAED ∼ ΔABC$ (ז.ז).`,
-        `ההתאמה: $A↔A$, $E↔B$, $D↔C$. לכן $AE↔AB$, $AD↔AC$, $ED↔BC$.`,
-        `$k = [[AB|AE]] = [[10|5]] = 2$.`,
-        `$AC = 2 · AD = 2 · 4 = 8$, $BC = 2 · ED = 2 · 3 = 6$.`,
-        `טעות נפוצה: לחשוב ש־$AD$ מתאימה ל־$AB$. כאן $AD$ מתאימה ל־$AC$!`]},
-  {title:'עם נעלם',fig:parFig([['AD','x'],['DB','3'],['DE','2x−4'],['BC','x+6']]),
-   text:`במשולש $ABC$, $DE ∥ BC$. נתון: $AD = x$, $DB = 3$, $DE = 2x − 4$, $BC = x + 6$.`,
-   parts:[{q:`מצאו את $x$.`,ans:6},{q:`חשבו את $DE$.`,ans:8},{q:`חשבו את $BC$.`,ans:12}],
-   sol:[`$ΔADE ∼ ΔABC$ (ז.ז, כמו בתרגיל 1), ולכן $[[AD|AB]] = [[DE|BC]]$.`,
-        `$[[x|x + 3]] = [[2x − 4|x + 6]]$`,
-        `כפל בהצלבה: $x(x + 6) = (2x − 4)(x + 3)$`,
-        `$x² + 6x = 2x² + 2x − 12$, כלומר $x² − 4x − 12 = 0$, כלומר $(x − 6)(x + 2) = 0$.`,
-        `$x = 6$ (הפתרון $x = −2$ נפסל, אורך חייב להיות חיובי).`,
-        `$DE = 2·6 − 4 = 8$, $BC = 6 + 6 = 12$. בדיקה: $[[6|9]] = [[8|12]]$ ✓`]},
-  {title:'קטע חלקי',fig:parFig([['AD','5'],['DB','x'],['AE','4'],['EC','6']]),
-   text:`$DE ∥ BC$. נתון: $AD = 5$, $DB = x$, $AE = 4$, $EC = 6$.`,
-   parts:[{q:`מצאו את $x$.`,ans:7.5}],
-   sol:[`$ΔADE ∼ ΔABC$, לכן $[[AD|AB]] = [[AE|AC]]$.`,
-        `$AC = 4 + 6 = 10$, $AB = 5 + x$.`,
-        `$[[5|5 + x]] = [[4|10]]$, כלומר $4(5 + x) = 50$, כלומר $5 + x = 12.5$, ולכן $x = 7.5$.`]},
-  {title:'אלכסוני טרפז',fig:trapFig([['AB','6'],['DC','15']]),
-   text:`בטרפז $ABCD$ ($AB ∥ DC$) האלכסונים נחתכים בנקודה $O$. נתון: $AB = 6$, $DC = 15$, $AC = 14$, $BD = 21$.`,
-   parts:[{q:`מהו יחס הדמיון $[[AB|DC]]$?`,ans:0.4},{q:`חשבו את $AO$.`,ans:4},{q:`חשבו את $OC$.`,ans:10},{q:`חשבו את $BO$.`,ans:6}],
-   sol:[`$∠OAB = ∠OCD$ (מתחלפות, $AB ∥ DC$), $∠AOB = ∠COD$ (קודקודיות). לכן $ΔAOB ∼ ΔCOD$ (ז.ז).`,
-        `$k = [[AB|CD]] = [[6|15]] = [[2|5]] = 0.4$.`,
-        `לכן $AO : OC = 2 : 5$. האלכסון $AC = 14$ מתחלק ל־7 חלקים, כל חלק שווה 2.`,
-        `$AO = 2 · 2 = 4$, $OC = 5 · 2 = 10$.`,
-        `באותו אופן $BO : OD = 2 : 5$, $BD = 21$, כל חלק שווה 3, ולכן $BO = 6$.`]}
+ {name:`כלל 2: ${M('(mx + b)<sup>n</sup>')}`,
+  rule:`${M(`∫ ${fr('a','b')}(mx+b)<sup>n</sup> dx = ${fr('a(mx+b)<sup>n+1</sup>','b·m(n+1)')} + C`)} &nbsp; גם עבור n שלילי`,
+  ex:[
+  {f:x=>3*(x-2)**2, fx:'3(x − 2)<sup>2</sup>', q:'חשבו את השטח המוגבל על ידי גרף הפונקציה ושני הצירים.',
+   a:0,b:2, v:[-1,4,-1,13], val:8, ans:'8',
+   s:[`הגרף משיק לציר ה‑x ב‑${M('x = 2')}, ובתחום ${M('0 ≤ x ≤ 2')} הוא מעל הציר.`,
+      `לפי כלל 2 (a = 3, m = 1, n = 2): ${M(`∫ 3(x − 2)<sup>2</sup> dx = ${fr('3(x − 2)<sup>3</sup>','1·3')} = (x − 2)<sup>3</sup>`)}`,
+      `${M(`S = ${EV('(x − 2)<sup>3</sup>',0,2)} = 0 − (−8) = 8`)}`]},
+  {f:x=>6/(2*x+1)**2, fx:fr('6','(2x + 1)<sup>2</sup>'), q:'חשבו את השטח המוגבל על ידי גרף הפונקציה, ציר ה‑x, ציר ה‑y והישר x = 1.',
+   a:0,b:1, v:[-0.4,2.5,-1,7], val:2, ans:'2',
+   s:[`${M(`${fr('6','(2x + 1)<sup>2</sup>')} = 6(2x + 1)<sup>−2</sup>`)}`,
+      `לפי כלל 2 (a = 6, m = 2, n = −2): ${M(`${fr('6(2x + 1)<sup>−1</sup>','2·(−1)')} = −${fr('3','2x + 1')}`)}`,
+      `${M(`S = ${EV('−'+fr('3','2x + 1'),0,1)} = −1 − (−3) = 2`)}`]},
+  {f:x=>(3-x)**3, fx:'(3 − x)<sup>3</sup>', q:'חשבו את השטח המוגבל על ידי גרף הפונקציה ושני הצירים.',
+   a:0,b:3, v:[-1,4.5,-4,28], val:81/4, ans:'81/4',
+   s:[`חיתוך עם ציר ה‑x ב‑${M('x = 3')}. בתחום ${M('0 ≤ x ≤ 3')} הגרף מעל הציר (${M('f(0) = 27')}).`,
+      `${M('(3 − x)<sup>3</sup> = (−x + 3)<sup>3</sup>')}, ולפי כלל 2 (m = −1, n = 3): ${M(`${fr('(−x + 3)<sup>4</sup>','(−1)·4')} = −${fr('(3 − x)<sup>4</sup>','4')}`)}`,
+      `${M(`S = 0 − (−${fr('81','4')}) = ${fr('81','4')}`)}`]},
+  {f:x=>4/(x+1)**2-1, fx:`${fr('4','(x + 1)<sup>2</sup>')} − 1`, q:'חשבו את השטח המוגבל על ידי גרף הפונקציה ושני הצירים.',
+   a:0,b:1, v:[-0.5,4,-1.5,4], val:1, ans:'1',
+   s:[`חיתוך עם ציר ה‑x: ${M('(x + 1)<sup>2</sup> = 4 ⇒ x = 1')} (הפתרון ${M('x = −3')} מחוץ לתחום). בתחום ${M('0 ≤ x ≤ 1')} הגרף מעל הציר.`,
+      `${M(`${fr('4','(x + 1)<sup>2</sup>')} = 4(x + 1)<sup>−2</sup>`)}, ולפי כלל 2: ${M(`${fr('4(x + 1)<sup>−1</sup>','1·(−1)')} = −${fr('4','x + 1')}`)}`,
+      `פונקציה קדומה: ${M(`−${fr('4','x + 1')} − x`)}`,
+      `${M(`S = (−2 − 1) − (−4 − 0) = 1`)}`]},
+  {f:x=>4/(2*x-1)**3, fx:fr('4','(2x − 1)<sup>3</sup>'), q:'חשבו את השטח המוגבל על ידי גרף הפונקציה, ציר ה‑x והישרים x = 1 ו‑x = 2.',
+   a:1,b:2, v:[0.6,3,-0.5,5], val:8/9, ans:'8/9',
+   s:[`${M(`${fr('4','(2x − 1)<sup>3</sup>')} = 4(2x − 1)<sup>−3</sup>`)}`,
+      `לפי כלל 2 (a = 4, m = 2, n = −3): ${M(`${fr('4(2x − 1)<sup>−2</sup>','2·(−2)')} = −${fr('1','(2x − 1)<sup>2</sup>')}`)}`,
+      `${M(`S = ${EV('−'+fr('1','(2x − 1)<sup>2</sup>'),1,2)} = −${fr('1','9')} + 1 = ${fr('8','9')}`)}`]}
  ]},
-
-{name:'היקף ושטח',
- intro:`אם יחס הדמיון הוא $k$: יחס ההיקפים שווה ל־$k$, יחס הגבהים, התיכונים וחוצי הזווית המתאימים שווה ל־$k$, ויחס השטחים שווה ל־$k²$.`,
- ex:[
-  {title:'היקף ושטח מיחס דמיון',
-   text:`נתון $ΔABC ∼ ΔDEF$ ויחס הדמיון $[[DE|AB]] = [[3|2]]$. היקף $ΔABC$ הוא 24 ושטחו 20.`,
-   parts:[{q:`מהו היקף $ΔDEF$?`,ans:36},{q:`מהו שטח $ΔDEF$?`,ans:45}],
-   sol:[`יחס ההיקפים שווה ליחס הדמיון: $P<sub>DEF</sub> = [[3|2]] · 24 = 36$.`,
-        `יחס השטחים שווה לריבוע יחס הדמיון: $([[3|2]])² = [[9|4]]$.`,
-        `$S<sub>DEF</sub> = [[9|4]] · 20 = 45$.`]},
-  {title:'יחס דמיון מיחס שטחים',
-   text:`שטחיהם של שני משולשים דומים הם 16 ו־36.`,
-   parts:[{q:`מהו יחס הדמיון של הקטן לגדול?`,ans:2/3},
-          {q:`צלע במשולש הקטן היא 8. מה אורך הצלע המתאימה במשולש הגדול?`,ans:12},
-          {q:`היקף המשולש הגדול הוא 45. מהו היקף הקטן?`,ans:30}],
-   sol:[`$k² = [[16|36]]$, ולכן $k = [[4|6]] = [[2|3]]$.`,
-        `$8 · [[3|2]] = 12$.`,
-        `$45 · [[2|3]] = 30$.`]},
-  {title:'גבהים מתאימים',
-   text:`$ΔABC ∼ ΔA′B′C′$, $BC = 10$, $B′C′ = 15$. הגובה לצלע $BC$ הוא $AH = 6$.`,
-   parts:[{q:`חשבו את הגובה המתאים $A′H′$.`,ans:9},{q:`חשבו את שטח $ΔABC$.`,ans:30},{q:`חשבו את שטח $ΔA′B′C′$.`,ans:67.5}],
-   sol:[`$k = [[15|10]] = 1.5$. הגבהים המתאימים ביחס הדמיון: $A′H′ = 1.5 · 6 = 9$.`,
-        `$S<sub>ABC</sub> = [[10 · 6|2]] = 30$.`,
-        `$S<sub>A′B′C′</sub> = [[15 · 9|2]] = 67.5$. בדיקה: $1.5² · 30 = 2.25 · 30 = 67.5$ ✓`]},
-  {title:'שטח משולש וטרפז',fig:parFig(),
-   text:`$DE ∥ BC$, $AD : DB = 2 : 3$, ושטח $ΔADE$ הוא 8.`,
-   parts:[{q:`מהו יחס הדמיון $[[AD|AB]]$?`,ans:0.4},{q:`חשבו את שטח $ΔABC$.`,ans:50},{q:`חשבו את שטח הטרפז $DECB$.`,ans:42}],
-   sol:[`$ΔADE ∼ ΔABC$ (ז.ז).`,
-        `$AD = 2t$, $DB = 3t$, לכן $AB = 5t$ ו־$k = [[AD|AB]] = [[2|5]]$.`,
-        `יחס השטחים $([[2|5]])² = [[4|25]]$, לכן $S<sub>ABC</sub> = 8 · [[25|4]] = 50$.`,
-        `$S<sub>DECB</sub> = 50 − 8 = 42$.`,
-        `טעות נפוצה: לקחת יחס $[[2|3]]$. יחס הדמיון הוא בין צלע במשולש הקטן לכל הצלע המתאימה בגדול.`]},
-  {title:'תיכונים מתאימים',
-   text:`$ΔABC ∼ ΔKLM$. התיכון לצלע $BC$ אורכו 9, והתיכון המתאים לו ב־$ΔKLM$ אורכו 6. היקף $ΔABC$ הוא 27, ושטח $ΔKLM$ הוא 20.`,
-   parts:[{q:`מהו יחס הדמיון של $ΔKLM$ ל־$ΔABC$?`,ans:2/3},{q:`מהו היקף $ΔKLM$?`,ans:18},{q:`מהו שטח $ΔABC$?`,ans:45}],
-   sol:[`$k = [[6|9]] = [[2|3]]$.`,
-        `$P<sub>KLM</sub> = [[2|3]] · 27 = 18$.`,
-        `$S<sub>ABC</sub> = 20 · ([[3|2]])² = 20 · [[9|4]] = 45$.`]},
-  {title:'מיחס היקפים לשטחים',
-   text:`יחס ההיקפים של שני משולשים דומים הוא $3 : 5$. סכום שטחיהם 102.`,
-   parts:[{q:`מהו שטח המשולש הקטן?`,ans:27},{q:`מהו שטח המשולש הגדול?`,ans:75}],
-   sol:[`יחס הדמיון $[[3|5]]$, ולכן יחס השטחים $[[9|25]]$.`,
-        `נסמן את השטחים $9t$ ו־$25t$: $9t + 25t = 102$, כלומר $34t = 102$, ולכן $t = 3$.`,
-        `השטחים: $9 · 3 = 27$ ו־$25 · 3 = 75$.`]}
+ {name:`כלל 3א: ${M('f′·f<sup>n</sup>')}, נגזרת מסודרת`,
+  rule:`${M(`∫ f′(x)·f<sup>n</sup>(x) dx = ${fr('f<sup>n+1</sup>(x)','n+1')} + C`)} &nbsp; בתרגילים כאן הנגזרת כבר מופיעה בדיוק כמו שהיא, בלי תיקון.`,
+  ex:[
+  {f:x=>2*x*(x*x+1)**2, fx:'2x(x<sup>2</sup> + 1)<sup>2</sup>', q:'חשבו את השטח המוגבל על ידי גרף הפונקציה, ציר ה‑x והישר x = 1.',
+   a:0,b:1, v:[-0.5,1.5,-1,9], val:7/3, ans:'7/3',
+   s:[`${M("(x<sup>2</sup> + 1)′ = 2x")}: הביטוי הוא בדיוק ${M('f′·f<sup>2</sup>')}. בתחום ${M('0 ≤ x ≤ 1')} הגרף מעל הציר.`,
+      `לפי כלל 3 (n = 2): ${M(`${fr('(x<sup>2</sup> + 1)<sup>3</sup>','3')}`)}`,
+      `${M(`S = ${fr('8','3')} − ${fr('1','3')} = ${fr('7','3')}`)}`]},
+  {f:x=>2*x/(x*x+1)**2, fx:fr('2x','(x<sup>2</sup> + 1)<sup>2</sup>'), q:'חשבו את השטח המוגבל על ידי גרף הפונקציה, ציר ה‑x והישר x = 1.',
+   a:0,b:1, v:[-0.5,2.5,-0.3,0.9], val:0.5, ans:'1/2',
+   s:[`${M(`${fr('2x','(x<sup>2</sup> + 1)<sup>2</sup>')} = 2x·(x<sup>2</sup> + 1)<sup>−2</sup>`)}, ו‑${M("(x<sup>2</sup> + 1)′ = 2x")}`,
+      `לפי כלל 3 (n = −2): ${M(`${fr('(x<sup>2</sup> + 1)<sup>−1</sup>','−1')} = −${fr('1','x<sup>2</sup> + 1')}`)}`,
+      `${M(`S = −${fr('1','2')} − (−1) = ${fr('1','2')}`)}`]},
+  {f:x=>2*x*(x*x-1)**2, fx:'2x(x<sup>2</sup> − 1)<sup>2</sup>', q:`חשבו את השטח המוגבל על ידי גרף הפונקציה, ציר ה‑x והישר ${M('x = 1.5')}.`,
+   a:0,b:1.5, v:[-0.5,2,-0.5,5.5], val:63/64, ans:'63/64', marks:[[1,'1']],
+   s:[`חיתוך עם ציר ה‑x: ${M('x = 0')}, והגרף נוגע בציר ב‑${M('x = 1')}. יש שני חלקים, ושניהם מעל הציר.`,
+      `${M("(x<sup>2</sup> − 1)′ = 2x")}: הנגזרת מופיעה בדיוק. לפי כלל 3: ${M(`${fr('(x<sup>2</sup> − 1)<sup>3</sup>','3')}`)}`,
+      `${M(`S = ${fr('(1.25)<sup>3</sup>','3')} − ${fr('(−1)<sup>3</sup>','3')} = ${fr('125','192')} + ${fr('1','3')} = ${fr('63','64')}`)}`]},
+  {f:x=>3*x*x*(x**3+1), fx:'3x<sup>2</sup>(x<sup>3</sup> + 1)', q:'חשבו את השטח המוגבל על ידי גרף הפונקציה, ציר ה‑x והישר x = 1.',
+   a:-1,b:1, v:[-1.5,1.5,-1,7], val:2, ans:'2', marks:[[0,'0']],
+   s:[`חיתוך עם ציר ה‑x: ${M('x = −1')}, והגרף נוגע בציר ב‑${M('x = 0')}. שני חלקים, שניהם מעל הציר.`,
+      `${M("(x<sup>3</sup> + 1)′ = 3x<sup>2</sup>")}: זה המקרה ${M('f′·f')} (n = 1). ${M(`∫ = ${fr('(x<sup>3</sup> + 1)<sup>2</sup>','2')}`)}`,
+      `${M(`S = ${fr('4','2')} − 0 = 2`)}`]},
+  {f:x=>(2*x-4)/(x*x-4*x+5)**2, fx:fr('2x − 4','(x<sup>2</sup> − 4x + 5)<sup>2</sup>'), q:'חשבו את השטח המוגבל על ידי גרף הפונקציה, ציר ה‑x והישר x = 4.',
+   a:2,b:4, v:[-0.5,5,-0.9,0.9], val:0.8, ans:'4/5',
+   s:[`חיתוך עם ציר ה‑x: ${M('2x − 4 = 0 ⇒ x = 2')}. בתחום ${M('2 ≤ x ≤ 4')} הגרף מעל הציר.`,
+      `${M("(x<sup>2</sup> − 4x + 5)′ = 2x − 4")}, והביטוי הוא ${M('f′·f<sup>−2</sup>')}.`,
+      `לפי כלל 3 (n = −2): ${M(`−${fr('1','x<sup>2</sup> − 4x + 5')}`)}`,
+      `${M(`S = −${fr('1','5')} − (−1) = ${fr('4','5')}`)}`]}
  ]},
-
-{name:'ישר זווית',
- intro:`במשולש ישר זווית, הגובה ליתר יוצר שלושה משולשים דומים: $ΔACB ∼ ΔADC ∼ ΔCDB$. מהם נובע: $CD² = AD · DB$, $AC² = AD · AB$, $BC² = DB · AB$. כדאי תמיד להגיע לזה דרך הדמיון.`,
- ex:[
-  {title:'הגובה ליתר',fig:altFig([['AD','9'],['DB','16']]),
-   text:`$∠ACB = 90°$, $CD ⟂ AB$, $AD = 9$, $DB = 16$.`,
-   parts:[{q:`חשבו את $CD$.`,ans:12},{q:`חשבו את $AC$.`,ans:15},{q:`חשבו את $BC$.`,ans:20},{q:`חשבו את שטח $ΔABC$.`,ans:150}],
-   sol:[`$ΔADC ∼ ΔCDB$, לכן $[[AD|CD]] = [[CD|DB]]$, כלומר $CD² = 9 · 16 = 144$ ו־$CD = 12$.`,
-        `$ΔADC ∼ ΔACB$, לכן $[[AD|AC]] = [[AC|AB]]$, כלומר $AC² = 9 · 25 = 225$ ו־$AC = 15$.`,
-        `$ΔCDB ∼ ΔACB$, לכן $[[DB|CB]] = [[CB|AB]]$, כלומר $BC² = 16 · 25 = 400$ ו־$BC = 20$.`,
-        `$S = [[AC · BC|2]] = [[15 · 20|2]] = 150$ (וגם $[[AB · CD|2]] = [[25 · 12|2]] = 150$ ✓).`]},
-  {title:'מניצב ויתר',fig:altFig(),
-   text:`$∠ACB = 90°$, $CD ⟂ AB$, $AC = 6$, $AB = 10$.`,
-   parts:[{q:`חשבו את $AD$.`,ans:3.6},{q:`חשבו את $DB$.`,ans:6.4},{q:`חשבו את $CD$.`,ans:4.8},{q:`חשבו את $BC$.`,ans:8}],
-   sol:[`$ΔADC ∼ ΔACB$, לכן $AC² = AD · AB$: $36 = 10 · AD$, ולכן $AD = 3.6$.`,
-        `$DB = 10 − 3.6 = 6.4$.`,
-        `$CD² = AD · DB = 3.6 · 6.4 = 23.04$, ולכן $CD = 4.8$.`,
-        `$BC² = DB · AB = 6.4 · 10 = 64$, ולכן $BC = 8$ (בדיקה בפיתגורס: $6² + 8² = 10²$ ✓).`]},
-  {title:'אנך מנקודה על היתר',fig:perpFig([['AD','4'],['CB','6']]),
-   text:`$∠ACB = 90°$, $AC = 8$, $BC = 6$, $AB = 10$. הנקודה $D$ על $AB$, הנקודה $E$ על $AC$, ו־$DE ⟂ AB$. נתון $AD = 4$.`,
-   parts:[{q:`מהי כתיבת הדמיון הנכונה?`,choices:['$ΔADE ∼ ΔACB$','$ΔADE ∼ ΔABC$','$ΔAED ∼ ΔACB$'],ans:0},
-          {q:`חשבו את $DE$.`,ans:3},{q:`חשבו את $AE$.`,ans:5},{q:`חשבו את $EC$.`,ans:3}],
-   sol:[`$∠ADE = ∠ACB = 90°$ ו־$∠A$ משותפת, לכן $ΔADE ∼ ΔACB$ (ז.ז). ההתאמה: $A↔A$, $D↔C$, $E↔B$.`,
-        `$k = [[AD|AC]] = [[4|8]] = [[1|2]]$.`,
-        `$DE = [[1|2]] · CB = 3$, $AE = [[1|2]] · AB = 5$.`,
-        `$EC = AC − AE = 8 − 5 = 3$.`]},
-  {title:'עם נעלם',fig:altFig([['AD','x'],['DB','x+5']]),
-   text:`$∠ACB = 90°$, $CD ⟂ AB$, $AD = x$, $DB = x + 5$, $CD = 6$.`,
-   parts:[{q:`מצאו את $x$.`,ans:4},{q:`חשבו את $AB$.`,ans:13}],
-   sol:[`$ΔADC ∼ ΔCDB$, לכן $CD² = AD · DB$.`,
-        `$36 = x(x + 5)$, כלומר $x² + 5x − 36 = 0$, כלומר $(x + 9)(x − 4) = 0$.`,
-        `$x = 4$ ($x = −9$ נפסל).`,
-        `$AB = 4 + 9 = 13$.`]}
+ {name:`כלל 3ב: ${M('f′·f<sup>n</sup>')}, תיקון הנגזרת`,
+  rule:`${M(`∫ ${fr('a','b')}·f′(x)·f<sup>n</sup>(x) dx = ${fr('a·f<sup>n+1</sup>(x)','b(n+1)')} + C`)} &nbsp; כאן הנגזרת לא מופיעה בדיוק: צריך להכפיל או לחלק כדי לקבל אותה, ואת המספר שמתקן מוציאים כמקדם ${M(fr('a','b'))}.`,
+  ex:[
+  {f:x=>x*(x*x-4)**2, fx:'x(x<sup>2</sup> − 4)<sup>2</sup>', q:'חשבו את השטח המוגבל על ידי גרף הפונקציה וציר ה‑x ברביע הראשון.',
+   a:0,b:2, v:[-0.5,2.5,-2,10], val:32/3, ans:'32/3',
+   s:[`חיתוך עם ציר ה‑x ברביע הראשון: ${M('x = 0, x = 2')}.`,
+      `${M("(x<sup>2</sup> − 4)′ = 2x")}, אבל בתרגיל מופיע רק x. מתקנים: ${M(`x = ${HL(fr('1','2'))}·2x`)} (מחלקים ב‑2).`,
+      `לפי כלל 3: ${M(`${fr('1','2')}·${fr('(x<sup>2</sup> − 4)<sup>3</sup>','3')} = ${fr('(x<sup>2</sup> − 4)<sup>3</sup>','6')}`)}`,
+      `${M(`S = 0 − ${fr('(−64)','6')} = ${fr('32','3')}`)}`]},
+  {f:x=>6*x*(x*x+1)**2, fx:'6x(x<sup>2</sup> + 1)<sup>2</sup>', q:'חשבו את השטח המוגבל על ידי גרף הפונקציה, ציר ה‑x והישר x = 1.',
+   a:0,b:1, v:[-0.5,1.3,-2,26], val:7, ans:'7',
+   s:[`${M("(x<sup>2</sup> + 1)′ = 2x")}, ובתרגיל מופיע 6x. מתקנים: ${M(`6x = ${HL('3')}·2x`)} (כופלים ב‑3).`,
+      `לפי כלל 3: ${M(`3·${fr('(x<sup>2</sup> + 1)<sup>3</sup>','3')} = (x<sup>2</sup> + 1)<sup>3</sup>`)}`,
+      `${M(`S = ${EV('(x<sup>2</sup> + 1)<sup>3</sup>',0,1)} = 8 − 1 = 7`)}`]},
+  {f:x=>x/(x*x+1)**3, fx:fr('x','(x<sup>2</sup> + 1)<sup>3</sup>'), q:'חשבו את השטח המוגבל על ידי גרף הפונקציה, ציר ה‑x והישר x = 1.',
+   a:0,b:1, v:[-0.5,2.5,-0.15,0.45], val:3/16, ans:'3/16',
+   s:[`${M(`${fr('x','(x<sup>2</sup> + 1)<sup>3</sup>')} = x·(x<sup>2</sup> + 1)<sup>−3</sup>`)}`,
+      `${M("(x<sup>2</sup> + 1)′ = 2x")}, ולכן ${M(`x = ${HL(fr('1','2'))}·2x`)} (מחלקים ב‑2).`,
+      `לפי כלל 3 (n = −3): ${M(`${fr('1','2')}·${fr('(x<sup>2</sup> + 1)<sup>−2</sup>','−2')} = −${fr('1','4(x<sup>2</sup> + 1)<sup>2</sup>')}`)}`,
+      `${M(`S = −${fr('1','16')} − (−${fr('1','4')}) = ${fr('3','16')}`)}`]},
+  {f:x=>(x+1)*(x*x+2*x)**2, fx:'(x + 1)(x<sup>2</sup> + 2x)<sup>2</sup>', q:`חשבו את השטח המוגבל על ידי גרף הפונקציה, ציר ה‑x והישר ${M(`x = ${fr('1','2')}`)}.`,
+   a:-1,b:0.5, v:[-1.6,1,-0.4,2.8], val:63/128, ans:'63/128', marks:[[0,'0']],
+   s:[`חיתוך עם ציר ה‑x: ${M('x = −1')}, והגרף נוגע בציר ב‑${M('x = 0')}. שני חלקים, שניהם מעל הציר.`,
+      `${M("(x<sup>2</sup> + 2x)′ = 2x + 2 = 2(x + 1)")}, ולכן ${M(`x + 1 = ${HL(fr('1','2'))}·(2x + 2)`)}`,
+      `לפי כלל 3: ${M(`${fr('1','2')}·${fr('(x<sup>2</sup> + 2x)<sup>3</sup>','3')} = ${fr('(x<sup>2</sup> + 2x)<sup>3</sup>','6')}`)}`,
+      `${M(`S = ${fr('(5/4)<sup>3</sup>','6')} − ${fr('(−1)<sup>3</sup>','6')} = ${fr('125','384')} + ${fr('64','384')} = ${fr('63','128')}`)}`]},
+  {f:x=>x*x*(x**3+8), fx:'x<sup>2</sup>(x<sup>3</sup> + 8)', q:'חשבו את השטח המוגבל על ידי גרף הפונקציה וציר ה‑x.',
+   a:-2,b:0, v:[-2.5,1,-2,12], val:32/3, ans:'32/3',
+   s:[`חיתוך עם ציר ה‑x: ${M('x = −2')}, והגרף נוגע בציר ב‑${M('x = 0')}. בתחום הגרף מעל הציר.`,
+      `${M("(x<sup>3</sup> + 8)′ = 3x<sup>2</sup>")}, ולכן ${M(`x<sup>2</sup> = ${HL(fr('1','3'))}·3x<sup>2</sup>`)} (מחלקים ב‑3). זה המקרה ${M('f′·f')}.`,
+      `${M(`∫ = ${fr('1','3')}·${fr('(x<sup>3</sup> + 8)<sup>2</sup>','2')} = ${fr('(x<sup>3</sup> + 8)<sup>2</sup>','6')}`)}`,
+      `${M(`S = ${fr('64','6')} − 0 = ${fr('32','3')}`)}`]}
  ]},
-
-{name:'בעיות מילוליות',
- intro:`בבעיות מהחיים מחפשים שני משולשים דומים. בדרך כלל יש זווית ישרה (עמוד, אדם או בניין ניצבים לקרקע) וזווית שווה (קרני שמש מקבילות, זווית פגיעה במראה, זווית משותפת).`,
- ex:[
-  {title:'צל של עץ',fig:{pts:{A:[40,130],B:[40,190],C:[130,190],D:[180,30],E:[180,190],F:[330,190]},groups:[['A','B','C'],['D','E','F']],
-     segs:['AB','BC','DE','EF'],aux:['AC','DF'],right:[['B','A','C'],['E','D','F']],sides:[['AB','2'],['BC','3'],['EF','18'],['DE','h']],w:350,h:215},
-   text:`מקל שגובהו 2 מ׳ מטיל צל של 3 מ׳. באותה שעה עץ מטיל צל של 18 מ׳.`,
-   parts:[{q:`מהו גובה העץ (במטרים)?`,ans:12}],
-   sol:[`קרני השמש מקבילות, לכן הזווית שבין הקרן לקרקע שווה בשני המשולשים, ושניהם ישרי זווית. לכן הם דומים (ז.ז).`,
-        `$[[h|2]] = [[18|3]]$, ולכן $h = 12$ מ׳.`]},
-  {title:'מראה על הקרקע',fig:{pts:{A:[30,120],B:[30,190],M:[100,190,0,16],C:[320,190],D:[320,20]},groups:[['A','B','M'],['D','C','M']],
-     segs:['AB','BM','MC','CD'],aux:['AM','MD'],right:[['B','A','M'],['C','D','M']],arcs:[['M','A','B',1],['M','D','C',1]],
-     sides:[['AB','1.6'],['BM','2'],['MC','25'],['CD','h']],w:345,h:215},
-   text:`דנה מניחה מראה על הקרקע ומתרחקת ממנה 2 מ׳, עד שהיא רואה במראה את ראש הבניין. גובה עיניה 1.6 מ׳, והמרחק מהמראה לבניין 25 מ׳. זווית הפגיעה במראה שווה לזווית ההחזרה.`,
-   parts:[{q:`מהו גובה הבניין (במטרים)?`,ans:20}],
-   sol:[`$∠AMB = ∠DMC$ (פגיעה = החזרה), $∠B = ∠C = 90°$, לכן $ΔABM ∼ ΔDCM$ (ז.ז).`,
-        `$[[DC|AB]] = [[CM|BM]]$, כלומר $[[h|1.6]] = [[25|2]]$, ולכן $h = 1.6 · 12.5 = 20$ מ׳.`]},
-  {title:'עמוד תאורה',fig:{pts:{L:[30,70],P:[30,190],Q:[150,190],H:[150,150],S:[210,190]},groups:[['L','P','S']],
-     segs:['LP','PS','QH'],aux:['LS'],right:[['P','L','S'],['Q','H','S']],sides:[['LP','h'],['QH','1.8'],['PQ','4'],['QS','2']],w:240,h:215},
-   text:`אדם שגובהו 1.8 מ׳ עומד במרחק 4 מ׳ מעמוד תאורה, ואורך הצל שלו 2 מ׳.`,
-   parts:[{q:`מהו גובה העמוד (במטרים)?`,ans:5.4}],
-   sol:[`$∠S$ משותפת, $∠P = ∠Q = 90°$, לכן $ΔHQS ∼ ΔLPS$ (ז.ז).`,
-        `$PS = 4 + 2 = 6$.`,
-        `$[[h|1.8]] = [[6|2]]$, ולכן $h = 5.4$ מ׳.`]},
-  {title:'הגדלה במכונת צילום',
-   text:`משולש שצלעותיו 5, 7, 9 ס״מ הוגדל במכונת צילום כך שהצלע הקצרה שלו היא 7.5 ס״מ.`,
-   parts:[{q:`מה אורך הצלע הארוכה אחרי ההגדלה?`,ans:13.5},{q:`מהו ההיקף אחרי ההגדלה?`,ans:31.5},{q:`פי כמה גדל השטח?`,ans:2.25}],
-   sol:[`$k = [[7.5|5]] = 1.5$.`,
-        `הצלע הארוכה: $9 · 1.5 = 13.5$.`,
-        `היקף: $(5 + 7 + 9) · 1.5 = 21 · 1.5 = 31.5$.`,
-        `השטח גדל פי $k² = 1.5² = 2.25$.`]},
-  {title:'מפה',
-   text:`על מפה בקנה מידה 1:2000 מסומנת חלקה משולשת ישרת זווית שניצביה 3 ס״מ ו־4 ס״מ.`,
-   parts:[{q:`מה אורך היתר של החלקה במציאות (במטרים)?`,ans:100},{q:`מהו שטח החלקה במציאות (במ״ר)?`,ans:2400}],
-   sol:[`החלקה במציאות דומה למשולש שבמפה ביחס $k = 2000$.`,
-        `היתר במפה הוא 5 ס״מ (פיתגורס), ובמציאות $5 · 2000 = 10000$ ס״מ, כלומר 100 מ׳.`,
-        `הניצבים במציאות: 60 מ׳ ו־80 מ׳, ולכן השטח $[[60 · 80|2]] = 2400$ מ״ר.`,
-        `בדיקה ביחס שטחים: שטח במפה 6 סמ״ר, $6 · 2000² = 24,000,000$ סמ״ר, שהם 2400 מ״ר ✓`]}
+ {name:`כלל 4: ${M('a·f′')}`,
+  rule:`${M(`∫ a·f′(x) dx = a·f(x) + C`)} &nbsp; נתונה הפונקציה g(x) ובשרטוט מופיע גרף הנגזרת ${M("g′(x)")}. השטח מתחת לגרף הנגזרת הוא ${M('g(b) − g(a)')}.`,
+  ex:[
+  {f:x=>(1-x*x)/(x*x+1)**2, top:`g(x) = ${fr('x','x<sup>2</sup> + 1')}`,
+   q:`בשרטוט גרף הנגזרת ${M("g′(x)")}. חשבו את השטח המוגבל על ידי גרף הנגזרת וציר ה‑x.`,
+   a:-1,b:1, v:[-3,3,-0.4,1.2], val:1, ans:'1',
+   s:[`נגזור: ${M(`g′(x) = ${fr('1 − x<sup>2</sup>','(x<sup>2</sup> + 1)<sup>2</sup>')}`)}. חיתוך עם ציר ה‑x: ${M('x = ±1')}, ובתחום גרף הנגזרת מעל הציר.`,
+      `לפי כלל 4: ${M("∫ g′(x) dx = g(x)")}`,
+      `${M(`S = g(1) − g(−1) = ${fr('1','2')} − (−${fr('1','2')}) = 1`)}`]},
+  {f:x=>(x*x+2*x)/(x+1)**2, top:`g(x) = ${fr('x<sup>2</sup>','x + 1')}`,
+   q:`בשרטוט גרף הנגזרת ${M("g′(x)")}. חשבו את השטח המוגבל על ידי גרף הנגזרת, ציר ה‑x והישר x = 2.`,
+   a:0,b:2, v:[-0.5,3,-0.3,1.2], val:4/3, ans:'4/3',
+   s:[`נגזור: ${M(`g′(x) = ${fr('x<sup>2</sup> + 2x','(x + 1)<sup>2</sup>')}`)}. חיתוך עם ציר ה‑x בתחום: ${M('x = 0')}. בתחום ${M('0 ≤ x ≤ 2')} מעל הציר.`,
+      `לפי כלל 4: ${M("∫ g′(x) dx = g(x)")}`,
+      `${M(`S = g(2) − g(0) = ${fr('4','3')} − 0 = ${fr('4','3')}`)}`]},
+  {f:x=>3*x*x-3, top:'g(x) = x<sup>3</sup> − 3x',
+   q:`בשרטוט גרף הנגזרת ${M("g′(x)")}. חשבו את השטח המוגבל על ידי גרף הנגזרת, ציר ה‑x והישר x = 2.`,
+   a:1,b:2, v:[-2.5,2.5,-4,10], val:4, ans:'4',
+   s:[`נגזור: ${M('g′(x) = 3x<sup>2</sup> − 3')}. חיתוך עם ציר ה‑x: ${M('x = ±1')}. השטח המבוקש בתחום ${M('1 ≤ x ≤ 2')}, שם הנגזרת מעל הציר.`,
+      `לפי כלל 4: ${M("∫ g′(x) dx = g(x)")}`,
+      `${M(`S = g(2) − g(1) = 2 − (−2) = 4`)}`]},
+  {f:x=>(1-x)/(x+1)**3, top:`g(x) = ${fr('x','(x + 1)<sup>2</sup>')}`,
+   q:`בשרטוט גרף הנגזרת ${M("g′(x)")}. חשבו את השטח המוגבל על ידי גרף הנגזרת ושני הצירים.`,
+   a:0,b:1, v:[-0.5,3,-0.3,1.2], val:0.25, ans:'1/4',
+   s:[`נגזור: ${M(`g′(x) = ${fr('(x + 1)<sup>2</sup> − 2x(x + 1)','(x + 1)<sup>4</sup>')} = ${fr('1 − x','(x + 1)<sup>3</sup>')}`)}. חיתוך עם ציר ה‑x: ${M('x = 1')}.`,
+      `לפי כלל 4: ${M("∫ g′(x) dx = g(x)")}`,
+      `${M(`S = g(1) − g(0) = ${fr('1','4')} − 0 = ${fr('1','4')}`)}`]},
+  {f:x=>4*x/(x*x+1)**2, top:`g(x) = ${fr('x<sup>2</sup> − 1','x<sup>2</sup> + 1')}`,
+   q:`בשרטוט גרף הנגזרת ${M("g′(x)")}. חשבו את השטח המוגבל על ידי גרף הנגזרת, ציר ה‑x והישר x = 1.`,
+   a:0,b:1, v:[-0.5,3,-0.3,1.6], val:1, ans:'1',
+   s:[`נגזור: ${M(`g′(x) = ${fr('2x(x<sup>2</sup> + 1) − 2x(x<sup>2</sup> − 1)','(x<sup>2</sup> + 1)<sup>2</sup>')} = ${fr('4x','(x<sup>2</sup> + 1)<sup>2</sup>')}`)}. חיתוך עם ציר ה‑x: ${M('x = 0')}.`,
+      `לפי כלל 4: ${M("∫ g′(x) dx = g(x)")}`,
+      `${M(`S = g(1) − g(0) = 0 − (−1) = 1`)}`]}
  ]},
-
-{name:'הוכחות',
- intro:`נסו קודם להוכיח לבד במחברת. אחר כך לחצו “בדיקת ההוכחה”, בחרו לכל טענה את הנימוק המתאים מהרשימה ולחצו “בדיקת הנימוקים”. ברוב ההוכחות המבנה הוא: שתי טענות על זוויות (או צלעות), משולשים דומים, ואז מסקנה (צלעות פרופורציוניות, זוויות שוות או מכפלה). אחרי ההוכחה יש סעיף חישוב.`,
- ex:[
-  {title:'קטע מקביל יוצר משולש דומה',fig:parFig(),proof:true,
-   given:`$DE ∥ BC$, הנקודה $D$ על $AB$ והנקודה $E$ על $AC$.`,prove:`$ΔADE ∼ ΔABC$`,
-   steps:[[`$DE ∥ BC$`,0],[`$∠ADE = ∠ABC$`,3],[`$∠A = ∠A$`,1],[`$ΔADE ∼ ΔABC$`,9]],
-   parts:[{q:`נתון $AD = 3$, $AB = 7.5$, $DE = 4$. חשבו את $BC$.`,ans:10}],
-   sol:[`חישוב: $k = [[7.5|3]] = 2.5$, ולכן $BC = 2.5 · 4 = 10$.`]},
-  {title:'הוכחת מכפלה בשעון חול',fig:hourFig(),proof:true,
-   given:`$AB ∥ CD$, הקטעים $AD$ ו־$BC$ נחתכים בנקודה $O$.`,prove:`$AO · OC = BO · OD$`,
-   steps:[[`$AB ∥ CD$`,0],[`$∠BAO = ∠CDO$`,4],[`$∠AOB = ∠DOC$`,2],[`$ΔAOB ∼ ΔDOC$`,9],[`$[[AO|DO]] = [[BO|CO]]$`,13],[`$AO · OC = BO · OD$`,14]],
-   parts:[{q:`נתון $AO = 4$, $OD = 6$, $BO = 5$. חשבו את $OC$.`,ans:7.5}],
-   sol:[`חישוב: $4 · OC = 5 · 6$, ולכן $OC = 7.5$.`]},
-  {title:'הוכחת מקבילות (צ.ז.צ)',fig:parFig([['AD','3'],['DB','6'],['AE','4'],['EC','8']],false),proof:true,
-   given:`$AD = 3$, $DB = 6$, $AE = 4$, $EC = 8$.`,prove:`$DE ∥ BC$`,
-   steps:[[`$AD = 3$, $AB = 9$, $AE = 4$, $AC = 12$`,[0,8]],[`$[[AD|AB]] = [[AE|AC]] = [[1|3]]$`,8],[`$∠A = ∠A$`,1],[`$ΔADE ∼ ΔABC$`,10],[`$∠ADE = ∠ABC$`,12],[`$DE ∥ BC$`,5]],
-   parts:[{q:`נתון $DE = 5$. חשבו את $BC$.`,ans:15}],
-   sol:[`חישוב: $k = [[AB|AD]] = 3$, ולכן $BC = 3 · 5 = 15$.`]},
-  {title:'זווית שווה ומכפלת צלעות',fig:antiFig(),proof:true,
-   given:`$∠AED = ∠ABC$`,prove:`$AD · AB = AE · AC$`,
-   steps:[[`$∠AED = ∠ABC$`,0],[`$∠A = ∠A$`,1],[`$ΔAED ∼ ΔABC$`,9],[`$[[AE|AB]] = [[AD|AC]]$`,13],[`$AD · AB = AE · AC$`,14]],
-   parts:[{q:`נתון $AD = 6$, $AE = 8$, $AC = 9$. חשבו את $AB$.`,ans:12}],
-   sol:[`חישוב: $6 · AB = 8 · 9 = 72$, ולכן $AB = 12$.`]},
-  {title:'הגובה ליתר',fig:altFig(),proof:true,
-   given:`$∠ACB = 90°$, $CD ⟂ AB$`,prove:`$CD² = AD · DB$`,
-   steps:[[`$∠ACB = 90°$, $CD ⟂ AB$`,0],[`$∠ADC = ∠CDB = 90°$`,6],[`$∠ACD = 90° − ∠A$ וגם $∠B = 90° − ∠A$, לכן $∠ACD = ∠B$`,7],[`$ΔADC ∼ ΔCDB$`,9],[`$[[AD|CD]] = [[CD|DB]]$`,13],[`$CD² = AD · DB$`,14]],
-   parts:[{q:`נתון $AD = 4$, $DB = 9$. חשבו את $CD$.`,ans:6}],
-   sol:[`חישוב: $CD² = 4 · 9 = 36$, ולכן $CD = 6$.`]},
-  {title:'הוכחת זווית שווה (צ.צ.צ)',fig:pairFig([['AB','6'],['BC','8'],['CA','10'],['DE','9'],['EF','12'],['FD','15']]),proof:true,
-   given:`$AB = 6$, $BC = 8$, $AC = 10$, $DE = 9$, $EF = 12$, $DF = 15$`,prove:`$∠BAC = ∠EDF$`,
-   steps:[[`$AB = 6$, $BC = 8$, $AC = 10$, $DE = 9$, $EF = 12$, $DF = 15$`,0],[`$[[DE|AB]] = [[EF|BC]] = [[DF|AC]] = [[3|2]]$`,8],[`$ΔABC ∼ ΔDEF$`,11],[`$∠BAC = ∠EDF$`,12]],
-   parts:[{q:`שטח $ΔABC$ הוא 24. מהו שטח $ΔDEF$?`,ans:54}],
-   sol:[`חישוב: $24 · ([[3|2]])² = 24 · 2.25 = 54$.`]},
-  {title:'אלכסוני טרפז',fig:trapFig(),proof:true,
-   given:`טרפז $ABCD$ ($AB ∥ DC$), האלכסונים נחתכים בנקודה $O$.`,prove:`$[[AO|OC]] = [[AB|DC]]$`,
-   steps:[[`$AB ∥ DC$`,0],[`$∠OAB = ∠OCD$`,4],[`$∠AOB = ∠COD$`,2],[`$ΔAOB ∼ ΔCOD$`,9],[`$[[AO|CO]] = [[AB|CD]]$`,13]],
-   parts:[{q:`נתון $AB = 4$, $DC = 10$, $AC = 21$. חשבו את $AO$.`,ans:6}],
-   sol:[`חישוב: $AO : OC = 4 : 10 = 2 : 5$, האלכסון מתחלק ל־7 חלקים של 3, ולכן $AO = 6$.`]},
-  {title:'אנך ליתר ומכפלת צלעות',fig:perpFig(),proof:true,
-   given:`$∠ACB = 90°$, $DE ⟂ AB$ ($D$ על $AB$, $E$ על $AC$)`,prove:`$AD · AB = AE · AC$`,
-   steps:[[`$∠ACB = 90°$, $DE ⟂ AB$`,0],[`$∠ADE = 90° = ∠ACB$`,6],[`$∠A = ∠A$`,1],[`$ΔADE ∼ ΔACB$`,9],[`$[[AD|AC]] = [[AE|AB]]$`,13],[`$AD · AB = AE · AC$`,14]],
-   parts:[{q:`נתון $AC = 8$, $AB = 10$, $AE = 5$. חשבו את $AD$.`,ans:4}],
-   sol:[`חישוב: $AD · 10 = 5 · 8 = 40$, ולכן $AD = 4$.`]}
+ {name:'כלל 5: פיצול שבר',
+  rule:`${M(`${fr('a + b','c')} = ${fr('a','c')} + ${fr('b','c')}`)} &nbsp; מפצלים, מצמצמים, ואז משתמשים בכלל 1 (כולל חזקות שליליות)`,
+  ex:[
+  {f:x=>(x**3+2)/(x*x), fx:fr('x<sup>3</sup> + 2','x<sup>2</sup>'), q:'חשבו את השטח המוגבל על ידי גרף הפונקציה, ציר ה‑x והישרים x = 1 ו‑x = 2.',
+   a:1,b:2, v:[0,3,-0.5,6], val:2.5, ans:'5/2',
+   s:[`פיצול: ${M(`${fr('x<sup>3</sup>','x<sup>2</sup>')} + ${fr('2','x<sup>2</sup>')} = x + 2x<sup>−2</sup>`)}`,
+      `פונקציה קדומה: ${M(`${fr('x<sup>2</sup>','2')} − ${fr('2','x')}`)}`,
+      `${M(`S = (2 − 1) − (${fr('1','2')} − 2) = 1 + ${fr('3','2')} = ${fr('5','2')}`)}`]},
+  {f:x=>(4-x*x)/(x*x), fx:fr('4 − x<sup>2</sup>','x<sup>2</sup>'), q:'חשבו את השטח המוגבל על ידי גרף הפונקציה, ציר ה‑x והישר x = 1.',
+   a:1,b:2, v:[0,4,-1.5,4], val:1, ans:'1',
+   s:[`פיצול: ${M('4x<sup>−2</sup> − 1')}. חיתוך עם ציר ה‑x: ${M('x = 2')} (בצד החיובי). בתחום ${M('1 ≤ x ≤ 2')} הגרף מעל הציר.`,
+      `פונקציה קדומה: ${M(`−${fr('4','x')} − x`)}`,
+      `${M(`S = (−2 − 2) − (−4 − 1) = 1`)}`]},
+  {f:x=>(2*x**3-16)/(x*x), fx:fr('2x<sup>3</sup> − 16','x<sup>2</sup>'), q:'חשבו את השטח המוגבל על ידי גרף הפונקציה, ציר ה‑x והישר x = 4.',
+   a:2,b:4, v:[0.5,5,-3,9], val:8, ans:'8',
+   s:[`פיצול: ${M('2x − 16x<sup>−2</sup>')}. חיתוך: ${M('2x<sup>3</sup> = 16 ⇒ x = 2')}. בתחום ${M('2 ≤ x ≤ 4')} הגרף מעל הציר.`,
+      `פונקציה קדומה: ${M(`x<sup>2</sup> + ${fr('16','x')}`)}`,
+      `${M(`S = (16 + 4) − (4 + 8) = 8`)}`]},
+  {f:x=>(1-x**4)/(x*x), fx:fr('1 − x<sup>4</sup>','x<sup>2</sup>'), q:`חשבו את השטח המוגבל על ידי גרף הפונקציה, ציר ה‑x והישר ${M(`x = ${fr('1','2')}`)}.`,
+   a:0.5,b:1, v:[0.2,2,-3,5], val:17/24, ans:'17/24',
+   s:[`פיצול: ${M('x<sup>−2</sup> − x<sup>2</sup>')}. חיתוך עם ציר ה‑x בצד החיובי: ${M('x = 1')}. בתחום הגרף מעל הציר.`,
+      `פונקציה קדומה: ${M(`−${fr('1','x')} − ${fr('x<sup>3</sup>','3')}`)}`,
+      `${M(`S = (−1 − ${fr('1','3')}) − (−2 − ${fr('1','24')}) = −${fr('32','24')} + ${fr('49','24')} = ${fr('17','24')}`)}`]}
  ]}
 ];
 
-const PARTS={}, PROOFS={}, solved=new Set(); let total=0;
-const LET='אבגדהוזח';
+const NOTE=`<div style="margin-top:4px;color:var(--muted)">כשהגרף מתחת לציר ה‑x האינטגרל שלילי, והשטח הוא הערך המוחלט שלו. כשחלק מעל וחלק מתחת, מפצלים את האינטגרל בנקודת החיתוך.</div>`;
+const BELOW=[
+ {name:ABOVE[0].name, rule:ABOVE[0].rule+NOTE, ex:[
+  {f:x=>x*x-4, fx:'x<sup>2</sup> − 4', q:'חשבו את השטח המוגבל על ידי גרף הפונקציה וציר ה‑x.',
+   a:-2,b:2, v:[-3,3,-5,3], val:32/3, ans:'32/3',
+   s:[`חיתוך עם ציר ה‑x: ${M('x = ±2')}. בתחום הגרף מתחת לציר.`,
+      `פונקציה קדומה לפי כלל 1: ${M(`${fr('x<sup>3</sup>','3')} − 4x`)}`,
+      `${M(`${I(-2,2)} = (${fr('8','3')} − 8) − (−${fr('8','3')} + 8) = −${fr('32','3')}`)}`,
+      `האינטגרל שלילי, ולכן ${M(`S = ${fr('32','3')}`)}`]},
+  {f:x=>-4/(x*x), fx:`−${fr('4','x<sup>2</sup>')}`, q:'חשבו את השטח המוגבל על ידי גרף הפונקציה, ציר ה‑x והישרים x = 1 ו‑x = 2.',
+   a:1,b:2, v:[0,3,-6,1], val:2, ans:'2',
+   s:[`${M(`−${fr('4','x<sup>2</sup>')} = −4x<sup>−2</sup>`)}, והגרף כולו מתחת לציר.`,
+      `לפי כלל 1 (n = −2): ${M(`${fr('−4x<sup>−1</sup>','−1')} = ${fr('4','x')}`)}`,
+      `${M(`${I(1,2)} = 2 − 4 = −2`)}, ולכן ${M('S = 2')}`]},
+  {f:x=>x**3-9*x, fx:'x<sup>3</sup> − 9x', q:'חשבו את השטח המוגבל על ידי גרף הפונקציה וציר ה‑x ברביע הרביעי.',
+   a:0,b:3, v:[-1,4,-12,4], val:81/4, ans:'81/4',
+   s:[`חיתוך עם ציר ה‑x: ${M('x = 0, ±3')}. ברביע הרביעי התחום ${M('0 ≤ x ≤ 3')}, והגרף מתחת לציר.`,
+      `פונקציה קדומה: ${M(`${fr('x<sup>4</sup>','4')} − ${fr('9x<sup>2</sup>','2')}`)}`,
+      `${M(`${I(0,3)} = ${fr('81','4')} − ${fr('81','2')} = −${fr('81','4')}`)}, ולכן ${M(`S = ${fr('81','4')}`)}`]},
+  {f:x=>1-8/(x**3), fx:`1 − ${fr('8','x<sup>3</sup>')}`, q:'חשבו את השטח המוגבל על ידי גרף הפונקציה, ציר ה‑x והישר x = 1.',
+   a:1,b:2, v:[0,4,-8,2], val:2, ans:'2',
+   s:[`חיתוך עם ציר ה‑x: ${M('x = 2')}. בתחום ${M('1 ≤ x ≤ 2')} הגרף מתחת לציר.`,
+      `${M(`${fr('8','x<sup>3</sup>')} = 8x<sup>−3</sup>`)}, ופונקציה קדומה: ${M(`x + ${fr('4','x<sup>2</sup>')}`)}`,
+      `${M(`${I(1,2)} = (2 + 1) − (1 + 4) = −2`)}, ולכן ${M('S = 2')}`]},
+  {f:x=>3*x*x-3, fx:'3x<sup>2</sup> − 3', q:'חשבו את השטח הכולל המוגבל על ידי גרף הפונקציה, ציר ה‑x, ציר ה‑y והישר x = 2.',
+   a:0,b:2, v:[-1,2.5,-4,10], val:6, ans:'6', marks:[[1,'1']], mixed:true,
+   s:[`חיתוך עם ציר ה‑x: ${M('x = 1')}. בתחום ${M('0 ≤ x ≤ 1')} הגרף מתחת לציר, ובתחום ${M('1 ≤ x ≤ 2')} מעליו. מפצלים.`,
+      `פונקציה קדומה: ${M('x<sup>3</sup> − 3x')}`,
+      `${M(`${I(0,1)} = −2`)} (שטח 2), ${M(`${I(1,2)} = 2 − (−2) = 4`)}`,
+      `${M('S = 2 + 4 = 6')}`]}
+ ]},
+ {name:ABOVE[1].name, rule:ABOVE[1].rule+NOTE, ex:[
+  {f:x=>-3*(x-2)**2, fx:'−3(x − 2)<sup>2</sup>', q:'חשבו את השטח המוגבל על ידי גרף הפונקציה ושני הצירים.',
+   a:0,b:2, v:[-1,4,-13,1], val:8, ans:'8',
+   s:[`הגרף משיק לציר ה‑x ב‑${M('x = 2')}, ובתחום ${M('0 ≤ x ≤ 2')} הוא מתחת לציר.`,
+      `לפי כלל 2 (a = −3, m = 1, n = 2): ${M(`${fr('−3(x − 2)<sup>3</sup>','3')} = −(x − 2)<sup>3</sup>`)}`,
+      `${M(`${I(0,2)} = 0 − 8 = −8`)}, ולכן ${M('S = 8')}`]},
+  {f:x=>-6/(2*x+1)**2, fx:`−${fr('6','(2x + 1)<sup>2</sup>')}`, q:'חשבו את השטח המוגבל על ידי גרף הפונקציה, ציר ה‑x, ציר ה‑y והישר x = 1.',
+   a:0,b:1, v:[-0.4,2.5,-7,1], val:2, ans:'2',
+   s:[`${M(`−6(2x + 1)<sup>−2</sup>`)}, הגרף מתחת לציר.`,
+      `לפי כלל 2 (a = −6, m = 2, n = −2): ${M(`${fr('−6(2x + 1)<sup>−1</sup>','2·(−1)')} = ${fr('3','2x + 1')}`)}`,
+      `${M(`${I(0,1)} = 1 − 3 = −2`)}, ולכן ${M('S = 2')}`]},
+  {f:x=>(x-3)**3, fx:'(x − 3)<sup>3</sup>', q:'חשבו את השטח המוגבל על ידי גרף הפונקציה ושני הצירים.',
+   a:0,b:3, v:[-1,4.5,-28,4], val:81/4, ans:'81/4',
+   s:[`חיתוך עם ציר ה‑x ב‑${M('x = 3')}. בתחום ${M('0 ≤ x ≤ 3')} הגרף מתחת לציר (${M('f(0) = −27')}).`,
+      `לפי כלל 2: ${M(fr('(x − 3)<sup>4</sup>','4'))}`,
+      `${M(`${I(0,3)} = 0 − ${fr('81','4')}`)}, ולכן ${M(`S = ${fr('81','4')}`)}`]},
+  {f:x=>1-4/(x+1)**2, fx:`1 − ${fr('4','(x + 1)<sup>2</sup>')}`, q:'חשבו את השטח המוגבל על ידי גרף הפונקציה ושני הצירים.',
+   a:0,b:1, v:[-0.5,4,-4,1.5], val:1, ans:'1',
+   s:[`חיתוך עם ציר ה‑x: ${M('(x + 1)<sup>2</sup> = 4 ⇒ x = 1')}. בתחום ${M('0 ≤ x ≤ 1')} הגרף מתחת לציר.`,
+      `לפי כלל 2: ${M(`∫ 4(x + 1)<sup>−2</sup> dx = −${fr('4','x + 1')}`)}, ולכן פונקציה קדומה: ${M(`x + ${fr('4','x + 1')}`)}`,
+      `${M(`${I(0,1)} = (1 + 2) − (0 + 4) = −1`)}, ולכן ${M('S = 1')}`]},
+  {f:x=>(x-1)**3, fx:'(x − 1)<sup>3</sup>', q:'חשבו את השטח הכולל המוגבל על ידי גרף הפונקציה, ציר ה‑x, ציר ה‑y והישר x = 2.',
+   a:0,b:2, v:[-0.5,2.5,-1.5,1.5], val:0.5, ans:'1/2', marks:[[1,'1']], mixed:true,
+   s:[`חיתוך עם ציר ה‑x: ${M('x = 1')}. בתחום ${M('0 ≤ x ≤ 1')} הגרף מתחת לציר, ובתחום ${M('1 ≤ x ≤ 2')} מעליו.`,
+      `לפי כלל 2: ${M(fr('(x − 1)<sup>4</sup>','4'))}`,
+      `${M(`${I(0,1)} = 0 − ${fr('1','4')}`)} (שטח ${M(fr('1','4'))}), ${M(`${I(1,2)} = ${fr('1','4')}`)}`,
+      `${M(`S = ${fr('1','4')} + ${fr('1','4')} = ${fr('1','2')}`)}`]}
+ ]},
+ {name:ABOVE[2].name, rule:ABOVE[2].rule+NOTE, ex:[
+  {f:x=>2*x*(x*x-4), fx:'2x(x<sup>2</sup> − 4)', q:'חשבו את השטח המוגבל על ידי גרף הפונקציה וציר ה‑x ברביע הרביעי.',
+   a:0,b:2, v:[-0.5,2.6,-7,3], val:8, ans:'8',
+   s:[`חיתוך עם ציר ה‑x: ${M('x = 0, ±2')}. ברביע הרביעי ${M('0 ≤ x ≤ 2')}, והגרף מתחת לציר.`,
+      `${M("(x<sup>2</sup> − 4)′ = 2x")}: זה ${M('f′·f')} (n = 1). ${M(`∫ = ${fr('(x<sup>2</sup> − 4)<sup>2</sup>','2')}`)}`,
+      `${M(`${I(0,2)} = 0 − ${fr('16','2')} = −8`)}, ולכן ${M('S = 8')}`]},
+  {f:x=>(2*x-4)/(x*x-4*x+5)**2, fx:fr('2x − 4','(x<sup>2</sup> − 4x + 5)<sup>2</sup>'), q:'חשבו את השטח המוגבל על ידי גרף הפונקציה ושני הצירים.',
+   a:0,b:2, v:[-0.5,4.5,-0.9,0.9], val:0.8, ans:'4/5',
+   s:[`חיתוך עם ציר ה‑x: ${M('x = 2')}. בתחום ${M('0 ≤ x ≤ 2')} הגרף מתחת לציר.`,
+      `${M("(x<sup>2</sup> − 4x + 5)′ = 2x − 4")}, ולפי כלל 3 (n = −2): ${M(`−${fr('1','x<sup>2</sup> − 4x + 5')}`)}`,
+      `${M(`${I(0,2)} = −1 − (−${fr('1','5')}) = −${fr('4','5')}`)}, ולכן ${M(`S = ${fr('4','5')}`)}`]},
+  {f:x=>3*x*x*(x**3-8), fx:'3x<sup>2</sup>(x<sup>3</sup> − 8)', q:'חשבו את השטח המוגבל על ידי גרף הפונקציה וציר ה‑x.',
+   a:0,b:2, v:[-0.5,2.4,-35,8], val:32, ans:'32',
+   s:[`חיתוך עם ציר ה‑x: ${M('x = 0, x = 2')}. בתחום הגרף מתחת לציר.`,
+      `${M("(x<sup>3</sup> − 8)′ = 3x<sup>2</sup>")}: ${M(`∫ = ${fr('(x<sup>3</sup> − 8)<sup>2</sup>','2')}`)}`,
+      `${M(`${I(0,2)} = 0 − 32 = −32`)}, ולכן ${M('S = 32')}`]},
+  {f:x=>2*x*(x*x-1)**3, fx:'2x(x<sup>2</sup> − 1)<sup>3</sup>', q:'חשבו את השטח המוגבל על ידי גרף הפונקציה וציר ה‑x ברביע הרביעי.',
+   a:0,b:1, v:[-0.3,1.4,-0.7,0.4], val:0.25, ans:'1/4',
+   s:[`חיתוך עם ציר ה‑x: ${M('x = 0, ±1')}. ברביע הרביעי ${M('0 ≤ x ≤ 1')}, הגרף מתחת לציר.`,
+      `${M("(x<sup>2</sup> − 1)′ = 2x")}, ולפי כלל 3 (n = 3): ${M(fr('(x<sup>2</sup> − 1)<sup>4</sup>','4'))}`,
+      `${M(`${I(0,1)} = 0 − ${fr('1','4')}`)}, ולכן ${M(`S = ${fr('1','4')}`)}`]},
+  {f:x=>(2*x-4)*(x*x-4*x), fx:'(2x − 4)(x<sup>2</sup> − 4x)', q:'חשבו את השטח הכולל המוגבל על ידי גרף הפונקציה וציר ה‑x.',
+   a:0,b:4, v:[-0.5,4.5,-7,7], val:16, ans:'16', marks:[[2,'2']], mixed:true,
+   s:[`חיתוך עם ציר ה‑x: ${M('x = 0, 2, 4')}. בתחום ${M('0 ≤ x ≤ 2')} הגרף מעל הציר, ובתחום ${M('2 ≤ x ≤ 4')} מתחתיו.`,
+      `${M("(x<sup>2</sup> − 4x)′ = 2x − 4")}: זה ${M('f′·f')}. ${M(`∫ = ${fr('(x<sup>2</sup> − 4x)<sup>2</sup>','2')}`)}`,
+      `${M(`${I(0,2)} = 8 − 0 = 8`)}, ${M(`${I(2,4)} = 0 − 8 = −8`)} (שטח 8)`,
+      `${M('S = 8 + 8 = 16')}`]}
+ ]},
+ {name:ABOVE[3].name, rule:ABOVE[3].rule+NOTE, ex:[
+  {f:x=>x*(x*x-4)**3, fx:'x(x<sup>2</sup> − 4)<sup>3</sup>', q:'חשבו את השטח המוגבל על ידי גרף הפונקציה וציר ה‑x ברביע הרביעי.',
+   a:0,b:2, v:[-0.5,2.4,-35,5], val:32, ans:'32',
+   s:[`ברביע הרביעי ${M('0 ≤ x ≤ 2')}, והגרף מתחת לציר.`,
+      `${M("(x<sup>2</sup> − 4)′ = 2x")}, ולכן ${M(`x = ${HL(fr('1','2'))}·2x`)} (מחלקים ב‑2).`,
+      `${M(`∫ = ${fr('1','2')}·${fr('(x<sup>2</sup> − 4)<sup>4</sup>','4')} = ${fr('(x<sup>2</sup> − 4)<sup>4</sup>','8')}`)}`,
+      `${M(`${I(0,2)} = 0 − ${fr('256','8')} = −32`)}, ולכן ${M('S = 32')}`]},
+  {f:x=>-6*x*(x*x+1)**2, fx:'−6x(x<sup>2</sup> + 1)<sup>2</sup>', q:'חשבו את השטח המוגבל על ידי גרף הפונקציה, ציר ה‑x והישר x = 1.',
+   a:0,b:1, v:[-0.5,1.3,-26,2], val:7, ans:'7',
+   s:[`בתחום ${M('0 ≤ x ≤ 1')} הגרף מתחת לציר.`,
+      `${M("(x<sup>2</sup> + 1)′ = 2x")}, ולכן ${M(`−6x = ${HL('−3')}·2x`)} (כופלים ב‑−3).`,
+      `${M(`∫ = −3·${fr('(x<sup>2</sup> + 1)<sup>3</sup>','3')} = −(x<sup>2</sup> + 1)<sup>3</sup>`)}`,
+      `${M(`${I(0,1)} = −8 − (−1) = −7`)}, ולכן ${M('S = 7')}`]},
+  {f:x=>-x/(x*x+1)**3, fx:`−${fr('x','(x<sup>2</sup> + 1)<sup>3</sup>')}`, q:'חשבו את השטח המוגבל על ידי גרף הפונקציה, ציר ה‑x והישר x = 1.',
+   a:0,b:1, v:[-0.5,2.5,-0.45,0.15], val:3/16, ans:'3/16',
+   s:[`${M('−x(x<sup>2</sup> + 1)<sup>−3</sup>')}, ובתחום הגרף מתחת לציר.`,
+      `${M(`−x = ${HL('−'+fr('1','2'))}·2x`)}, ולפי כלל 3 (n = −3): ${M(`−${fr('1','2')}·${fr('(x<sup>2</sup> + 1)<sup>−2</sup>','−2')} = ${fr('1','4(x<sup>2</sup> + 1)<sup>2</sup>')}`)}`,
+      `${M(`${I(0,1)} = ${fr('1','16')} − ${fr('1','4')} = −${fr('3','16')}`)}, ולכן ${M(`S = ${fr('3','16')}`)}`]},
+  {f:x=>x*x*(x**3-8), fx:'x<sup>2</sup>(x<sup>3</sup> − 8)', q:'חשבו את השטח המוגבל על ידי גרף הפונקציה וציר ה‑x.',
+   a:0,b:2, v:[-0.5,2.4,-12,3], val:32/3, ans:'32/3',
+   s:[`חיתוך עם ציר ה‑x: ${M('x = 0, x = 2')}. בתחום הגרף מתחת לציר.`,
+      `${M("(x<sup>3</sup> − 8)′ = 3x<sup>2</sup>")}, ולכן ${M(`x<sup>2</sup> = ${HL(fr('1','3'))}·3x<sup>2</sup>`)}`,
+      `${M(`∫ = ${fr('(x<sup>3</sup> − 8)<sup>2</sup>','6')}`)}`,
+      `${M(`${I(0,2)} = 0 − ${fr('64','6')} = −${fr('32','3')}`)}, ולכן ${M(`S = ${fr('32','3')}`)}`]},
+  {f:x=>(x-1)*(x*x-2*x)**2, fx:'(x − 1)(x<sup>2</sup> − 2x)<sup>2</sup>', q:'חשבו את השטח הכולל המוגבל על ידי גרף הפונקציה וציר ה‑x.',
+   a:0,b:2, v:[-0.3,2.3,-0.5,0.5], val:1/3, ans:'1/3', marks:[[1,'1']], mixed:true,
+   s:[`חיתוך עם ציר ה‑x: ${M('x = 0, 1, 2')}. בתחום ${M('0 ≤ x ≤ 1')} הגרף מתחת לציר, ובתחום ${M('1 ≤ x ≤ 2')} מעליו.`,
+      `${M("(x<sup>2</sup> − 2x)′ = 2(x − 1)")}, ולכן ${M(`x − 1 = ${HL(fr('1','2'))}·(2x − 2)`)}`,
+      `${M(`∫ = ${fr('(x<sup>2</sup> − 2x)<sup>3</sup>','6')}`)}`,
+      `${M(`${I(0,1)} = −${fr('1','6')}`)} (שטח ${M(fr('1','6'))}), ${M(`${I(1,2)} = ${fr('1','6')}`)}`,
+      `${M(`S = ${fr('1','3')}`)}`]}
+ ]},
+ {name:ABOVE[4].name, rule:`${M('∫ a·f′(x) dx = a·f(x) + C')} &nbsp; נתונה g(x) ובשרטוט גרף הנגזרת ${M("g′(x)")}. כשגרף הנגזרת מתחת לציר: ${M('S = g(a) − g(b)')}.`+NOTE, ex:[
+  {f:x=>3*x*x-3, top:'g(x) = x<sup>3</sup> − 3x',
+   q:`בשרטוט גרף הנגזרת ${M("g′(x)")}. חשבו את השטח המוגבל על ידי גרף הנגזרת וציר ה‑x.`,
+   a:-1,b:1, v:[-2.5,2.5,-4,10], val:4, ans:'4',
+   s:[`${M('g′(x) = 3x<sup>2</sup> − 3')}, חיתוך עם ציר ה‑x: ${M('x = ±1')}. בתחום הנגזרת מתחת לציר.`,
+      `לפי כלל 4: ${M("∫ g′(x) dx = g(x)")}`,
+      `${M(`${I(-1,1)} = g(1) − g(−1) = −2 − 2 = −4`)}, ולכן ${M('S = 4')}`]},
+  {f:x=>(1-x*x)/(x*x+1)**2, top:`g(x) = ${fr('x','x<sup>2</sup> + 1')}`,
+   q:`בשרטוט גרף הנגזרת ${M("g′(x)")}. חשבו את השטח המוגבל על ידי גרף הנגזרת, ציר ה‑x והישר x = 3.`,
+   a:1,b:3, v:[-0.5,4,-0.2,1.1], val:0.2, ans:'1/5',
+   s:[`${M(`g′(x) = ${fr('1 − x<sup>2</sup>','(x<sup>2</sup> + 1)<sup>2</sup>')}`)}, חיתוך ב‑${M('x = 1')}. בתחום ${M('1 ≤ x ≤ 3')} הנגזרת מתחת לציר.`,
+      `לפי כלל 4: ${M("∫ g′(x) dx = g(x)")}`,
+      `${M(`${I(1,3)} = g(3) − g(1) = ${fr('3','10')} − ${fr('1','2')} = −${fr('1','5')}`)}, ולכן ${M(`S = ${fr('1','5')}`)}`]},
+  {f:x=>-2*x/(x*x+3)**2, top:`g(x) = ${fr('1','x<sup>2</sup> + 3')}`,
+   q:`בשרטוט גרף הנגזרת ${M("g′(x)")}. חשבו את השטח המוגבל על ידי גרף הנגזרת, ציר ה‑x והישר x = 1.`,
+   a:0,b:1, v:[-0.5,3,-0.18,0.08], val:1/12, ans:'1/12',
+   s:[`${M(`g′(x) = −${fr('2x','(x<sup>2</sup> + 3)<sup>2</sup>')}`)}, חיתוך ב‑${M('x = 0')}. בתחום ${M('0 ≤ x ≤ 1')} הנגזרת מתחת לציר.`,
+      `לפי כלל 4: ${M("∫ g′(x) dx = g(x)")}`,
+      `${M(`${I(0,1)} = g(1) − g(0) = ${fr('1','4')} − ${fr('1','3')} = −${fr('1','12')}`)}, ולכן ${M(`S = ${fr('1','12')}`)}`]},
+  {f:x=>(1-x)/(x+1)**3, top:`g(x) = ${fr('x','(x + 1)<sup>2</sup>')}`,
+   q:`בשרטוט גרף הנגזרת ${M("g′(x)")}. חשבו את השטח המוגבל על ידי גרף הנגזרת, ציר ה‑x והישר x = 3.`,
+   a:1,b:3, v:[0.5,4,-0.06,0.06], val:1/16, ans:'1/16',
+   s:[`${M(`g′(x) = ${fr('1 − x','(x + 1)<sup>3</sup>')}`)}, חיתוך ב‑${M('x = 1')}. בתחום ${M('1 ≤ x ≤ 3')} הנגזרת מתחת לציר.`,
+      `לפי כלל 4: ${M("∫ g′(x) dx = g(x)")}`,
+      `${M(`${I(1,3)} = g(3) − g(1) = ${fr('3','16')} − ${fr('1','4')} = −${fr('1','16')}`)}, ולכן ${M(`S = ${fr('1','16')}`)}`]},
+  {f:x=>(1-x*x)/(x*x+1)**2, top:`g(x) = ${fr('x','x<sup>2</sup> + 1')}`,
+   q:`בשרטוט גרף הנגזרת ${M("g′(x)")}. חשבו את השטח הכולל המוגבל על ידי גרף הנגזרת, ציר ה‑x, ציר ה‑y והישר x = 3.`,
+   a:0,b:3, v:[-0.5,3.5,-0.3,1.1], val:0.7, ans:'7/10', marks:[[1,'1']], mixed:true,
+   s:[`חיתוך עם ציר ה‑x: ${M('x = 1')}. בתחום ${M('0 ≤ x ≤ 1')} הנגזרת מעל הציר, ובתחום ${M('1 ≤ x ≤ 3')} מתחתיו.`,
+      `${M(`${I(0,1)} = g(1) − g(0) = ${fr('1','2')}`)}`,
+      `${M(`${I(1,3)} = g(3) − g(1) = −${fr('1','5')}`)} (שטח ${M(fr('1','5'))})`,
+      `${M(`S = ${fr('1','2')} + ${fr('1','5')} = ${fr('7','10')}`)}`]}
+ ]},
+ {name:ABOVE[5].name, rule:ABOVE[5].rule+NOTE, ex:[
+  {f:x=>(x*x-4)/(x*x), fx:fr('x<sup>2</sup> − 4','x<sup>2</sup>'), q:'חשבו את השטח המוגבל על ידי גרף הפונקציה, ציר ה‑x והישר x = 1.',
+   a:1,b:2, v:[0,4,-4,1.5], val:1, ans:'1',
+   s:[`פיצול: ${M('1 − 4x<sup>−2</sup>')}. חיתוך: ${M('x = 2')}. בתחום ${M('1 ≤ x ≤ 2')} הגרף מתחת לציר.`,
+      `פונקציה קדומה: ${M(`x + ${fr('4','x')}`)}`,
+      `${M(`${I(1,2)} = (2 + 2) − (1 + 4) = −1`)}, ולכן ${M('S = 1')}`]},
+  {f:x=>(x**4-1)/(x*x), fx:fr('x<sup>4</sup> − 1','x<sup>2</sup>'), q:`חשבו את השטח המוגבל על ידי גרף הפונקציה, ציר ה‑x והישר ${M(`x = ${fr('1','2')}`)}.`,
+   a:0.5,b:1, v:[0.2,2,-5,3], val:17/24, ans:'17/24',
+   s:[`פיצול: ${M('x<sup>2</sup> − x<sup>−2</sup>')}. חיתוך: ${M('x = 1')}. בתחום הגרף מתחת לציר.`,
+      `פונקציה קדומה: ${M(`${fr('x<sup>3</sup>','3')} + ${fr('1','x')}`)}`,
+      `${M(`${I(H,1)} = ${fr('4','3')} − ${fr('49','24')} = −${fr('17','24')}`)}, ולכן ${M(`S = ${fr('17','24')}`)}`]},
+  {f:x=>(16-2*x**3)/(x*x), fx:fr('16 − 2x<sup>3</sup>','x<sup>2</sup>'), q:'חשבו את השטח המוגבל על ידי גרף הפונקציה, ציר ה‑x והישר x = 4.',
+   a:2,b:4, v:[0.5,5,-9,3], val:8, ans:'8',
+   s:[`פיצול: ${M('16x<sup>−2</sup> − 2x')}. חיתוך: ${M('x = 2')}. בתחום ${M('2 ≤ x ≤ 4')} הגרף מתחת לציר.`,
+      `פונקציה קדומה: ${M(`−${fr('16','x')} − x<sup>2</sup>`)}`,
+      `${M(`${I(2,4)} = (−4 − 16) − (−8 − 4) = −8`)}, ולכן ${M('S = 8')}`]},
+  {f:x=>(x**3-8)/(x*x), fx:fr('x<sup>3</sup> − 8','x<sup>2</sup>'), q:'חשבו את השטח המוגבל על ידי גרף הפונקציה, ציר ה‑x והישר x = 1.',
+   a:1,b:2, v:[0.3,4,-9,3], val:2.5, ans:'5/2',
+   s:[`פיצול: ${M('x − 8x<sup>−2</sup>')}. חיתוך: ${M('x = 2')}. בתחום ${M('1 ≤ x ≤ 2')} הגרף מתחת לציר.`,
+      `פונקציה קדומה: ${M(`${fr('x<sup>2</sup>','2')} + ${fr('8','x')}`)}`,
+      `${M(`${I(1,2)} = (2 + 4) − (${fr('1','2')} + 8) = −${fr('5','2')}`)}, ולכן ${M(`S = ${fr('5','2')}`)}`]},
+  {f:x=>(x**3-1)/(x*x), fx:fr('x<sup>3</sup> − 1','x<sup>2</sup>'), q:`חשבו את השטח הכולל המוגבל על ידי גרף הפונקציה, ציר ה‑x והישרים ${M(`x = ${fr('1','2')}`)} ו‑x = 2.`,
+   a:0.5,b:2, v:[0.2,2.5,-4.5,2.5], val:13/8, ans:'13/8', marks:[[1,'1']], mixed:true,
+   s:[`פיצול: ${M('x − x<sup>−2</sup>')}. חיתוך: ${M('x = 1')}. בתחום ${M(`${fr('1','2')} ≤ x ≤ 1`)} הגרף מתחת לציר, ובתחום ${M('1 ≤ x ≤ 2')} מעליו.`,
+      `פונקציה קדומה: ${M(`${fr('x<sup>2</sup>','2')} + ${fr('1','x')}`)}`,
+      `${M(`${I(H,1)} = ${fr('3','2')} − ${fr('17','8')} = −${fr('5','8')}`)} (שטח ${M(fr('5','8'))}), ${M(`${I(1,2)} = ${fr('5','2')} − ${fr('3','2')} = 1`)}`,
+      `${M(`S = ${fr('5','8')} + 1 = ${fr('13','8')}`)}`]}
+ ]}
+];
+const FIND='מציאת פרמטר', EXP='הבעה באמצעות פרמטר';
+const S3=Math.sqrt(3);
+const PAR_ABOVE=[
+ [{par:FIND,f:x=>x*x, fx:'x<sup>2</sup>', q:'נתון t > 0. השטח המוגבל על ידי גרף הפונקציה, ציר ה‑x והישר x = t שווה ל‑9. מצאו את t.',
+   a:0,b:3,lb:'t', v:[-1,4,-1,10], val:9, ansH:M('t = 3'),
+   s:[`בתחום ${M('0 ≤ x ≤ t')} הגרף מעל ציר ה‑x.`,
+      `${M(`S = ${I(0,'t')} x<sup>2</sup> dx = ${EV(fr('x<sup>3</sup>','3'),0,'t')} = ${fr('t<sup>3</sup>','3')}`)}`,
+      `${M(`${fr('t<sup>3</sup>','3')} = 9 ⇒ t<sup>3</sup> = 27 ⇒ t = 3`)}`]},
+  {par:EXP,f:x=>3*x-x*x, fx:'kx − x<sup>2</sup>', q:'נתון k > 0. הביעו באמצעות k את השטח המוגבל על ידי גרף הפונקציה וציר ה‑x.',
+   a:0,b:3,lb:'k', v:[-1,4,-1,3], val:4.5, ansH:M(`S = ${fr('k<sup>3</sup>','6')}`),
+   s:[`חיתוך עם ציר ה‑x: ${M('x(k − x) = 0 ⇒ x = 0, x = k')}. בתחום הגרף מעל הציר.`,
+      `פונקציה קדומה לפי כלל 1: ${M(`${fr('kx<sup>2</sup>','2')} − ${fr('x<sup>3</sup>','3')}`)}`,
+      `${M(`S = ${fr('k<sup>3</sup>','2')} − ${fr('k<sup>3</sup>','3')} = ${fr('k<sup>3</sup>','6')}`)}`]}],
+ [{par:FIND,f:x=>(x-3)**2, fx:'(x − k)<sup>2</sup>', q:'נתון k > 0. השטח המוגבל על ידי גרף הפונקציה ושני הצירים שווה ל‑9. מצאו את k.',
+   a:0,b:3,lb:'k', v:[-1,4.5,-1,10], val:9, ansH:M('k = 3'),
+   s:[`הגרף משיק לציר ה‑x ב‑${M('x = k')}, ובתחום ${M('0 ≤ x ≤ k')} הוא מעל הציר.`,
+      `לפי כלל 2: ${M(fr('(x − k)<sup>3</sup>','3'))}`,
+      `${M(`S = 0 − ${fr('(−k)<sup>3</sup>','3')} = ${fr('k<sup>3</sup>','3')}`)}`,
+      `${M(`${fr('k<sup>3</sup>','3')} = 9 ⇒ k<sup>3</sup> = 27 ⇒ k = 3`)}`]},
+  {par:EXP,f:x=>1/(x+1)**2, fx:fr('1','(x + 1)<sup>2</sup>'), q:'נתון t > 0. הביעו באמצעות t את השטח המוגבל על ידי גרף הפונקציה, שני הצירים והישר x = t.',
+   a:0,b:2,lb:'t', v:[-0.5,3.5,-0.3,1.3], val:2/3, ansH:M(`S = ${fr('t','t + 1')}`),
+   s:[`${M('(x + 1)<sup>−2</sup>')}, ולפי כלל 2: ${M(`${fr('(x + 1)<sup>−1</sup>','−1')} = −${fr('1','x + 1')}`)}`,
+      `${M(`S = −${fr('1','t + 1')} − (−1) = 1 − ${fr('1','t + 1')} = ${fr('t','t + 1')}`)}`]}],
+ [{par:FIND,f:x=>2*x*(x*x+1)**2, fx:'2x(x<sup>2</sup> + 1)<sup>2</sup>', q:'נתון k > 0. השטח המוגבל על ידי גרף הפונקציה, ציר ה‑x והישר x = k שווה ל‑21. מצאו את k.',
+   a:0,b:S3,lb:'k', v:[-0.5,2.2,-3,60], val:21, ansH:M('k = √3'),
+   s:[`לפי כלל 3: ${M(fr('(x<sup>2</sup> + 1)<sup>3</sup>','3'))}`,
+      `${M(`S = ${fr('(k<sup>2</sup> + 1)<sup>3</sup> − 1','3')} = 21`)}`,
+      `${M('(k<sup>2</sup> + 1)<sup>3</sup> = 64 ⇒ k<sup>2</sup> + 1 = 4 ⇒ k = √3')}`]},
+  {par:EXP,f:x=>2*x/(x*x+1)**2, fx:fr('2x','(x<sup>2</sup> + 1)<sup>2</sup>'), q:'נתון t > 0. הביעו באמצעות t את השטח המוגבל על ידי גרף הפונקציה, ציר ה‑x והישר x = t.',
+   a:0,b:1.5,lb:'t', v:[-0.5,3,-0.3,0.9], val:1-1/3.25, ansH:M(`S = ${fr('t<sup>2</sup>','t<sup>2</sup> + 1')}`),
+   s:[`לפי כלל 3 (n = −2): ${M(`−${fr('1','x<sup>2</sup> + 1')}`)}`,
+      `${M(`S = −${fr('1','t<sup>2</sup> + 1')} + 1 = ${fr('t<sup>2</sup>','t<sup>2</sup> + 1')}`)}`]}],
+ [{par:FIND,f:x=>2*x*(x*x+1)**2, fx:'kx(x<sup>2</sup> + 1)<sup>2</sup>', q:`נתון k > 0. השטח המוגבל על ידי גרף הפונקציה, ציר ה‑x והישר x = 1 שווה ל‑${M(fr('7','3'))}. מצאו את k.`,
+   a:0,b:1, v:[-0.5,1.5,-1,9], val:7/3, ansH:M('k = 2'),
+   s:[`מתקנים את הנגזרת: ${M(`kx = ${HL(fr('k','2'))}·2x`)}`,
+      `לפי כלל 3: ${M(`${fr('k','2')}·${fr('(x<sup>2</sup> + 1)<sup>3</sup>','3')} = ${fr('k(x<sup>2</sup> + 1)<sup>3</sup>','6')}`)}`,
+      `${M(`S = ${fr('k(8 − 1)','6')} = ${fr('7k','6')}`)}`,
+      `${M(`${fr('7k','6')} = ${fr('7','3')} ⇒ k = 2`)}`]},
+  {par:EXP,f:x=>x/(x*x+1)**2, fx:fr('x','(x<sup>2</sup> + 1)<sup>2</sup>'), q:'נתון t > 0. הביעו באמצעות t את השטח המוגבל על ידי גרף הפונקציה, ציר ה‑x והישר x = t.',
+   a:0,b:2,lb:'t', v:[-0.5,3,-0.1,0.4], val:0.4, ansH:M(`S = ${fr('t<sup>2</sup>','2(t<sup>2</sup> + 1)')}`),
+   s:[`מתקנים: ${M(`x = ${HL(fr('1','2'))}·2x`)}`,
+      `לפי כלל 3 (n = −2): ${M(`${fr('1','2')}·${fr('(x<sup>2</sup> + 1)<sup>−1</sup>','−1')} = −${fr('1','2(x<sup>2</sup> + 1)')}`)}`,
+      `${M(`S = −${fr('1','2(t<sup>2</sup> + 1)')} + ${fr('1','2')} = ${fr('t<sup>2</sup>','2(t<sup>2</sup> + 1)')}`)}`]}],
+ [{par:FIND,f:x=>(x*x+2*x)/(x+1)**2, top:`g(x) = ${fr('x<sup>2</sup>','x + 1')}`, q:`בשרטוט גרף הנגזרת ${M("g′(x)")}. נתון t > 0. השטח המוגבל על ידי גרף הנגזרת, ציר ה‑x והישר x = t שווה ל‑${M(fr('9','4'))}. מצאו את t.`,
+   a:0,b:3,lb:'t', v:[-0.5,4,-0.3,1.2], val:9/4, ansH:M('t = 3'),
+   s:[`${M(`g′(x) = ${fr('x<sup>2</sup> + 2x','(x + 1)<sup>2</sup>')}`)}, חיתוך ב‑${M('x = 0')}, ובתחום הנגזרת מעל הציר.`,
+      `לפי כלל 4: ${M(`S = g(t) − g(0) = ${fr('t<sup>2</sup>','t + 1')}`)}`,
+      `${M(`${fr('t<sup>2</sup>','t + 1')} = ${fr('9','4')} ⇒ 4t<sup>2</sup> − 9t − 9 = 0 ⇒ t = 3`)} (הפתרון ${M(`−${fr('3','4')}`)} נפסל)`]},
+  {par:EXP,f:x=>(1-x*x)/(x*x+1)**2, top:`g(x) = ${fr('x','x<sup>2</sup> + 1')}`, q:`בשרטוט גרף הנגזרת ${M("g′(x)")}. נתון ${M('0 < t ≤ 1')}. הביעו באמצעות t את השטח המוגבל על ידי גרף הנגזרת, שני הצירים והישר x = t.`,
+   a:0,b:0.8,lb:'t', v:[-0.5,3,-0.4,1.2], val:0.8/1.64, ansH:M(`S = ${fr('t','t<sup>2</sup> + 1')}`),
+   s:[`בתחום ${M('0 ≤ x ≤ 1')} הנגזרת מעל הציר.`,
+      `לפי כלל 4: ${M(`S = g(t) − g(0) = ${fr('t','t<sup>2</sup> + 1')}`)}`]}],
+ [{par:FIND,f:x=>(x**3+2)/(x*x), fx:fr('x<sup>3</sup> + k','x<sup>2</sup>'), q:`נתון k > 0. השטח המוגבל על ידי גרף הפונקציה, ציר ה‑x והישרים x = 1 ו‑x = 2 שווה ל‑${M(fr('5','2'))}. מצאו את k.`,
+   a:1,b:2, v:[0,3,-0.5,6], val:2.5, ansH:M('k = 2'),
+   s:[`פיצול: ${M('x + kx<sup>−2</sup>')}, ופונקציה קדומה: ${M(`${fr('x<sup>2</sup>','2')} − ${fr('k','x')}`)}`,
+      `${M(`S = (2 − ${fr('k','2')}) − (${fr('1','2')} − k) = ${fr('3','2')} + ${fr('k','2')}`)}`,
+      `${M(`${fr('3','2')} + ${fr('k','2')} = ${fr('5','2')} ⇒ k = 2`)}`]},
+  {par:EXP,f:x=>(x*x+2)/(x*x), fx:fr('x<sup>2</sup> + k','x<sup>2</sup>'), q:'נתון k > 0. הביעו באמצעות k את השטח המוגבל על ידי גרף הפונקציה, ציר ה‑x והישרים x = 1 ו‑x = 2.',
+   a:1,b:2, v:[0,3,-0.5,4], val:2, ansH:M(`S = 1 + ${fr('k','2')}`),
+   s:[`פיצול: ${M('1 + kx<sup>−2</sup>')}, ופונקציה קדומה: ${M(`x − ${fr('k','x')}`)}`,
+      `${M(`S = (2 − ${fr('k','2')}) − (1 − k) = 1 + ${fr('k','2')}`)}`]}]
+];
+const PAR_BELOW=[
+ [{par:FIND,f:x=>x*x-9, fx:'x<sup>2</sup> − k<sup>2</sup>', q:'נתון k > 0. השטח המוגבל על ידי גרף הפונקציה וציר ה‑x שווה ל‑36. מצאו את k.',
+   a:-3,b:3,la:'−k',lb:'k', v:[-4,4,-10,3], val:36, ansH:M('k = 3'),
+   s:[`חיתוך עם ציר ה‑x: ${M('x = ±k')}, ובתחום הגרף מתחת לציר.`,
+      `${M(`${I('−k','k')} = (${fr('k<sup>3</sup>','3')} − k<sup>3</sup>) − (−${fr('k<sup>3</sup>','3')} + k<sup>3</sup>) = −${fr('4k<sup>3</sup>','3')}`)}`,
+      `${M(`S = ${fr('4k<sup>3</sup>','3')} = 36 ⇒ k<sup>3</sup> = 27 ⇒ k = 3`)}`]},
+  {par:EXP,f:x=>x*x-3*x, fx:'x<sup>2</sup> − kx', q:'נתון k > 0. הביעו באמצעות k את השטח המוגבל על ידי גרף הפונקציה וציר ה‑x.',
+   a:0,b:3,lb:'k', v:[-1,4,-3,1.5], val:4.5, ansH:M(`S = ${fr('k<sup>3</sup>','6')}`),
+   s:[`חיתוך: ${M('x = 0, x = k')}. בתחום הגרף מתחת לציר.`,
+      `פונקציה קדומה: ${M(`${fr('x<sup>3</sup>','3')} − ${fr('kx<sup>2</sup>','2')}`)}`,
+      `${M(`${I(0,'k')} = ${fr('k<sup>3</sup>','3')} − ${fr('k<sup>3</sup>','2')} = −${fr('k<sup>3</sup>','6')}`)}, ולכן ${M(`S = ${fr('k<sup>3</sup>','6')}`)}`]}],
+ [{par:FIND,f:x=>-((x-3)**2), fx:'−(x − k)<sup>2</sup>', q:'נתון k > 0. השטח המוגבל על ידי גרף הפונקציה ושני הצירים שווה ל‑9. מצאו את k.',
+   a:0,b:3,lb:'k', v:[-1,4.5,-10,1], val:9, ansH:M('k = 3'),
+   s:[`בתחום ${M('0 ≤ x ≤ k')} הגרף מתחת לציר.`,
+      `לפי כלל 2: ${M(`−${fr('(x − k)<sup>3</sup>','3')}`)}`,
+      `${M(`${I(0,'k')} = 0 + ${fr('(−k)<sup>3</sup>','3')} = −${fr('k<sup>3</sup>','3')}`)}, ולכן ${M(`S = ${fr('k<sup>3</sup>','3')}`)}`,
+      `${M(`${fr('k<sup>3</sup>','3')} = 9 ⇒ k = 3`)}`]},
+  {par:EXP,f:x=>-1/(x+1)**2, fx:`−${fr('1','(x + 1)<sup>2</sup>')}`, q:'נתון t > 0. הביעו באמצעות t את השטח המוגבל על ידי גרף הפונקציה, שני הצירים והישר x = t.',
+   a:0,b:2,lb:'t', v:[-0.5,3.5,-1.3,0.3], val:2/3, ansH:M(`S = ${fr('t','t + 1')}`),
+   s:[`לפי כלל 2: ${M(`∫ −(x + 1)<sup>−2</sup> dx = ${fr('1','x + 1')}`)}`,
+      `${M(`${I(0,'t')} = ${fr('1','t + 1')} − 1 = −${fr('t','t + 1')}`)}, ולכן ${M(`S = ${fr('t','t + 1')}`)}`]}],
+ [{par:FIND,f:x=>2*x*(x*x-4), fx:'2x(x<sup>2</sup> − k)', q:'נתון k > 0. השטח המוגבל על ידי גרף הפונקציה וציר ה‑x ברביע הרביעי שווה ל‑8. מצאו את k.',
+   a:0,b:2,lb:'√k', v:[-0.5,2.6,-7,3], val:8, ansH:M('k = 4'),
+   s:[`חיתוך: ${M('x = 0, ±√k')}. ברביע הרביעי ${M('0 ≤ x ≤ √k')}.`,
+      `לפי כלל 3 (n = 1): ${M(fr('(x<sup>2</sup> − k)<sup>2</sup>','2'))}`,
+      `${M(`${I(0,'√k')} = 0 − ${fr('k<sup>2</sup>','2')}`)}, ולכן ${M(`S = ${fr('k<sup>2</sup>','2')}`)}`,
+      `${M(`${fr('k<sup>2</sup>','2')} = 8 ⇒ k = 4`)}`]},
+  {par:EXP,f:x=>(2*x-4)/(x*x-4*x+5)**2, fx:fr('2x − 4','(x<sup>2</sup> − 4x + 5)<sup>2</sup>'), q:`נתון ${M('0 ≤ t < 2')}. הביעו באמצעות t את השטח המוגבל על ידי גרף הפונקציה, ציר ה‑x והישר x = t.`,
+   a:0.5,b:2,la:'t', v:[-0.5,4.5,-0.9,0.9], val:1-1/3.25, ansH:M(`S = ${fr('(t − 2)<sup>2</sup>','t<sup>2</sup> − 4t + 5')}`),
+   s:[`חיתוך עם ציר ה‑x: ${M('x = 2')}. בתחום ${M('t ≤ x ≤ 2')} הגרף מתחת לציר.`,
+      `לפי כלל 3 (n = −2): ${M(`−${fr('1','x<sup>2</sup> − 4x + 5')}`)}`,
+      `${M(`${I('t',2)} = −1 + ${fr('1','t<sup>2</sup> − 4t + 5')}`)}`,
+      `${M(`S = 1 − ${fr('1','t<sup>2</sup> − 4t + 5')} = ${fr('(t − 2)<sup>2</sup>','t<sup>2</sup> − 4t + 5')}`)}`]}],
+ [{par:FIND,f:x=>-6*x*(x*x+1)**2, fx:'−kx(x<sup>2</sup> + 1)<sup>2</sup>', q:'נתון k > 0. השטח המוגבל על ידי גרף הפונקציה, ציר ה‑x והישר x = 1 שווה ל‑7. מצאו את k.',
+   a:0,b:1, v:[-0.5,1.3,-26,2], val:7, ansH:M('k = 6'),
+   s:[`מתקנים: ${M(`−kx = ${HL('−'+fr('k','2'))}·2x`)}`,
+      `לפי כלל 3: ${M(`−${fr('k','2')}·${fr('(x<sup>2</sup> + 1)<sup>3</sup>','3')} = −${fr('k(x<sup>2</sup> + 1)<sup>3</sup>','6')}`)}`,
+      `${M(`${I(0,1)} = −${fr('7k','6')}`)}, ולכן ${M(`S = ${fr('7k','6')} = 7 ⇒ k = 6`)}`]},
+  {par:EXP,f:x=>-x/(x*x+1)**2, fx:`−${fr('x','(x<sup>2</sup> + 1)<sup>2</sup>')}`, q:'נתון t > 0. הביעו באמצעות t את השטח המוגבל על ידי גרף הפונקציה, ציר ה‑x והישר x = t.',
+   a:0,b:2,lb:'t', v:[-0.5,3,-0.4,0.1], val:0.4, ansH:M(`S = ${fr('t<sup>2</sup>','2(t<sup>2</sup> + 1)')}`),
+   s:[`מתקנים: ${M(`−x = ${HL('−'+fr('1','2'))}·2x`)}`,
+      `לפי כלל 3 (n = −2): ${M(`−${fr('1','2')}·${fr('(x<sup>2</sup> + 1)<sup>−1</sup>','−1')} = ${fr('1','2(x<sup>2</sup> + 1)')}`)}`,
+      `${M(`${I(0,'t')} = ${fr('1','2(t<sup>2</sup> + 1)')} − ${fr('1','2')} = −${fr('t<sup>2</sup>','2(t<sup>2</sup> + 1)')}`)}, ולכן ${M(`S = ${fr('t<sup>2</sup>','2(t<sup>2</sup> + 1)')}`)}`]}],
+ [{par:FIND,f:x=>3*x*x-3, top:'g(x) = x<sup>3</sup> − 3x', q:`בשרטוט גרף הנגזרת ${M("g′(x)")}. נתון ${M('0 < t ≤ 1')}. השטח המוגבל על ידי גרף הנגזרת, ציר ה‑x, ציר ה‑y והישר x = t שווה ל‑${M(fr('11','8'))}. מצאו את t.`,
+   a:0,b:0.5,lb:'t', v:[-2.5,2.5,-4,10], val:11/8, ansH:M(`t = ${fr('1','2')}`),
+   s:[`${M('g′(x) = 3x<sup>2</sup> − 3')}, ובתחום ${M('0 ≤ x ≤ 1')} הנגזרת מתחת לציר.`,
+      `לפי כלל 4: ${M(`${I(0,'t')} = g(t) − g(0) = t<sup>3</sup> − 3t`)}, ולכן ${M('S = 3t − t<sup>3</sup>')}`,
+      `${M(`3t − t<sup>3</sup> = ${fr('11','8')} ⇒ 8t<sup>3</sup> − 24t + 11 = 0 ⇒ (2t − 1)(4t<sup>2</sup> + 2t − 11) = 0`)}`,
+      `בתחום ${M('0 < t ≤ 1')} הפתרון היחיד: ${M(`t = ${fr('1','2')}`)}`]},
+  {par:EXP,f:x=>-2*x/(x*x+3)**2, top:`g(x) = ${fr('1','x<sup>2</sup> + 3')}`, q:`בשרטוט גרף הנגזרת ${M("g′(x)")}. נתון t > 0. הביעו באמצעות t את השטח המוגבל על ידי גרף הנגזרת, שני הצירים והישר x = t.`,
+   a:0,b:1,lb:'t', v:[-0.5,3,-0.18,0.08], val:1/12, ansH:M(`S = ${fr('t<sup>2</sup>','3(t<sup>2</sup> + 3)')}`),
+   s:[`בתחום ${M('x > 0')} הנגזרת מתחת לציר.`,
+      `לפי כלל 4: ${M(`${I(0,'t')} = g(t) − g(0) = ${fr('1','t<sup>2</sup> + 3')} − ${fr('1','3')}`)}`,
+      `${M(`S = ${fr('1','3')} − ${fr('1','t<sup>2</sup> + 3')} = ${fr('t<sup>2</sup>','3(t<sup>2</sup> + 3)')}`)}`]}],
+ [{par:FIND,f:x=>(x*x-4)/(x*x), fx:fr('x<sup>2</sup> − k','x<sup>2</sup>'), q:'נתון k > 1. השטח המוגבל על ידי גרף הפונקציה, ציר ה‑x והישר x = 1 שווה ל‑1. מצאו את k.',
+   a:1,b:2,lb:'√k', v:[0,4,-4,1.5], val:1, ansH:M('k = 4'),
+   s:[`פיצול: ${M('1 − kx<sup>−2</sup>')}. חיתוך: ${M('x = √k')}. בתחום ${M('1 ≤ x ≤ √k')} הגרף מתחת לציר.`,
+      `פונקציה קדומה: ${M(`x + ${fr('k','x')}`)}`,
+      `${M(`${I(1,'√k')} = 2√k − (1 + k) = −(√k − 1)<sup>2</sup>`)}, ולכן ${M('S = (√k − 1)<sup>2</sup>')}`,
+      `${M('(√k − 1)<sup>2</sup> = 1 ⇒ √k = 2 ⇒ k = 4')}`]},
+  {par:EXP,f:x=>(x**3-8)/(x*x), fx:fr('x<sup>3</sup> − 8','x<sup>2</sup>'), q:`נתון ${M('0 < t < 2')}. הביעו באמצעות t את השטח המוגבל על ידי גרף הפונקציה, ציר ה‑x והישר x = t.`,
+   a:1,b:2,la:'t', v:[0.3,4,-9,3], val:2.5, ansH:M(`S = ${fr('t<sup>2</sup>','2')} + ${fr('8','t')} − 6`),
+   s:[`פיצול: ${M('x − 8x<sup>−2</sup>')}. חיתוך: ${M('x = 2')}. בתחום ${M('t ≤ x ≤ 2')} הגרף מתחת לציר.`,
+      `פונקציה קדומה: ${M(`${fr('x<sup>2</sup>','2')} + ${fr('8','x')}`)}`,
+      `${M(`${I('t',2)} = 6 − (${fr('t<sup>2</sup>','2')} + ${fr('8','t')})`)}, ולכן ${M(`S = ${fr('t<sup>2</sup>','2')} + ${fr('8','t')} − 6`)}`]}]
+];
+PAR_ABOVE.forEach((p,i)=>p.forEach(e=>{e.noticks=true;ABOVE[i].ex.push(e)}));
+PAR_BELOW.forEach((p,i)=>p.forEach(e=>{e.noticks=true;BELOW[i].ex.push(e)}));
 
-function renderEx(e,id,num){
-  let h=`<div class="ex"><h3>תרגיל ${num}${e.title?': '+e.title:''}</h3>`;
-  if(e.fig) h+=`<div class="fig">${fig(e.fig)}</div>`;
-  if(e.text) h+=`<div>${fmt(e.text)}</div>`;
-  if(e.proof){
-    PROOFS[id]=e; total++;
-    h+=`<div class="given"><b>נתון:</b> ${fmt(e.given)}</div><div class="given"><b>צריך להוכיח:</b> ${fmt(e.prove)}</div>`;
-    h+=`<p class="note">נסו לכתוב את ההוכחה לבד במחברת. כשתסיימו, לחצו כדי לבדוק אותה.</p><button class="act" data-reveal="${id}">בדיקת ההוכחה</button><div class="proofbox" id="pbox-${id}" hidden><p class="note">לפניכם הטענות של ההוכחה. בחרו לכל טענה את הנימוק המתאים ולחצו “בדיקת הנימוקים”.</p><div class="tablewrap"><table class="proof"><thead><tr><th>#</th><th>טענה</th><th>נימוק</th></tr></thead><tbody>`;
-    e.steps.forEach((st,k)=>{
-      h+=`<tr><td>${k+1}</td><td>${fmt(st[0])}</td><td><select data-proof="${id}" data-r="${k}" aria-label="נימוק לטענה ${k+1}"><option value="">בחרו נימוק…</option>${R.map((x,ri)=>`<option value="${ri}">${x}</option>`).join('')}</select></td></tr>`;
-    });
-    h+=`</tbody></table></div><div class="row"><button class="act" data-pcheck="${id}">בדיקת הנימוקים</button><span class="fb" id="pfb-${id}"></span></div></div>`;
-    if(e.parts) h+=`<div class="calc">סעיף חישוב</div>`;
-  }
-  (e.parts||[]).forEach((p,j)=>{
-    const pid=id+'-'+j; PARTS[pid]=p; total++;
-    h+=`<div class="part"><div>${LET[j]}. ${fmt(p.q)}</div><div class="row">`;
-    if(p.choices) p.choices.forEach((c,k)=>h+=`<button class="choice" data-pid="${pid}" data-k="${k}">${fmt(c)}</button>`);
-    else h+=`<input class="ans" id="in-${pid}" inputmode="decimal" aria-label="תשובה לסעיף ${LET[j]}"><button class="act" data-check="${pid}">בדיקה</button>`;
-    h+=`<span class="fb" id="fb-${pid}"></span></div></div>`;
-  });
-  let lines=[];
-  if(e.proof) lines=e.steps.map(st=>`${st[0]} &nbsp;|&nbsp; <i>${R[[].concat(st[1])[0]]}</i>`);
-  lines=lines.concat(e.sol||[]);
-  h+=`<button class="ghost" data-sol="${id}" id="solbtn-${id}"${e.proof?' hidden':''}>הצגת פתרון מלא</button><div class="sol" id="sol-${id}"><ol>${lines.map(l=>'<li>'+fmt(l)+'</li>').join('')}</ol></div></div>`;
-  return h;
+const SECS=[{tab:'מעל ציר x',title:'חישוב שטח בין פונקציה לציר ה‑x כשהפונקציה מעל ציר ה‑x',rules:ABOVE},
+            {tab:'מתחת לציר x',title:'חישוב שטח בין פונקציה לציר ה‑x כשהפונקציה מתחת לציר ה‑x',rules:BELOW}];
+
+const TWO_RULE=`השטח בין שני גרפים: ${M(`S = ${I('a','b')}(f(x) − g(x))dx`)}, כאשר ${M('f')} הפונקציה העליונה ו‑${M('g')} התחתונה בתחום. מוצאים את נקודות החיתוך בין הגרפים, וקובעים איזו פונקציה עליונה.`;
+const TWO=[
+ {name:'בלי החלפה בין עליונה לתחתונה', rule:TWO_RULE+' בתרגילים כאן אותה פונקציה עליונה בכל התחום.', ex:[
+  {h:'כלל 1',f:x=>x*x, g2:x=>x+2, fx:'x<sup>2</sup>', gx:'x + 2', q:'חשבו את השטח המוגבל בין שני הגרפים.',
+   a:-1,b:2, v:[-2,3,-1,6], val:4.5, ans:'9/2',
+   s:[`חיתוך: ${M('x<sup>2</sup> = x + 2 ⇒ x<sup>2</sup> − x − 2 = 0 ⇒ x = −1, x = 2')}`,
+      `בתחום ${M('g')} עליונה (למשל ${M('g(0) = 2 > f(0) = 0')}).`,
+      `${M(`S = ${I(-1,2)}(x + 2 − x<sup>2</sup>)dx = ${EV(`${fr('x<sup>2</sup>','2')} + 2x − ${fr('x<sup>3</sup>','3')}`,-1,2)}`)}`,
+      `${M(`S = ${fr('10','3')} − (−${fr('7','6')}) = ${fr('9','2')}`)}`]},
+  {h:'כלל 1',f:x=>4-x*x, g2:x=>x*x-4, fx:'4 − x<sup>2</sup>', gx:'x<sup>2</sup> − 4', q:'חשבו את השטח המוגבל בין שני הגרפים.',
+   a:-2,b:2, v:[-3,3,-5,5], val:64/3, ans:'64/3',
+   s:[`חיתוך: ${M('4 − x<sup>2</sup> = x<sup>2</sup> − 4 ⇒ x<sup>2</sup> = 4 ⇒ x = ±2')}. בתחום ${M('f')} עליונה.`,
+      `${M(`S = ${I(-2,2)}(8 − 2x<sup>2</sup>)dx = ${EV(`8x − ${fr('2x<sup>3</sup>','3')}`,-2,2)}`)}`,
+      `${M(`S = (16 − ${fr('16','3')}) − (−16 + ${fr('16','3')}) = ${fr('64','3')}`)}`]},
+  {h:'כלל 2',f:x=>(x-2)**2, g2:x=>4, fx:'(x − 2)<sup>2</sup>', gx:'4', q:'חשבו את השטח המוגבל בין שני הגרפים.',
+   a:0,b:4, v:[-1,5,-1,6], val:32/3, ans:'32/3',
+   s:[`חיתוך: ${M('(x − 2)<sup>2</sup> = 4 ⇒ x − 2 = ±2 ⇒ x = 0, x = 4')}. בתחום ${M('g')} עליונה.`,
+      `${M(`S = ${I(0,4)}(4 − (x − 2)<sup>2</sup>)dx = ${EV(`4x − ${fr('(x − 2)<sup>3</sup>','3')}`,0,4)}`)}`,
+      `${M(`S = (16 − ${fr('8','3')}) − (0 + ${fr('8','3')}) = ${fr('32','3')}`)}`]},
+  {h:'כלל 1 (חזקה שלילית)',f:x=>4/(x*x), g2:x=>1, fx:fr('4','x<sup>2</sup>'), gx:'1', q:'חשבו את השטח המוגבל בין שני הגרפים והישר x = 1.',
+   a:1,b:2, v:[0,3,-0.5,5], val:1, ans:'1',
+   s:[`חיתוך (${M('x > 0')}): ${M(`${fr('4','x<sup>2</sup>')} = 1 ⇒ x = 2`)}. בתחום ${M('1 ≤ x ≤ 2')} ${M('f')} עליונה.`,
+      `${M(`S = ${I(1,2)}(4x<sup>−2</sup> − 1)dx = ${EV(`−${fr('4','x')} − x`,1,2)}`)}`,
+      `${M('S = (−2 − 2) − (−4 − 1) = 1')}`]},
+  {h:'כלל 3',f:x=>2*x*(x*x+1)**2, g2:x=>2*x, fx:'2x(x<sup>2</sup> + 1)<sup>2</sup>', gx:'2x', q:'חשבו את השטח המוגבל בין שני הגרפים והישר x = 1.',
+   a:0,b:1, v:[-0.5,1.5,-1,10], val:4/3, ans:'4/3',
+   s:[`חיתוך: ${M('2x(x<sup>2</sup> + 1)<sup>2</sup> = 2x ⇒ x = 0')}. בתחום ${M('0 ≤ x ≤ 1')} ${M('f')} עליונה.`,
+      `לפי כלל 3: ${M(`∫ 2x(x<sup>2</sup> + 1)<sup>2</sup>dx = ${fr('(x<sup>2</sup> + 1)<sup>3</sup>','3')}`)}, ו‑${M('∫ 2x dx = x<sup>2</sup>')}`,
+      `${M(`S = ${EV(`${fr('(x<sup>2</sup> + 1)<sup>3</sup>','3')} − x<sup>2</sup>`,0,1)} = (${fr('8','3')} − 1) − ${fr('1','3')} = ${fr('4','3')}`)}`]},
+  {h:'כלל 5',f:x=>(x**3+2)/(x*x), g2:x=>x, fx:fr('x<sup>3</sup> + 2','x<sup>2</sup>'), gx:'x', q:'חשבו את השטח המוגבל בין שני הגרפים והישרים x = 1 ו‑x = 2.',
+   a:1,b:2, v:[0,3,-0.5,5], val:1, ans:'1',
+   s:[`פיצול: ${M('f(x) = x + 2x<sup>−2</sup>')}, ולכן ${M('f(x) − g(x) = 2x<sup>−2</sup> > 0')}: ${M('f')} עליונה.`,
+      `${M(`S = ${I(1,2)} 2x<sup>−2</sup>dx = ${EV(`−${fr('2','x')}`,1,2)} = −1 + 2 = 1`)}`]},
+  {h:'כלל 4',f:x=>(x*x+2*x)/(x+1)**2, g2:x=>-x, fx:fr('x<sup>2</sup> + 2x','(x + 1)<sup>2</sup>'), gx:'−x',
+   q:`נתון ${M(`(${fr('x<sup>2</sup>','x + 1')})′ = ${fr('x<sup>2</sup> + 2x','(x + 1)<sup>2</sup>')}`)}. חשבו את השטח המוגבל בין שני הגרפים והישר x = 1.`,
+   a:0,b:1, v:[-0.5,2,-2,1.2], val:1, ans:'1',
+   s:[`חיתוך: ${M('x = 0')}. בתחום ${M('0 ≤ x ≤ 1')} ${M('f ≥ 0 ≥ g')}, ולכן ${M('f')} עליונה.`,
+      `לפי כלל 4: ${M(`∫ f(x)dx = ${fr('x<sup>2</sup>','x + 1')}`)}`,
+      `${M(`S = ${EV(`${fr('x<sup>2</sup>','x + 1')} + ${fr('x<sup>2</sup>','2')}`,0,1)} = ${fr('1','2')} + ${fr('1','2')} = 1`)}`]}
+ ]},
+ {name:'עם החלפה בין עליונה לתחתונה', rule:TWO_RULE+' בתרגילים כאן הגרפים נחתכים בתוך התחום, והעליונה מתחלפת. מפצלים את האינטגרל בנקודת החיתוך.', ex:[
+  {h:'כלל 1',f:x=>x**3, g2:x=>x, fx:'x<sup>3</sup>', gx:'x', q:'חשבו את השטח הכולל המוגבל בין שני הגרפים.',
+   a:-1,b:1, v:[-1.5,1.5,-1.5,1.5], val:0.5, ans:'1/2', marks:[[0,'0']],
+   s:[`חיתוך: ${M('x<sup>3</sup> = x ⇒ x = −1, 0, 1')}.`,
+      `בתחום ${M('−1 ≤ x ≤ 0')} ${M('f')} עליונה, ובתחום ${M('0 ≤ x ≤ 1')} ${M('g')} עליונה.`,
+      `${M(`${I(-1,0)}(x<sup>3</sup> − x)dx = ${fr('1','4')}`)}, ${M(`${I(0,1)}(x − x<sup>3</sup>)dx = ${fr('1','4')}`)}`,
+      `${M(`S = ${fr('1','2')}`)}`]},
+  {h:'כלל 1',f:x=>x*x, g2:x=>2*x, fx:'x<sup>2</sup>', gx:'2x', q:'חשבו את השטח הכולל המוגבל בין שני הגרפים והישר x = 3.',
+   a:0,b:3, v:[-0.5,3.5,-1,10], val:8/3, ans:'8/3', marks:[[2,'2']],
+   s:[`חיתוך: ${M('x<sup>2</sup> = 2x ⇒ x = 0, x = 2')}. בתחום ${M('0 ≤ x ≤ 2')} ${M('g')} עליונה, ובתחום ${M('2 ≤ x ≤ 3')} ${M('f')} עליונה.`,
+      `${M(`${I(0,2)}(2x − x<sup>2</sup>)dx = 4 − ${fr('8','3')} = ${fr('4','3')}`)}`,
+      `${M(`${I(2,3)}(x<sup>2</sup> − 2x)dx = 0 − (${fr('8','3')} − 4) = ${fr('4','3')}`)}`,
+      `${M(`S = ${fr('8','3')}`)}`]},
+  {h:'כלל 2',f:x=>(x-1)**3, g2:x=>x-1, fx:'(x − 1)<sup>3</sup>', gx:'x − 1', q:'חשבו את השטח הכולל המוגבל בין שני הגרפים.',
+   a:0,b:2, v:[-0.5,2.5,-1.5,1.5], val:0.5, ans:'1/2', marks:[[1,'1']],
+   s:[`חיתוך: ${M('(x − 1)<sup>3</sup> = x − 1 ⇒ x − 1 = 0, ±1 ⇒ x = 0, 1, 2')}.`,
+      `בתחום ${M('0 ≤ x ≤ 1')} ${M('f')} עליונה, ובתחום ${M('1 ≤ x ≤ 2')} ${M('g')} עליונה.`,
+      `לפי כלל 2: ${M(`∫ ((x − 1)<sup>3</sup> − (x − 1))dx = ${fr('(x − 1)<sup>4</sup>','4')} − ${fr('(x − 1)<sup>2</sup>','2')}`)}`,
+      `${M(`${I(0,1)} = 0 − (${fr('1','4')} − ${fr('1','2')}) = ${fr('1','4')}`)}, ובאותו אופן ${M(`${I(1,2)}(g − f)dx = ${fr('1','4')}`)}`,
+      `${M(`S = ${fr('1','2')}`)}`]},
+  {h:'כלל 5',f:x=>(x**3+1)/(x*x), g2:x=>x+1, fx:fr('x<sup>3</sup> + 1','x<sup>2</sup>'), gx:'x + 1', q:`חשבו את השטח הכולל המוגבל בין שני הגרפים והישרים ${M(`x = ${fr('1','2')}`)} ו‑x = 2.`,
+   a:0.5,b:2, v:[0.2,2.5,-0.5,5], val:1, ans:'1', marks:[[1,'1']],
+   s:[`פיצול: ${M('f(x) = x + x<sup>−2</sup>')}, ולכן ${M('f(x) − g(x) = x<sup>−2</sup> − 1')}. חיתוך: ${M('x = 1')}.`,
+      `בתחום ${M(`${fr('1','2')} ≤ x ≤ 1`)} ${M('f')} עליונה, ובתחום ${M('1 ≤ x ≤ 2')} ${M('g')} עליונה.`,
+      `${M(`${I(H,1)}(x<sup>−2</sup> − 1)dx = ${EV(`−${fr('1','x')} − x`,H,1)} = −2 − (−${fr('5','2')}) = ${fr('1','2')}`)}`,
+      `${M(`${I(1,2)}(1 − x<sup>−2</sup>)dx = ${EV(`x + ${fr('1','x')}`,1,2)} = ${fr('5','2')} − 2 = ${fr('1','2')}`)}`,
+      `${M('S = 1')}`]},
+  {h:'כלל 3',f:x=>2*x*(x*x+1)**2, g2:x=>8*x, fx:'2x(x<sup>2</sup> + 1)<sup>2</sup>', gx:'8x', q:'חשבו את השטח הכולל המוגבל בין שני הגרפים.',
+   a:-1,b:1, v:[-1.5,1.5,-10,10], val:10/3, ans:'10/3', marks:[[0,'0']],
+   s:[`חיתוך: ${M('2x(x<sup>2</sup> + 1)<sup>2</sup> = 8x ⇒ x = 0')} או ${M('(x<sup>2</sup> + 1)<sup>2</sup> = 4 ⇒ x = ±1')}.`,
+      `בתחום ${M('−1 ≤ x ≤ 0')} ${M('f')} עליונה, ובתחום ${M('0 ≤ x ≤ 1')} ${M('g')} עליונה.`,
+      `פונקציה קדומה של ${M('f − g')}: ${M(`${fr('(x<sup>2</sup> + 1)<sup>3</sup>','3')} − 4x<sup>2</sup>`)}`,
+      `${M(`${I(-1,0)} = (${fr('1','3')}) − (${fr('8','3')} − 4) = ${fr('5','3')}`)}, ובאותו אופן בתחום השני ${M(fr('5','3'))}`,
+      `${M(`S = ${fr('10','3')}`)}`]}
+ ]},
+ {name:'תרגילים עם פרמטר', rule:TWO_RULE, ex:[
+  {par:FIND,h:'כלל 1',f:x=>x*x, g2:x=>6*x, fx:'x<sup>2</sup>', gx:'kx', q:'נתון k > 0. השטח המוגבל בין שני הגרפים שווה ל‑36. מצאו את k.',
+   a:0,b:6,lb:'k', v:[-1,7,-2,40], val:36, ansH:M('k = 6'),
+   s:[`חיתוך: ${M('x<sup>2</sup> = kx ⇒ x = 0, x = k')}. בתחום ${M('g')} עליונה.`,
+      `${M(`S = ${I(0,'k')}(kx − x<sup>2</sup>)dx = ${fr('k<sup>3</sup>','2')} − ${fr('k<sup>3</sup>','3')} = ${fr('k<sup>3</sup>','6')}`)}`,
+      `${M(`${fr('k<sup>3</sup>','6')} = 36 ⇒ k<sup>3</sup> = 216 ⇒ k = 6`)}`]},
+  {par:FIND,h:'כלל 2',f:x=>(x-3)**2, g2:x=>9, fx:'(x − k)<sup>2</sup>', gx:'k<sup>2</sup>', q:'נתון k > 0. השטח המוגבל בין שני הגרפים שווה ל‑36. מצאו את k.',
+   a:0,b:6,lb:'2k', v:[-1,7,-1,11], val:36, ansH:M('k = 3'),
+   s:[`חיתוך: ${M('(x − k)<sup>2</sup> = k<sup>2</sup> ⇒ x = 0, x = 2k')}. בתחום ${M('g')} עליונה.`,
+      `${M(`S = ${I(0,'2k')}(k<sup>2</sup> − (x − k)<sup>2</sup>)dx = 2k<sup>3</sup> − ${EV(fr('(x − k)<sup>3</sup>','3'),0,'2k')} = 2k<sup>3</sup> − ${fr('2k<sup>3</sup>','3')} = ${fr('4k<sup>3</sup>','3')}`)}`,
+      `${M(`${fr('4k<sup>3</sup>','3')} = 36 ⇒ k<sup>3</sup> = 27 ⇒ k = 3`)}`]},
+  {par:FIND,h:'כלל 1 (חזקה שלילית)',f:x=>4/(x*x), g2:x=>1, fx:fr('k','x<sup>2</sup>'), gx:'1', q:'נתון k > 1. השטח המוגבל בין שני הגרפים והישר x = 1 שווה ל‑1. מצאו את k.',
+   a:1,b:2,lb:'√k', v:[0,3,-0.5,5], val:1, ansH:M('k = 4'),
+   s:[`חיתוך (${M('x > 0')}): ${M(`${fr('k','x<sup>2</sup>')} = 1 ⇒ x = √k`)}. בתחום ${M('1 ≤ x ≤ √k')} ${M('f')} עליונה.`,
+      `${M(`S = ${EV(`−${fr('k','x')} − x`,1,'√k')} = −2√k + k + 1 = (√k − 1)<sup>2</sup>`)}`,
+      `${M('(√k − 1)<sup>2</sup> = 1 ⇒ √k = 2 ⇒ k = 4')}`]},
+  {par:EXP,h:'כלל 1',f:x=>x*x, g2:x=>2.25, fx:'x<sup>2</sup>', gx:'t<sup>2</sup>', q:'נתון t > 0. הביעו באמצעות t את השטח המוגבל בין שני הגרפים.',
+   a:-1.5,b:1.5,la:'−t',lb:'t', v:[-2.5,2.5,-0.5,4], val:4.5, ansH:M(`S = ${fr('4t<sup>3</sup>','3')}`),
+   s:[`חיתוך: ${M('x<sup>2</sup> = t<sup>2</sup> ⇒ x = ±t')}. בתחום ${M('g')} עליונה.`,
+      `${M(`S = ${I('−t','t')}(t<sup>2</sup> − x<sup>2</sup>)dx = ${EV(`t<sup>2</sup>x − ${fr('x<sup>3</sup>','3')}`,'−t','t')}`)}`,
+      `${M(`S = 2(t<sup>3</sup> − ${fr('t<sup>3</sup>','3')}) = ${fr('4t<sup>3</sup>','3')}`)}`]},
+  {par:EXP,h:'כלל 1',f:x=>x*x, g2:x=>2*x, fx:'x<sup>2</sup>', gx:'2x', q:'נתון t > 2. הביעו באמצעות t את השטח הכולל המוגבל בין שני הגרפים, ציר ה‑y והישר x = t.',
+   a:0,b:3,lb:'t', v:[-0.5,3.5,-1,10], val:8/3, ansH:M(`S = ${fr('t<sup>3</sup>','3')} − t<sup>2</sup> + ${fr('8','3')}`), marks:[[2,'2']],
+   s:[`חיתוך: ${M('x = 0, x = 2')}. בתחום ${M('0 ≤ x ≤ 2')} ${M('g')} עליונה, ובתחום ${M('2 ≤ x ≤ t')} ${M('f')} עליונה.`,
+      `${M(`${I(0,2)}(2x − x<sup>2</sup>)dx = ${fr('4','3')}`)}`,
+      `${M(`${I(2,'t')}(x<sup>2</sup> − 2x)dx = ${fr('t<sup>3</sup>','3')} − t<sup>2</sup> + ${fr('4','3')}`)}`,
+      `${M(`S = ${fr('t<sup>3</sup>','3')} − t<sup>2</sup> + ${fr('8','3')}`)}`]}
+ ]}
+];
+TWO.forEach(r=>r.ex.forEach(e=>{if(e.par)e.noticks=true}));
+SECS.push({tab:'בין שתי פונקציות',title:'חישוב שטח בין שתי פונקציות',rules:TWO});
+
+const mn=(p,q)=>x=>Math.min(p(x),q(x)), mx0=p=>x=>Math.max(0,p(x));
+const COMP_RULE=`שטח מורכב: מפצלים את השטח לחלקים לפי נקודות החיתוך, כך שבכל חלק ברור מה מגביל אותו מלמעלה ומה מלמטה, ומחברים (או מחסרים) את השטחים.`;
+const sq=x=>x*x, tw=x=>2-x, inv2=x=>1/(x*x), id=x=>x, p2=x=>(x-2)**2, f4=x=>4/(x*x), l4=x=>4*x,
+      q1=x=>(x-1)**2, q3=x=>(x-3)**2, pa=x=>4-x*x, ln2=x=>x+2,
+      t1=x=>2*x-1, cu=x=>x**3, t2=x=>12*x-16, t3=x=>4*x-8, t4=x=>3-x;
+const COMP=[
+ {name:'פיצול לפי נקודת חיתוך', rule:COMP_RULE, ex:[
+  {h:'כלל 1',f:sq,g2:tw,u:mn(sq,tw),l:()=>0, fx:'x<sup>2</sup>', gx:'2 − x', q:'חשבו את השטח המוגבל על ידי שני הגרפים וציר ה‑x.',
+   a:0,b:2, v:[-1,3,-1,4], val:5/6, ans:'5/6', marks:[[1,'1']],
+   s:[`חיתוך בין הגרפים: ${M('x<sup>2</sup> = 2 − x ⇒ x = 1')} (בצד החיובי). הישר חותך את ציר ה‑x ב‑${M('x = 2')}.`,
+      `בתחום ${M('0 ≤ x ≤ 1')} השטח מתחת לפרבולה, ובתחום ${M('1 ≤ x ≤ 2')} מתחת לישר.`,
+      `${M(`${I(0,1)} x<sup>2</sup>dx = ${fr('1','3')}`)}, ${M(`${I(1,2)}(2 − x)dx = ${EV(`2x − ${fr('x<sup>2</sup>','2')}`,1,2)} = 2 − ${fr('3','2')} = ${fr('1','2')}`)}`,
+      `${M(`S = ${fr('1','3')} + ${fr('1','2')} = ${fr('5','6')}`)}`]},
+  {h:'כלל 1 (חזקה שלילית)',f:inv2,g2:id,u:mn(inv2,id),l:()=>0, fx:fr('1','x<sup>2</sup>'), gx:'x', q:'חשבו את השטח המוגבל על ידי שני הגרפים, ציר ה‑x והישר x = 2.',
+   a:0,b:2, v:[-0.5,3,-0.5,3], val:1, ans:'1', marks:[[1,'1']],
+   s:[`חיתוך: ${M(`${fr('1','x<sup>2</sup>')} = x ⇒ x<sup>3</sup> = 1 ⇒ x = 1`)}.`,
+      `בתחום ${M('0 ≤ x ≤ 1')} השטח מתחת ל‑${M('g')}, ובתחום ${M('1 ≤ x ≤ 2')} מתחת ל‑${M('f')}.`,
+      `${M(`${I(0,1)} x dx = ${fr('1','2')}`)}, ${M(`${I(1,2)} x<sup>−2</sup>dx = ${EV(`−${fr('1','x')}`,1,2)} = ${fr('1','2')}`)}`,
+      `${M('S = 1')}`]},
+  {h:'כלל 2',f:p2,g2:id,u:mn(p2,id),l:()=>0, fx:'(x − 2)<sup>2</sup>', gx:'x', q:'חשבו את השטח המוגבל על ידי שני הגרפים וציר ה‑x.',
+   a:0,b:2, v:[-1,4.5,-1,5], val:5/6, ans:'5/6', marks:[[1,'1']],
+   s:[`חיתוך: ${M('(x − 2)<sup>2</sup> = x ⇒ x<sup>2</sup> − 5x + 4 = 0 ⇒ x = 1, 4')}. ${M('g')} עוברת בראשית, ו‑${M('f')} נוגעת בציר ב‑${M('x = 2')}.`,
+      `בתחום ${M('0 ≤ x ≤ 1')} השטח מתחת ל‑${M('g')}, ובתחום ${M('1 ≤ x ≤ 2')} מתחת ל‑${M('f')}.`,
+      `${M(`${I(0,1)} x dx = ${fr('1','2')}`)}, לפי כלל 2: ${M(`${I(1,2)}(x − 2)<sup>2</sup>dx = ${EV(fr('(x − 2)<sup>3</sup>','3'),1,2)} = ${fr('1','3')}`)}`,
+      `${M(`S = ${fr('1','2')} + ${fr('1','3')} = ${fr('5','6')}`)}`]},
+  {h:'כלל 1 (חזקה שלילית)',f:f4,g2:l4,u:mn(f4,l4),l:()=>0, fx:fr('4','x<sup>2</sup>'), gx:'4x', q:'חשבו את השטח המוגבל על ידי שני הגרפים, ציר ה‑x והישר x = 2.',
+   a:0,b:2, v:[-0.5,3,-1,8], val:4, ans:'4', marks:[[1,'1']],
+   s:[`חיתוך: ${M(`${fr('4','x<sup>2</sup>')} = 4x ⇒ x = 1`)}.`,
+      `${M(`${I(0,1)} 4x dx = 2`)}, ${M(`${I(1,2)} 4x<sup>−2</sup>dx = ${EV(`−${fr('4','x')}`,1,2)} = −2 + 4 = 2`)}`,
+      `${M('S = 2 + 2 = 4')}`]},
+  {h:'כלל 2',f:q1,g2:q3,u:mn(q1,q3),l:()=>0, fx:'(x − 1)<sup>2</sup>', gx:'(x − 3)<sup>2</sup>', q:'חשבו את השטח המוגבל על ידי שני הגרפים וציר ה‑x.',
+   a:1,b:3, v:[-0.5,4.5,-0.5,4], val:2/3, ans:'2/3', marks:[[2,'2']],
+   s:[`חיתוך: ${M('(x − 1)<sup>2</sup> = (x − 3)<sup>2</sup> ⇒ x = 2')}. ${M('f')} נוגעת בציר ב‑${M('x = 1')}, ו‑${M('g')} ב‑${M('x = 3')}.`,
+      `${M(`${I(1,2)}(x − 1)<sup>2</sup>dx = ${EV(fr('(x − 1)<sup>3</sup>','3'),1,2)} = ${fr('1','3')}`)}`,
+      `${M(`${I(2,3)}(x − 3)<sup>2</sup>dx = ${EV(fr('(x − 3)<sup>3</sup>','3'),2,3)} = ${fr('1','3')}`)}`,
+      `${M(`S = ${fr('2','3')}`)}`]},
+  {h:'כלל 1',f:pa,g2:ln2,u:mn(pa,ln2),l:()=>0, fx:'4 − x<sup>2</sup>', gx:'x + 2', q:'חשבו את השטח המוגבל על ידי שני הגרפים וציר ה‑x.',
+   a:-2,b:2, v:[-3,3,-1,5], val:37/6, ans:'37/6', marks:[[1,'1']],
+   s:[`חיתוך: ${M('4 − x<sup>2</sup> = x + 2 ⇒ x = −2, 1')}. הישר חותך את ציר ה‑x ב‑${M('x = −2')}, והפרבולה ב‑${M('x = ±2')}.`,
+      `בתחום ${M('−2 ≤ x ≤ 1')} השטח מתחת לישר, ובתחום ${M('1 ≤ x ≤ 2')} מתחת לפרבולה.`,
+      `${M(`${I(-2,1)}(x + 2)dx = ${EV(`${fr('x<sup>2</sup>','2')} + 2x`,-2,1)} = ${fr('5','2')} + 2 = ${fr('9','2')}`)}`,
+      `${M(`${I(1,2)}(4 − x<sup>2</sup>)dx = (8 − ${fr('8','3')}) − (4 − ${fr('1','3')}) = ${fr('5','3')}`)}`,
+      `${M(`S = ${fr('9','2')} + ${fr('5','3')} = ${fr('37','6')}`)}`]}
+ ]},
+ {name:'פונקציה ומשיק', rule:COMP_RULE+' כאן השטח מוגבל על ידי גרף, המשיק לו וציר ה‑x: מחשבים את השטח מתחת לגרף ומחסרים את המשולש שמתחת למשיק.', ex:[
+  {h:'כלל 1',f:sq,g2:t1,u:sq,l:mx0(t1),gl:'המשיק', fx:'x<sup>2</sup>', q:'העבירו משיק לגרף הפונקציה בנקודה שבה x = 1. חשבו את השטח המוגבל על ידי גרף הפונקציה, המשיק וציר ה‑x.',
+   a:0,b:1, v:[-0.5,2,-1,3], val:1/12, ans:'1/12', marks:[[0.5,H]],
+   s:[`${M("f(1) = 1, f′(1) = 2")}, ולכן המשיק: ${M('y = 2x − 1')}. הוא חותך את ציר ה‑x ב‑${M(`x = ${fr('1','2')}`)}.`,
+      `${M(`S = ${I(0,1)} x<sup>2</sup>dx − ${I(H,1)}(2x − 1)dx`)}`,
+      `${M(`S = ${fr('1','3')} − ${EV('x<sup>2</sup> − x',H,1)} = ${fr('1','3')} − ${fr('1','4')} = ${fr('1','12')}`)}`]},
+  {h:'כלל 1',f:cu,g2:t2,u:cu,l:mx0(t2),gl:'המשיק', fx:'x<sup>3</sup>', q:'העבירו משיק לגרף הפונקציה בנקודה שבה x = 2. חשבו את השטח המוגבל על ידי גרף הפונקציה, המשיק וציר ה‑x.',
+   a:0,b:2, v:[-0.5,2.6,-2,12], val:4/3, ans:'4/3', marks:[[4/3,'4/3']],
+   s:[`${M("f(2) = 8, f′(2) = 12")}, ולכן המשיק: ${M('y = 12x − 16')}. הוא חותך את ציר ה‑x ב‑${M(`x = ${fr('4','3')}`)}.`,
+      `${M(`${I(0,2)} x<sup>3</sup>dx = 4`)}`,
+      `${M(`${I('4/3',2)}(12x − 16)dx = ${EV('6x<sup>2</sup> − 16x','4/3',2)} = −8 + ${fr('32','3')} = ${fr('8','3')}`)}`,
+      `${M(`S = 4 − ${fr('8','3')} = ${fr('4','3')}`)}`]},
+  {h:'כלל 2',f:q1,g2:t3,u:q1,l:mx0(t3),gl:'המשיק', fx:'(x − 1)<sup>2</sup>', q:'העבירו משיק לגרף הפונקציה בנקודה שבה x = 3. חשבו את השטח המוגבל על ידי גרף הפונקציה, המשיק וציר ה‑x.',
+   a:1,b:3, v:[0,4,-1,6], val:2/3, ans:'2/3', marks:[[2,'2']],
+   s:[`${M("f(3) = 4, f′(x) = 2(x − 1), f′(3) = 4")}, ולכן המשיק: ${M('y = 4x − 8')}. הוא חותך את ציר ה‑x ב‑${M('x = 2')}.`,
+      `הפרבולה נוגעת בציר ב‑${M('x = 1')}. לפי כלל 2: ${M(`${I(1,3)}(x − 1)<sup>2</sup>dx = ${fr('8','3')}`)}`,
+      `${M(`${I(2,3)}(4x − 8)dx = ${EV('2x<sup>2</sup> − 8x',2,3)} = −6 + 8 = 2`)}`,
+      `${M(`S = ${fr('8','3')} − 2 = ${fr('2','3')}`)}`]},
+  {h:'כלל 1 (חזקה שלילית)',f:f4,g2:t4,u:f4,l:mx0(t4),gl:'המשיק', fx:fr('4','x<sup>2</sup>'), q:'העבירו משיק לגרף הפונקציה בנקודה שבה x = 2. חשבו את השטח המוגבל על ידי גרף הפונקציה, המשיק, ציר ה‑x והישר x = 4.',
+   a:2,b:4, v:[0,5,-0.5,3], val:0.5, ans:'1/2', marks:[[3,'3']],
+   s:[`${M(`f(2) = 1, f′(x) = −${fr('8','x<sup>3</sup>')}, f′(2) = −1`)}, ולכן המשיק: ${M('y = −x + 3')}. הוא חותך את ציר ה‑x ב‑${M('x = 3')}.`,
+      `${M(`${I(2,4)} 4x<sup>−2</sup>dx = ${EV(`−${fr('4','x')}`,2,4)} = −1 + 2 = 1`)}`,
+      `${M(`${I(2,3)}(3 − x)dx = ${EV(`3x − ${fr('x<sup>2</sup>','2')}`,2,3)} = ${fr('9','2')} − 4 = ${fr('1','2')}`)}`,
+      `${M(`S = 1 − ${fr('1','2')} = ${fr('1','2')}`)}`]}
+ ]},
+ {name:'תרגילים עם פרמטר', rule:COMP_RULE, ex:[
+  {par:FIND,h:'כלל 1',f:sq,g2:x=>12*x-36,u:sq,l:mx0(x=>12*x-36),gl:'המשיק', fx:'x<sup>2</sup>', q:'נתון t > 0. המשיק לגרף הפונקציה בנקודה שבה x = t, גרף הפונקציה וציר ה‑x מגבילים שטח השווה ל‑18. מצאו את t.',
+   a:0,b:6,lb:'t', v:[-1,7,-3,40], val:18, ansH:M('t = 6'),
+   s:[`${M("f(t) = t<sup>2</sup>, f′(t) = 2t")}, ולכן המשיק: ${M('y = 2tx − t<sup>2</sup>')}. הוא חותך את ציר ה‑x ב‑${M(`x = ${fr('t','2')}`)}.`,
+      `${M(`S = ${I(0,'t')} x<sup>2</sup>dx − ${I('t/2','t')}(2tx − t<sup>2</sup>)dx = ${fr('t<sup>3</sup>','3')} − ${fr('t<sup>3</sup>','4')} = ${fr('t<sup>3</sup>','12')}`)}`,
+      `${M(`${fr('t<sup>3</sup>','12')} = 18 ⇒ t<sup>3</sup> = 216 ⇒ t = 6`)}`]},
+  {par:FIND,h:'כלל 2',f:sq,g2:x=>(x-6)**2,u:mn(sq,x=>(x-6)**2),l:()=>0, fx:'x<sup>2</sup>', gx:'(x − 2k)<sup>2</sup>', q:'נתון k > 0. השטח המוגבל על ידי שני הגרפים וציר ה‑x שווה ל‑18. מצאו את k.',
+   a:0,b:6,lb:'2k', v:[-1,7,-1,15], val:18, ansH:M('k = 3'), marks:[[3,'k']],
+   s:[`חיתוך: ${M('x<sup>2</sup> = (x − 2k)<sup>2</sup> ⇒ x = k')}. ${M('f')} נוגעת בציר ב‑0, ו‑${M('g')} ב‑${M('2k')}.`,
+      `${M(`${I(0,'k')} x<sup>2</sup>dx = ${fr('k<sup>3</sup>','3')}`)}, ${M(`${I('k','2k')}(x − 2k)<sup>2</sup>dx = ${EV(fr('(x − 2k)<sup>3</sup>','3'),'k','2k')} = ${fr('k<sup>3</sup>','3')}`)}`,
+      `${M(`S = ${fr('2k<sup>3</sup>','3')} = 18 ⇒ k<sup>3</sup> = 27 ⇒ k = 3`)}`]},
+  {par:EXP,h:'כלל 1',f:cu,g2:t2,u:cu,l:mx0(t2),gl:'המשיק', fx:'x<sup>3</sup>', q:'נתון t > 0. הביעו באמצעות t את השטח המוגבל על ידי גרף הפונקציה, המשיק לו בנקודה שבה x = t וציר ה‑x.',
+   a:0,b:2,lb:'t', v:[-0.5,2.6,-2,12], val:4/3, ansH:M(`S = ${fr('t<sup>4</sup>','12')}`),
+   s:[`${M("f(t) = t<sup>3</sup>, f′(t) = 3t<sup>2</sup>")}, ולכן המשיק: ${M('y = 3t<sup>2</sup>x − 2t<sup>3</sup>')}. הוא חותך את ציר ה‑x ב‑${M(`x = ${fr('2t','3')}`)}.`,
+      `${M(`${I(0,'t')} x<sup>3</sup>dx = ${fr('t<sup>4</sup>','4')}`)}`,
+      `${M(`${I('2t/3','t')}(3t<sup>2</sup>x − 2t<sup>3</sup>)dx = ${EV(`${fr('3t<sup>2</sup>x<sup>2</sup>','2')} − 2t<sup>3</sup>x`,'2t/3','t')} = ${fr('t<sup>4</sup>','6')}`)}`,
+      `${M(`S = ${fr('t<sup>4</sup>','4')} − ${fr('t<sup>4</sup>','6')} = ${fr('t<sup>4</sup>','12')}`)}`]},
+  {par:EXP,h:'כלל 1 (חזקה שלילית)',f:inv2,g2:id,u:mn(inv2,id),l:()=>0, fx:fr('1','x<sup>2</sup>'), gx:'x', q:'נתון t > 1. הביעו באמצעות t את השטח המוגבל על ידי שני הגרפים, ציר ה‑x והישר x = t.',
+   a:0,b:2,lb:'t', v:[-0.5,3,-0.5,3], val:1, ansH:M(`S = ${fr('3','2')} − ${fr('1','t')}`), marks:[[1,'1']],
+   s:[`חיתוך: ${M('x = 1')}. בתחום ${M('0 ≤ x ≤ 1')} מתחת ל‑${M('g')}, ובתחום ${M('1 ≤ x ≤ t')} מתחת ל‑${M('f')}.`,
+      `${M(`${I(0,1)} x dx = ${fr('1','2')}`)}, ${M(`${I(1,'t')} x<sup>−2</sup>dx = 1 − ${fr('1','t')}`)}`,
+      `${M(`S = ${fr('3','2')} − ${fr('1','t')}`)}`]}
+ ]}
+];
+COMP.forEach(r=>r.ex.forEach(e=>{if(e.par)e.noticks=true}));
+SECS.push({tab:'שטח מורכב',title:'חישוב שטח מורכב',rules:COMP});
+
+const SX=`${M(`S(x) = ${I('a','x')} f(t)dt`)}`;
+const ACC_CAP='בשרטוט: גרף הפונקציה f, והשטח המצטבר עד נקודה x כלשהי.';
+const ACC=[
+ {name:'מציאת פונקציית השטח', hint:`מצאו פונקציה קדומה F של f, ואז ${M('S(x) = F(x) − F(a)')}.`,
+  rule:`פונקציה צוברת שטח: ${SX} היא השטח שמצטבר מתחת לגרף של f מ‑a ועד x. אם F פונקציה קדומה של f, אז ${M('S(x) = F(x) − F(a)')}, ובפרט ${M('S(a) = 0')}.`, ex:[
+  {f:x=>2*x, fx:'2x', q:`נגדיר ${M(`S(x) = ${I(0,'x')} f(t)dt`)} עבור x > 0. א. מצאו את ${M('S(x)')}. ב. חשבו את ${M('S(3)')}.`,
+   a:0,b:2,lb:'x', v:[-0.5,4,-1,8], tests:[[3,9]], ansH:`${M('S(x) = x<sup>2</sup>')}, ${M('S(3) = 9')}`,
+   s:[`פונקציה קדומה: ${M('F(x) = x<sup>2</sup>')}`,
+      `${M(`S(x) = ${EV('t<sup>2</sup>',0,'x')} = x<sup>2</sup> − 0 = x<sup>2</sup>`)}`,
+      `${M('S(3) = 9')}`]},
+  {f:x=>3*x*x+1, fx:'3x<sup>2</sup> + 1', q:`נגדיר ${M(`S(x) = ${I(0,'x')} f(t)dt`)} עבור x > 0. א. מצאו את ${M('S(x)')}. ב. חשבו את ${M('S(2)')}.`,
+   a:0,b:1.5,lb:'x', v:[-0.5,2.5,-1,14], tests:[[2,10]], ansH:`${M('S(x) = x<sup>3</sup> + x')}, ${M('S(2) = 10')}`,
+   s:[`לפי כלל 1: ${M('F(x) = x<sup>3</sup> + x')}`,
+      `${M('S(x) = (x<sup>3</sup> + x) − 0 = x<sup>3</sup> + x')}`,
+      `${M('S(2) = 8 + 2 = 10')}`]},
+  {f:x=>4/(x*x), fx:fr('4','x<sup>2</sup>'), q:`נגדיר ${M(`S(x) = ${I(1,'x')} f(t)dt`)} עבור x > 1. א. מצאו את ${M('S(x)')}. ב. חשבו את ${M('S(4)')}. ג. הסבירו למה ${M('S(x) < 4')} לכל x > 1.`,
+   a:1,b:3,lb:'x', v:[0,5,-0.5,5], tests:[[4,3]], ansH:`${M(`S(x) = 4 − ${fr('4','x')}`)}, ${M('S(4) = 3')}`,
+   s:[`לפי כלל 1 (חזקה שלילית): ${M(`F(x) = −${fr('4','x')}`)}`,
+      `${M(`S(x) = −${fr('4','x')} − (−4) = 4 − ${fr('4','x')}`)}`,
+      `${M('S(4) = 4 − 1 = 3')}`,
+      `${M(fr('4','x'))} חיובי לכל x > 1, ולכן ${M('S(x) < 4')}: השטח גדל כל הזמן, אבל אף פעם לא מגיע ל‑4.`]},
+  {f:x=>(x-2)**2, fx:'(x − 2)<sup>2</sup>', q:`נגדיר ${M(`S(x) = ${I(0,'x')} f(t)dt`)} עבור x > 0. א. מצאו את ${M('S(x)')}. ב. חשבו את ${M('S(3)')}.`,
+   a:0,b:3,lb:'x', v:[-0.5,4,-0.5,5], tests:[[3,3]], ansH:`${M(`S(x) = ${fr('(x − 2)<sup>3</sup>','3')} + ${fr('8','3')}`)}, ${M('S(3) = 3')}`,
+   s:[`לפי כלל 2: ${M(`F(x) = ${fr('(x − 2)<sup>3</sup>','3')}`)}`,
+      `${M(`S(x) = ${fr('(x − 2)<sup>3</sup>','3')} − ${fr('(−2)<sup>3</sup>','3')} = ${fr('(x − 2)<sup>3</sup>','3')} + ${fr('8','3')}`)}`,
+      `${M(`S(3) = ${fr('1','3')} + ${fr('8','3')} = 3`)}`]},
+  {f:x=>2*x*(x*x+1)**2, fx:'2x(x<sup>2</sup> + 1)<sup>2</sup>', q:`נגדיר ${M(`S(x) = ${I(0,'x')} f(t)dt`)} עבור x > 0. א. מצאו את ${M('S(x)')}. ב. חשבו את ${M('S(1)')}.`,
+   a:0,b:1,lb:'x', v:[-0.5,1.5,-1,10], tests:[[1,7/3]], ansH:`${M(`S(x) = ${fr('(x<sup>2</sup> + 1)<sup>3</sup> − 1','3')}`)}, ${M(`S(1) = ${fr('7','3')}`)}`,
+   s:[`לפי כלל 3: ${M(`F(x) = ${fr('(x<sup>2</sup> + 1)<sup>3</sup>','3')}`)}`,
+      `${M(`S(x) = ${fr('(x<sup>2</sup> + 1)<sup>3</sup>','3')} − ${fr('1','3')} = ${fr('(x<sup>2</sup> + 1)<sup>3</sup> − 1','3')}`)}`,
+      `${M(`S(1) = ${fr('8 − 1','3')} = ${fr('7','3')}`)}`]},
+  {f:x=>(x**3+2)/(x*x), fx:fr('x<sup>3</sup> + 2','x<sup>2</sup>'), q:`נגדיר ${M(`S(x) = ${I(1,'x')} f(t)dt`)} עבור x > 1. א. מצאו את ${M('S(x)')}. ב. חשבו את ${M('S(2)')}.`,
+   a:1,b:2,lb:'x', v:[0,3,-0.5,6], tests:[[2,2.5]], ansH:`${M(`S(x) = ${fr('x<sup>2</sup>','2')} − ${fr('2','x')} + ${fr('3','2')}`)}, ${M(`S(2) = ${fr('5','2')}`)}`,
+   s:[`פיצול: ${M('f(x) = x + 2x<sup>−2</sup>')}, ולכן ${M(`F(x) = ${fr('x<sup>2</sup>','2')} − ${fr('2','x')}`)}`,
+      `${M(`S(x) = ${fr('x<sup>2</sup>','2')} − ${fr('2','x')} − (${fr('1','2')} − 2) = ${fr('x<sup>2</sup>','2')} − ${fr('2','x')} + ${fr('3','2')}`)}`,
+      `${M(`S(2) = 2 − 1 + ${fr('3','2')} = ${fr('5','2')}`)}`]}
+ ]},
+ {name:`הנגזרת: ${M("S′(x) = f(x)")}`, hint:`${M("S′(x) = f(x)")}: היכן ש‑f מעל ציר ה‑x, S עולה; היכן ש‑f מתחת לציר, S יורדת; קיצון של S היכן ש‑f חותכת את ציר ה‑x.`,
+  rule:`${M("S′(x) = f(x)")}. כש‑f מעל ציר ה‑x השטח מצטבר ו‑S עולה. כש‑f מתחת לציר ה‑x השטח נצבר עם סימן מינוס ו‑S יורדת. בשרטוטים כאן השטח החיובי מסומן בסגול והשלילי באדום.`, ex:[
+  {f:x=>4-x*x, fx:'4 − x<sup>2</sup>', signed:true, q:`נגדיר ${M(`S(x) = ${I(0,'x')} f(t)dt`)} עבור x > 0. א. חשבו את ${M("S′(1)")}. ב. באיזה תחום S עולה ובאיזה יורדת? ג. מצאו את הערך המקסימלי של S.`,
+   a:0,b:3,lb:'x', v:[-0.5,3.5,-6,5], tests:[[2,16/3]], ansH:`${M("S′(1) = 3")}; עולה ב‑${M('0 < x < 2')}, יורדת ב‑${M('x > 2')}; ${M(`S<sub>max</sub> = S(2) = ${fr('16','3')}`)}`,
+   s:[`${M("S′(x) = f(x) = 4 − x<sup>2</sup>")}, ולכן ${M("S′(1) = 3")}`,
+      `f חיובית ב‑${M('0 < x < 2')} ושלילית ב‑${M('x > 2')}, ולכן S עולה ב‑${M('0 < x < 2')} ויורדת ב‑${M('x > 2')}.`,
+      `מקסימום ב‑${M('x = 2')}: ${M(`S(2) = ${EV(`4t − ${fr('t<sup>3</sup>','3')}`,0,2)} = 8 − ${fr('8','3')} = ${fr('16','3')}`)}`]},
+  {f:x=>x*x-2*x, fx:'x<sup>2</sup> − 2x', signed:true, q:`נגדיר ${M(`S(x) = ${I(0,'x')} f(t)dt`)} עבור x > 0. א. מצאו את נקודת הקיצון של S וקבעו את סוגה. ב. חשבו את ערך S בנקודה זו. ג. מצאו x > 0 שעבורו ${M('S(x) = 0')}, והסבירו את המשמעות בשרטוט.`,
+   a:0,b:3,lb:'x', v:[-0.5,3.5,-1.5,3.5], tests:[[2,-4/3],[3,0]], ansH:`מינימום ב‑${M('x = 2')}, ${M(`S(2) = −${fr('4','3')}`)}; ${M('S(3) = 0')}`,
+   s:[`${M("S′(x) = x<sup>2</sup> − 2x = 0 ⇒ x = 2")} (עבור x > 0). משמאל ל‑${M('x = 2')} ${M("S′ < 0")}, ומימין לה ${M("S′ > 0")}: מינימום.`,
+      `${M(`S(x) = ${fr('x<sup>3</sup>','3')} − x<sup>2</sup>`)}, ולכן ${M(`S(2) = ${fr('8','3')} − 4 = −${fr('4','3')}`)}`,
+      `${M(`${fr('x<sup>3</sup>','3')} − x<sup>2</sup> = 0 ⇒ x<sup>2</sup>(${fr('x','3')} − 1) = 0 ⇒ x = 3`)}`,
+      `ב‑${M('x = 3')} השטח שמעל הציר (בין 2 ל‑3) שווה לשטח שמתחת לציר (בין 0 ל‑2), והם מקזזים זה את זה.`]},
+  {f:x=>(x-1)**3, fx:'(x − 1)<sup>3</sup>', signed:true, q:`נגדיר ${M(`S(x) = ${I(0,'x')} f(t)dt`)} עבור x > 0. א. מצאו את נקודת הקיצון של S, את סוגה ואת ערכה. ב. חשבו את ${M('S(2)')} והסבירו את התוצאה.`,
+   a:0,b:2,lb:'x', v:[-0.5,2.5,-1.5,1.5], tests:[[1,-0.25],[2,0]], ansH:`מינימום ב‑${M('x = 1')}, ${M(`S(1) = −${fr('1','4')}`)}; ${M('S(2) = 0')}`,
+   s:[`${M("S′(x) = (x − 1)<sup>3</sup> = 0 ⇒ x = 1")}. משמאל ל‑${M('x = 1')} ${M("S′ < 0")}, ומימין לה ${M("S′ > 0")}: מינימום.`,
+      `לפי כלל 2: ${M(`S(x) = ${fr('(x − 1)<sup>4</sup>','4')} − ${fr('1','4')}`)}, ולכן ${M(`S(1) = −${fr('1','4')}`)}`,
+      `${M(`S(2) = ${fr('1','4')} − ${fr('1','4')} = 0`)}: השטח שמתחת לציר (0 עד 1) שווה לשטח שמעליו (1 עד 2).`]},
+  {f:x=>3*x*x-3, disp:'S(x) = x<sup>3</sup> − 3x', cap:'בשרטוט: גרף הפונקציה f.', signed:true, q:`נתון ${M(`S(x) = ${I(0,'x')} f(t)dt = x<sup>3</sup> − 3x`)}. א. מצאו את ${M('f(x)')}. ב. חשבו את השטח המוגבל על ידי גרף f, ציר ה‑x וציר ה‑y ברביע הרביעי.`,
+   a:0,b:1, v:[-2,2,-4,6], tests:[[1,-2]], ansH:`${M('f(x) = 3x<sup>2</sup> − 3')}; השטח 2`,
+   s:[`${M("f(x) = S′(x) = 3x<sup>2</sup> − 3")}`,
+      `f חותכת את ציר ה‑x ב‑${M('x = 1')}, ובתחום ${M('0 ≤ x ≤ 1')} היא מתחת לציר.`,
+      `${M(`${I(0,1)} f(t)dt = S(1) = 1 − 3 = −2`)}, ולכן השטח 2.`]},
+  {f:x=>1-4/(x+1)**2, fx:`1 − ${fr('4','(x + 1)<sup>2</sup>')}`, signed:true, q:`נגדיר ${M(`S(x) = ${I(0,'x')} f(t)dt`)} עבור x > 0. א. מצאו את נקודת הקיצון של S, את סוגה ואת ערכה. ב. מצאו x > 0 שעבורו ${M('S(x) = 0')}.`,
+   a:0,b:3,lb:'x', v:[-0.5,4,-4,1.5], tests:[[1,-1],[3,0]], ansH:`מינימום ב‑${M('x = 1')}, ${M('S(1) = −1')}; ${M('x = 3')}`,
+   s:[`${M(`S′(x) = 1 − ${fr('4','(x + 1)<sup>2</sup>')} = 0 ⇒ x = 1`)}. משמאל ל‑${M('x = 1')} ${M("S′ < 0")}, ומימין לה ${M("S′ > 0")}: מינימום.`,
+      `לפי כלל 2: ${M(`S(x) = x + ${fr('4','x + 1')} − 4`)}, ולכן ${M('S(1) = 1 + 2 − 4 = −1')}`,
+      `${M(`x + ${fr('4','x + 1')} = 4 ⇒ x<sup>2</sup> − 3x = 0 ⇒ x = 3`)}`]}
+ ]},
+ {name:'מציאת x או פרמטר', hint:`מצאו את ${M('S(x)')} או את ${M('S')} עם הפרמטר, והשוו לערך הנתון.`,
+  rule:`כאן נתון ערך של השטח המצטבר, ומוצאים את גבול האינטגרל x או פרמטר בפונקציה.`, ex:[
+  {f:x=>2*x, fx:'2x', q:`נגדיר ${M(`S(x) = ${I(0,'x')} f(t)dt`)}. מצאו x > 0 שעבורו ${M('S(x) = 16')}.`,
+   a:0,b:4,lb:'x',noticks:true, v:[-0.5,5,-1,10], tests:[[4,16]], ansH:M('x = 4'),
+   s:[`${M('S(x) = x<sup>2</sup>')}`,`${M('x<sup>2</sup> = 16 ⇒ x = 4')}`]},
+  {f:x=>3*x*x, fx:'3x<sup>2</sup>', q:`נגדיר ${M(`S(x) = ${I(1,'x')} f(t)dt`)}. מצאו x > 1 שעבורו ${M('S(x) = 26')}.`,
+   a:1,b:3,lb:'x',noticks:true, v:[-0.5,3.5,-1,30], tests:[[3,26]], ansH:M('x = 3'),
+   s:[`${M('S(x) = x<sup>3</sup> − 1')}`,`${M('x<sup>3</sup> − 1 = 26 ⇒ x<sup>3</sup> = 27 ⇒ x = 3')}`]},
+  {f:x=>4/(x*x), fx:fr('4','x<sup>2</sup>'), q:`נגדיר ${M(`S(x) = ${I(1,'x')} f(t)dt`)}. מצאו x > 1 שעבורו ${M('S(x) = 3')}.`,
+   a:1,b:4,lb:'x',noticks:true, v:[0,5,-0.5,5], tests:[[4,3]], ansH:M('x = 4'),
+   s:[`${M(`S(x) = 4 − ${fr('4','x')}`)}`,`${M(`4 − ${fr('4','x')} = 3 ⇒ ${fr('4','x')} = 1 ⇒ x = 4`)}`]},
+  {f:x=>2*x*(x*x+1)**2, fx:'2x(x<sup>2</sup> + 1)<sup>2</sup>', q:`נגדיר ${M(`S(x) = ${I(0,'x')} f(t)dt`)}. מצאו x > 0 שעבורו ${M('S(x) = 21')}.`,
+   a:0,b:Math.sqrt(3),lb:'x',noticks:true, v:[-0.5,2.2,-3,60], tests:[[Math.sqrt(3),21]], ansH:M('x = √3'),
+   s:[`${M(`S(x) = ${fr('(x<sup>2</sup> + 1)<sup>3</sup> − 1','3')}`)}`,`${M('(x<sup>2</sup> + 1)<sup>3</sup> = 64 ⇒ x<sup>2</sup> + 1 = 4 ⇒ x = √3')}`]},
+  {f:x=>1/(x+1)**2, fx:fr('1','(x + 1)<sup>2</sup>'), q:`נגדיר ${M(`S(x) = ${I(0,'x')} f(t)dt`)}. א. מצאו x > 0 שעבורו ${M(`S(x) = ${fr('3','4')}`)}. ב. הסבירו למה ${M('S(x) < 1')} לכל x.`,
+   a:0,b:3,lb:'x',noticks:true, v:[-0.5,4,-0.3,1.3], tests:[[3,0.75]], ansH:M('x = 3'),
+   s:[`לפי כלל 2: ${M(`S(x) = −${fr('1','x + 1')} + 1 = ${fr('x','x + 1')}`)}`,
+      `${M(`${fr('x','x + 1')} = ${fr('3','4')} ⇒ 4x = 3x + 3 ⇒ x = 3`)}`,
+      `המונה ${M('x')} קטן תמיד מהמכנה ${M('x + 1')}, ולכן ${M('S(x) < 1')}.`]},
+  {par:FIND,f:x=>3*x, fx:'kx', q:`נתון k > 0, ו‑${M(`S(x) = ${I(0,'x')} f(t)dt`)}. ידוע ש‑${M('S(2) = 6')}. א. מצאו את k. ב. מצאו את ${M('S(x)')}.`,
+   a:0,b:2,noticks:true, v:[-0.5,3,-1,8], tests:[[2,6]], ansH:`${M('k = 3')}, ${M(`S(x) = ${fr('3x<sup>2</sup>','2')}`)}`,
+   s:[`${M(`S(x) = ${fr('kx<sup>2</sup>','2')}`)}`,`${M('S(2) = 2k = 6 ⇒ k = 3')}`,`${M(`S(x) = ${fr('3x<sup>2</sup>','2')}`)}`]},
+  {par:FIND,f:x=>(x-3)**2, fx:'(x − k)<sup>2</sup>', q:`נתון k > 0, ו‑${M(`S(x) = ${I(0,'x')} f(t)dt`)}. ידוע ש‑${M('S(2k) = 18')}. מצאו את k.`,
+   a:0,b:6,lb:'2k',noticks:true, v:[-1,7,-1,10], tests:[[6,18]], ansH:M('k = 3'),
+   s:[`לפי כלל 2: ${M(`S(x) = ${fr('(x − k)<sup>3</sup>','3')} + ${fr('k<sup>3</sup>','3')}`)}`,
+      `${M(`S(2k) = ${fr('k<sup>3</sup>','3')} + ${fr('k<sup>3</sup>','3')} = ${fr('2k<sup>3</sup>','3')}`)}`,
+      `${M(`${fr('2k<sup>3</sup>','3')} = 18 ⇒ k<sup>3</sup> = 27 ⇒ k = 3`)}`]}
+ ]}
+];
+ACC.forEach(r=>r.ex.forEach(e=>{if(!e.cap)e.cap=ACC_CAP}));
+const CUP='קעורה כלפי מעלה (∪)', CAP='קעורה כלפי מטה (∩)';
+const cub=x=>x*(x-2)*(x-4);
+const ACC_CONC={name:'קעירות של S', hint:`${M("S″(x) = f′(x)")}: S ${CUP} היכן ש‑f עולה, ${CAP} היכן ש‑f יורדת, ונקודת פיתול של S היכן ש‑f מקבלת קיצון.`,
+ rule:`${M("S′(x) = f(x)")}, ולכן ${M("S″(x) = f′(x)")}. S ${CUP} היכן ש‑f עולה, ${CAP} היכן ש‑f יורדת. נקודת פיתול של S נמצאת היכן ש‑f מקבלת מקסימום או מינימום.`, ex:[
+ {f:x=>4-x*x, fx:'4 − x<sup>2</sup>', signed:true, q:`נגדיר ${M(`S(x) = ${I(0,'x')} f(t)dt`)}. א. מצאו את ${M("S″(x)")}. ב. קבעו את תחום הקעירות של S עבור x > 0.`,
+  a:0,b:2.5,lb:'x', v:[-0.5,3,-3,5], tests:[[2,16/3]], ansH:`${M("S″(x) = −2x")}; עבור ${M('x > 0')} S ${CAP}`,
+  s:[`${M("S′(x) = f(x) = 4 − x<sup>2</sup>")}, ולכן ${M("S″(x) = −2x")}`,
+     `עבור ${M('x > 0')}: ${M("S″(x) < 0")}, ולכן S ${CAP}.`,
+     `בשרטוט: f יורדת לכל ${M('x > 0')}, וזה בדיוק מה שקובע את הקעירות של S.`]},
+ {f:x=>x*x-2*x, fx:'x<sup>2</sup> − 2x', signed:true, q:`נגדיר ${M(`S(x) = ${I(0,'x')} f(t)dt`)}. א. מצאו את תחומי הקעירות של S. ב. מצאו את נקודת הפיתול של S.`,
+  a:0,b:3,lb:'x', v:[-1,3.5,-1.5,3.5], tests:[[1,-2/3]], ansH:`${CAP} ב‑${M('x < 1')}, ${CUP} ב‑${M('x > 1')}; פיתול ${M(`(1, −${fr('2','3')})`)}`,
+  s:[`${M("S″(x) = f′(x) = 2x − 2")}`,
+     `${M("S″ < 0")} עבור ${M('x < 1')}: S ${CAP}. ${M("S″ > 0")} עבור ${M('x > 1')}: S ${CUP}.`,
+     `נקודת פיתול ב‑${M('x = 1')} (שם f מקבלת מינימום): ${M(`S(1) = ${fr('1','3')} − 1 = −${fr('2','3')}`)}`]},
+ {f:x=>(x-1)**3, fx:'(x − 1)<sup>3</sup>', signed:true, q:`נגדיר ${M(`S(x) = ${I(0,'x')} f(t)dt`)}. א. מצאו את ${M("S″(x)")} וקבעו את הקעירות של S. ב. ${M("S″(1) = 0")}. האם ל‑S יש נקודת פיתול ב‑${M('x = 1')}? נמקו.`,
+  a:0,b:2,lb:'x', v:[-0.5,2.5,-1.5,1.5], tests:[[1,-0.25]], ansH:`${M("S″(x) = 3(x − 1)<sup>2</sup> ≥ 0")}: S ${CUP} תמיד; אין נקודת פיתול`,
+  s:[`${M("S″(x) = f′(x) = 3(x − 1)<sup>2</sup>")}`,
+     `${M("S″(x) ≥ 0")} לכל x, ולכן S ${CUP} בכל התחום.`,
+     `ב‑${M('x = 1')} הנגזרת השנייה מתאפסת אבל לא מחליפה סימן, ולכן אין נקודת פיתול. בשרטוט: f עולה כל הזמן ואין לה קיצון.`]},
+ {f:x=>x**3-3*x, fx:'x<sup>3</sup> − 3x', signed:true, q:`נגדיר ${M(`S(x) = ${I(0,'x')} f(t)dt`)} לכל x. א. מצאו את תחומי הקעירות של S. ב. מצאו את נקודות הפיתול של S.`,
+  a:0,b:2,lb:'x', v:[-2.5,2.5,-3,3], tests:[[1,-1.25],[-1,-1.25]], ansH:`${CUP} ב‑${M('x < −1')} וב‑${M('x > 1')}, ${CAP} ב‑${M('−1 < x < 1')}; פיתול ב‑${M(`(±1, −${fr('5','4')})`)}`,
+  s:[`${M("S″(x) = f′(x) = 3x<sup>2</sup> − 3 = 0 ⇒ x = ±1")}`,
+     `${M("S″ > 0")} עבור ${M('x < −1')} ו‑${M('x > 1')}: ${CUP}. ${M("S″ < 0")} עבור ${M('−1 < x < 1')}: ${CAP}.`,
+     `${M(`S(x) = ${fr('x<sup>4</sup>','4')} − ${fr('3x<sup>2</sup>','2')}`)}, ולכן ${M(`S(1) = S(−1) = ${fr('1','4')} − ${fr('3','2')} = −${fr('5','4')}`)}`]},
+ {f:x=>x*x-4*x+3, fx:'x<sup>2</sup> − 4x + 3', signed:true, q:`נגדיר ${M(`S(x) = ${I(0,'x')} f(t)dt`)}. א. מצאו את תחומי העלייה והירידה של S ואת נקודות הקיצון שלה. ב. מצאו את תחומי הקעירות של S ואת נקודת הפיתול שלה.`,
+  a:0,b:4,lb:'x', v:[-0.5,4.5,-1.5,3.5], tests:[[1,4/3],[2,2/3],[3,0]], ansH:`עולה ב‑${M('x < 1')} וב‑${M('x > 3')}, יורדת ב‑${M('1 < x < 3')}; מקסימום ${M(`(1, ${fr('4','3')})`)}, מינימום ${M('(3, 0)')}; ${CAP} ב‑${M('x < 2')}, ${CUP} ב‑${M('x > 2')}, פיתול ${M(`(2, ${fr('2','3')})`)}`,
+  s:[`${M("S′(x) = f(x) = (x − 1)(x − 3)")}: חיובית ב‑${M('x < 1')} וב‑${M('x > 3')}, שלילית ב‑${M('1 < x < 3')}.`,
+     `${M(`S(x) = ${fr('x<sup>3</sup>','3')} − 2x<sup>2</sup> + 3x`)}: מקסימום ${M(`S(1) = ${fr('4','3')}`)}, מינימום ${M('S(3) = 9 − 18 + 9 = 0')}`,
+     `${M("S″(x) = f′(x) = 2x − 4")}: ${CAP} ב‑${M('x < 2')}, ${CUP} ב‑${M('x > 2')}.`,
+     `נקודת פיתול (שם f מקבלת מינימום): ${M(`S(2) = ${fr('8','3')} − 8 + 6 = ${fr('2','3')}`)}`]}
+]};
+const ACC_SIGN={name:'סימן השטח: מעל ומתחת לציר', hint:'שטח מעל ציר ה‑x נכנס ל‑S עם סימן פלוס, ושטח מתחת לציר עם סימן מינוס. היעזרו בשטחים שעל השרטוט.',
+ rule:`${M(`S(x) = ${I('a','x')} f(t)dt`)} סופרת שטח עם סימן: שטח מעל ציר ה‑x נוסף בפלוס, ושטח מתחת לציר נוסף במינוס. כש‑x משמאל ל‑a הסימן מתהפך: ${M(`${I('a','x')} f(t)dt = −${I('x','a')} f(t)dt`)}.`, ex:[
+ {f:x=>3-x, fx:'3 − x', signed:true, lbl:[[1,1,'A = 9/2'],[4.8,-0.9,'B = 9/2']], q:`בשרטוט גרף f והשטחים ${M(`A = ${fr('9','2')}`)}, ${M(`B = ${fr('9','2')}`)}. נגדיר ${M(`S(x) = ${I(0,'x')} f(t)dt`)}. א. חשבו את ${M('S(3)')} ואת ${M('S(6)')} בעזרת השטחים. ב. היכן S מקבלת ערך מקסימלי בתחום ${M('0 ≤ x ≤ 6')}? ג. האם ${M('S(4)')} חיובי או שלילי? נמקו.`,
+  a:0,b:6, v:[-0.5,6.5,-3.5,3.5], tests:[[3,4.5],[6,0],[4,4]], ansH:`${M(`S(3) = ${fr('9','2')}`)}, ${M('S(6) = 0')}; מקסימום ב‑${M('x = 3')}; ${M('S(4) = 4 > 0')}`,
+  s:[`השטח A מעל הציר: ${M(`S(3) = ${fr('9','2')}`)}`,
+     `השטח B מתחת לציר ולכן נספר במינוס: ${M(`S(6) = ${fr('9','2')} − ${fr('9','2')} = 0`)}`,
+     `S עולה כל עוד f חיובית (עד ${M('x = 3')}) ויורדת אחר כך: מקסימום ב‑${M('x = 3')}.`,
+     `בין 3 ל‑4 נוסף משולש מתחת לציר ששטחו ${M(fr('1','2'))}: ${M(`S(4) = ${fr('9','2')} − ${fr('1','2')} = 4 > 0`)}`]},
+ {f:x=>x*x-4*x+3, fx:'x<sup>2</sup> − 4x + 3', signed:true, lbl:[[0.45,0.7,'4/3'],[2,-0.7,'4/3'],[3.72,0.6,'4/3']], q:`בשרטוט גרף f, והשטחים המסומנים שווים כולם ל‑${M(fr('4','3'))}. נגדיר ${M(`S(x) = ${I(0,'x')} f(t)dt`)}. א. חשבו את ${M('S(1)')}, ${M('S(3)')} ו‑${M('S(4)')} בעזרת השטחים. ב. מצאו ${M('x > 0')} שעבורו ${M('S(x) = 0')}. ג. האם ${M('S(2)')} חיובי או שלילי? נמקו בלי לחשב אינטגרל.`,
+  a:0,b:4, v:[-0.5,4.5,-1.5,3.5], tests:[[1,4/3],[3,0],[4,4/3],[2,2/3]], ansH:`${M(`S(1) = ${fr('4','3')}`)}, ${M('S(3) = 0')}, ${M(`S(4) = ${fr('4','3')}`)}; ${M('x = 3')}; ${M('S(2) > 0')}`,
+  s:[`${M(`S(1) = ${fr('4','3')}`)} (מעל הציר).`,
+     `${M(`S(3) = ${fr('4','3')} − ${fr('4','3')} = 0`)}, ${M(`S(4) = 0 + ${fr('4','3')} = ${fr('4','3')}`)}`,
+     `${M('S(x) = 0')} כאשר ${M('x = 3')}: השטח שמתחת לציר מקזז בדיוק את השטח הראשון.`,
+     `ב‑${M('x = 2')} נגרע רק חצי מהשטח שמתחת לציר (הפרבולה סימטרית סביב ${M('x = 2')}): ${M(`S(2) = ${fr('4','3')} − ${fr('2','3')} = ${fr('2','3')} > 0`)}`]},
+ {f:cub, fx:'x(x − 2)(x − 4)', signed:true, lbl:[[1,1.3,'4'],[3,-1.3,'4'],[4.68,1.6,'25/4']], q:`בשרטוט גרף f והשטחים המסומנים. נגדיר ${M(`S(x) = ${I(0,'x')} f(t)dt`)}. א. חשבו את ${M('S(2)')}, ${M('S(4)')} ו‑${M('S(5)')}. ב. מצאו את נקודות הקיצון המקומיות של S בתחום ${M('0 < x < 5')} וקבעו את סוגן.`,
+  a:0,b:5, v:[-0.5,5.3,-4.5,6], tests:[[2,4],[4,0],[5,25/4]], ansH:`${M('S(2) = 4')}, ${M('S(4) = 0')}, ${M(`S(5) = ${fr('25','4')}`)}; מקסימום ${M('(2, 4)')}, מינימום ${M('(4, 0)')}`,
+  s:[`${M('S(2) = 4')} (מעל הציר), ${M('S(4) = 4 − 4 = 0')}, ${M(`S(5) = 0 + ${fr('25','4')} = ${fr('25','4')}`)}`,
+     `${M("S′ = f")}: ב‑${M('x = 2')} f עוברת מחיובית לשלילית, ולכן מקסימום ${M('(2, 4)')}.`,
+     `ב‑${M('x = 4')} f עוברת משלילית לחיובית, ולכן מינימום ${M('(4, 0)')}.`]},
+ {f:cub, fx:'x(x − 2)(x − 4)', signed:true, lbl:[[1,1.3,'4'],[3,-1.3,'4']], q:`אותה פונקציה, אבל הפעם ${M(`S(x) = ${I(2,'x')} f(t)dt`)}. א. חשבו את ${M('S(4)')}. ב. חשבו את ${M('S(0)')}, והסבירו למה הוא שלילי למרות ש‑f מעל הציר בין 0 ל‑2. ג. מצאו את הערך המקסימלי של S בתחום ${M('0 ≤ x ≤ 4')}.`,
+  a:0,b:4, s0:2, v:[-0.5,4.6,-4,4], tests:[[4,-4],[0,-4],[2,0]], ansH:`${M('S(4) = −4')}, ${M('S(0) = −4')}; המקסימום ${M('S(2) = 0')}`,
+  s:[`בין 2 ל‑4 השטח מתחת לציר: ${M('S(4) = −4')}`,
+     `${M(`S(0) = ${I(2,0)} f(t)dt = −${I(0,2)} f(t)dt = −4`)}: הגבול העליון קטן מהתחתון, ולכן הסימן מתהפך.`,
+     `${M("S′ = f")} חיובית ב‑${M('0 < x < 2')} ושלילית ב‑${M('2 < x < 4')}: S עולה עד 2 ויורדת אחריה, ולכן המקסימום ${M('S(2) = 0')}.`,
+     `כלומר ${M('S(x) ≤ 0')} בכל התחום.`]},
+ {f:x=>4-x*x, fx:'4 − x<sup>2</sup>', signed:true, lbl:[[0,1.5,'32/3'],[2.62,-1.1,'7/3']], q:`בשרטוט גרף f והשטחים המסומנים. נגדיר ${M(`S(x) = ${I(-2,'x')} f(t)dt`)}. א. חשבו את ${M('S(2)')} ואת ${M('S(3)')}. ב. מה גדול יותר, ${M('S(2)')} או ${M('S(3)')}? הסבירו בלי לחשב. ג. מצאו ${M('x > 2')} שעבורו ${M('S(x) = 0')}.`,
+  a:-2,b:3, s0:-2, v:[-2.5,3.5,-6,5], tests:[[2,32/3],[3,25/3],[4,0]], ansH:`${M(`S(2) = ${fr('32','3')}`)}, ${M(`S(3) = ${fr('25','3')}`)}; ${M('S(2) > S(3)')}; ${M('x = 4')}`,
+  s:[`${M(`S(2) = ${fr('32','3')}`)}, ${M(`S(3) = ${fr('32','3')} − ${fr('7','3')} = ${fr('25','3')}`)}`,
+     `מ‑${M('x = 2')} ואילך f מתחת לציר, והשטח נצבר במינוס: ${M('S(2) > S(3)')}.`,
+     `${M(`S(x) = ${EV(`4t − ${fr('t<sup>3</sup>','3')}`,-2,'x')} = 4x − ${fr('x<sup>3</sup>','3')} + ${fr('16','3')}`)}`,
+     `${M('S(x) = 0 ⇒ x<sup>3</sup> − 12x − 16 = 0 ⇒ (x − 4)(x + 2)<sup>2</sup> = 0 ⇒ x = 4')}`,
+     `כלומר השטח שמתחת לציר בין 2 ל‑4 שווה ל‑${M(fr('32','3'))}.`]}
+]};
+ACC_CONC.ex.forEach(e=>e.cap=ACC_CAP);
+ACC_SIGN.ex.forEach(e=>e.cap='בשרטוט: גרף הפונקציה f והשטחים בין הגרף לציר ה‑x. בסגול שטח מעל הציר ובאדום שטח מתחת לציר.');
+ACC.splice(2,0,ACC_CONC,ACC_SIGN);
+
+const ACC_DRAW={name:'שרטוט S', hint:`התחילו מ‑${M('S(a) = 0')}. לפי הסימן של f קבעו היכן S עולה ויורדת, לפי העלייה והירידה של f קבעו את הקעירות, ובעזרת השטחים חשבו ערכים בנקודות המיוחדות.`,
+ rule:`לשרטוט של ${M(`S(x) = ${I('a','x')} f(t)dt`)} אוספים: ${M('S(a) = 0')}; S עולה היכן ש‑f מעל הציר ויורדת היכן ש‑f מתחתיו; קיצון של S היכן ש‑f חותכת את ציר ה‑x; S ${CUP} היכן ש‑f עולה ו‑${CAP} היכן ש‑f יורדת; ערכי S בנקודות המיוחדות לפי השטחים. בתרגילים הראשונים יש סעיפים מנחים, ובהמשך מבקשים לשרטט ישירות.`, ex:[
+ {f:x=>2-x, fx:'2 − x', signed:true, S:x=>2*x-x*x/2, Sv:[-1,5,-3,3], Sp:[[0,0,'(0, 0)'],[2,2,'(2, 2)'],[4,0,'(4, 0)']],
+  q:`נגדיר ${M(`S(x) = ${I(0,'x')} f(t)dt`)}. א. מהו ${M('S(0)')}? ב. באיזה תחום S עולה ובאיזה יורדת? ג. מצאו את נקודת הקיצון של S ואת סוגה. ד. קבעו את הקעירות של S. ה. מצאו את נקודות החיתוך של S עם ציר ה‑x. ו. שרטטו סקיצה של S.`,
+  a:0,b:2.5,lb:'x', v:[-1,5,-3,3], tests:[[2,2],[4,0]],
+  s:[`${M('S(0) = 0')}`,
+     `${M("S′(x) = f(x) = 2 − x")}: S עולה ב‑${M('x < 2')} ויורדת ב‑${M('x > 2')}.`,
+     `מקסימום ב‑${M('x = 2')}: ${M(`S(x) = 2x − ${fr('x<sup>2</sup>','2')}`)}, ולכן ${M('S(2) = 2')}.`,
+     `${M("S″(x) = f′(x) = −1 < 0")}: S ${CAP} בכל התחום.`,
+     `${M(`x(2 − ${fr('x','2')}) = 0 ⇒ x = 0, x = 4`)}`]},
+ {f:x=>x*x-4*x+3, fx:'x<sup>2</sup> − 4x + 3', signed:true, S:x=>x**3/3-2*x*x+3*x, Sv:[-0.5,4.5,-1.5,3], Sp:[[0,0,'(0, 0)'],[1,4/3,'(1, 4/3)'],[2,2/3,'(2, 2/3)'],[3,0,'(3, 0)']],
+  q:`נגדיר ${M(`S(x) = ${I(0,'x')} f(t)dt`)}. א. מהו ${M('S(0)')}? ב. מצאו את תחומי העלייה והירידה של S ואת נקודות הקיצון. ג. מצאו את תחומי הקעירות של S ואת נקודת הפיתול. ד. שרטטו סקיצה של S.`,
+  a:0,b:4,lb:'x', v:[-0.5,4.5,-1.5,3.5], tests:[[1,4/3],[2,2/3],[3,0]],
+  s:[`${M('S(0) = 0')}`,
+     `${M("S′ = f = (x − 1)(x − 3)")}: עולה ב‑${M('x < 1')} וב‑${M('x > 3')}, יורדת ב‑${M('1 < x < 3')}. מקסימום ${M(`(1, ${fr('4','3')})`)}, מינימום ${M('(3, 0)')}.`,
+     `${M("S″ = f′ = 2x − 4")}: ${CAP} ב‑${M('x < 2')}, ${CUP} ב‑${M('x > 2')}. פיתול ${M(`(2, ${fr('2','3')})`)}.`,
+     `הערכים: ${M(`S(x) = ${fr('x<sup>3</sup>','3')} − 2x<sup>2</sup> + 3x`)}`]},
+ {f:cub, fx:'x(x − 2)(x − 4)', signed:true, S:x=>x**4/4-2*x**3+4*x*x, Sv:[-1,5,-1,7], Sp:[[0,0,'(0, 0)'],[2,4,'(2, 4)'],[4,0,'(4, 0)']],
+  q:`נגדיר ${M(`S(x) = ${I(0,'x')} f(t)dt`)}. א. מצאו את הנקודות שבהן ${M("S′(x) = 0")}. ב. מצאו את תחומי העלייה והירידה של S ואת נקודות הקיצון. ג. הראו ש‑${M(`S(x) = ${fr('x<sup>2</sup>(x − 4)<sup>2</sup>','4')}`)}, והסיקו ש‑${M('S(x) ≥ 0')} לכל x. ד. שרטטו סקיצה של S.`,
+  a:0,b:5,lb:'x', v:[-0.5,5.3,-4.5,6], tests:[[2,4],[4,0],[-1,6.25]],
+  s:[`${M("S′(x) = x(x − 2)(x − 4) = 0 ⇒ x = 0, 2, 4")}`,
+     `${M("S′ < 0")} ב‑${M('x < 0')} וב‑${M('2 < x < 4')}, ${M("S′ > 0")} ב‑${M('0 < x < 2')} וב‑${M('x > 4')}. מינימום ${M('(0, 0)')}, מקסימום ${M('(2, 4)')}, מינימום ${M('(4, 0)')}.`,
+     `${M(`S(x) = ${fr('x<sup>4</sup>','4')} − 2x<sup>3</sup> + 4x<sup>2</sup> = ${fr('x<sup>2</sup>(x<sup>2</sup> − 8x + 16)','4')} = ${fr('x<sup>2</sup>(x − 4)<sup>2</sup>','4')} ≥ 0`)}`]},
+ {f:x=>4-x*x, fx:'4 − x<sup>2</sup>', signed:true, S:x=>4*x-x**3/3, Sv:[-4,4,-7,7], Sp:[[-2,-16/3,'(−2, −16/3)'],[0,0,'(0, 0)'],[2,16/3,'(2, 16/3)']],
+  q:`נגדיר ${M(`S(x) = ${I(0,'x')} f(t)dt`)} לכל x. שרטטו סקיצה של S.`,
+  a:0,b:3,lb:'x', v:[-3,3.5,-6,5], tests:[[2,16/3],[-2,-16/3]],
+  s:[`${M('S(0) = 0')}, ו‑${M(`S(x) = 4x − ${fr('x<sup>3</sup>','3')}`)}`,
+     `${M("S′ = f = 4 − x<sup>2</sup>")}: יורדת ב‑${M('x < −2')}, עולה ב‑${M('−2 < x < 2')}, יורדת ב‑${M('x > 2')}. מינימום ${M(`(−2, −${fr('16','3')})`)}, מקסימום ${M(`(2, ${fr('16','3')})`)}.`,
+     `${M("S″ = f′ = −2x")}: ${CUP} ב‑${M('x < 0')}, ${CAP} ב‑${M('x > 0')}. פיתול ${M('(0, 0)')}.`,
+     `חיתוך עם ציר ה‑x: ${M(`x(4 − ${fr('x<sup>2</sup>','3')}) = 0 ⇒ x = 0, ±2√3`)}`]},
+ {f:x=>(x-1)**3, fx:'(x − 1)<sup>3</sup>', signed:true, S:x=>((x-1)**4-1)/4, Sv:[-1,3,-0.6,3], Sp:[[0,0,'(0, 0)'],[1,-0.25,'(1, −1/4)'],[2,0,'(2, 0)']],
+  q:`נגדיר ${M(`S(x) = ${I(0,'x')} f(t)dt`)} לכל x. שרטטו סקיצה של S.`,
+  a:0,b:2,lb:'x', v:[-0.5,2.5,-1.5,1.5], tests:[[1,-0.25],[2,0]],
+  s:[`${M('S(0) = 0')}, ולפי כלל 2: ${M(`S(x) = ${fr('(x − 1)<sup>4</sup> − 1','4')}`)}`,
+     `${M("S′ = (x − 1)<sup>3</sup>")}: יורדת ב‑${M('x < 1')}, עולה ב‑${M('x > 1')}. מינימום ${M(`(1, −${fr('1','4')})`)}.`,
+     `${M("S″ = 3(x − 1)<sup>2</sup> ≥ 0")}: ${CUP} בכל התחום, בלי נקודת פיתול.`,
+     `חיתוך עם ציר ה‑x: ${M('(x − 1)<sup>4</sup> = 1 ⇒ x = 0, x = 2')}`]},
+ {f:x=>3-x, fx:'3 − x', signed:true, lbl:[[1,1,'A = 9/2'],[4.8,-0.9,'B = 9/2']], S:x=>3*x-x*x/2, Sv:[-1,7,-4,5.5], Sp:[[0,0,'(0, 0)'],[3,4.5,'(3, 9/2)'],[6,0,'(6, 0)']],
+  q:`בשרטוט גרף f והשטחים ${M(`A = ${fr('9','2')}`)}, ${M(`B = ${fr('9','2')}`)}. נגדיר ${M(`S(x) = ${I(0,'x')} f(t)dt`)}. שרטטו סקיצה של S בתחום ${M('0 ≤ x ≤ 6')}, בעזרת השטחים בלבד.`,
+  a:0,b:6, v:[-0.5,6.5,-3.5,3.5], tests:[[3,4.5],[6,0]],
+  s:[`${M('S(0) = 0')}. בין 0 ל‑3 f מעל הציר: S עולה עד ${M(`S(3) = A = ${fr('9','2')}`)} (מקסימום).`,
+     `בין 3 ל‑6 f מתחת לציר: S יורדת עד ${M(`S(6) = ${fr('9','2')} − ${fr('9','2')} = 0`)}.`,
+     `f יורדת בכל התחום, ולכן S ${CAP}.`]},
+ {f:x=>4/(x*x), fx:fr('4','x<sup>2</sup>'), S:x=>4-4/x, Sv:[0,6,-6,5], Sp:[[1,0,'(1, 0)'],[2,2,'(2, 2)']], Sasy:4,
+  q:`נגדיר ${M(`S(x) = ${I(1,'x')} f(t)dt`)} עבור ${M('x > 0')}. שרטטו סקיצה של S, כולל התנהגות S כש‑x גדל מאוד וכש‑x מתקרב ל‑0.`,
+  a:1,b:3,lb:'x', v:[0,5,-0.5,5], tests:[[2,2],[4,3]],
+  s:[`${M('S(1) = 0')}, ו‑${M(`S(x) = 4 − ${fr('4','x')}`)}`,
+     `f חיובית תמיד, ולכן S עולה לכל ${M('x > 0')}. בין 0 ל‑1 הגבול העליון קטן מ‑1, ולכן ${M('S(x) < 0')} שם.`,
+     `f יורדת, ולכן S ${CAP}.`,
+     `כש‑x גדל מאוד S מתקרבת ל‑4 (אסימפטוטה ${M('y = 4')}). כש‑x מתקרב ל‑0, S שואפת למינוס אינסוף.`]}
+]};
+ACC_DRAW.ex.forEach(e=>{e.cap=e.lbl?'בשרטוט: גרף הפונקציה f והשטחים בין הגרף לציר ה‑x.':'בשרטוט: גרף הפונקציה f.';e.ansH=`השרטוט של S:`});
+ACC.splice(4,0,ACC_DRAW);
+function plotS(e,tag){
+  const W=360,Hh=240,[x0,x1,y0,y1]=e.Sv;const id=e.id+tag;
+  const X=x=>(x-x0)/(x1-x0)*W, Y=y=>Hh-(y-y0)/(y1-y0)*Hh;
+  let s=`<svg viewBox="0 0 ${W} ${Hh}" xmlns="${NS}" role="img" aria-label="שרטוט S" style="margin-top:8px"><defs><clipPath id="c${id}"><rect x="0" y="0" width="${W}" height="${Hh}"/></clipPath></defs>`;
+  const sx=step(x1-x0), sy=step(y1-y0);
+  for(let x=Math.ceil(x0/sx)*sx;x<=x1+1e-9;x+=sx)s+=`<line x1="${X(x)}" y1="0" x2="${X(x)}" y2="${Hh}" stroke="var(--grid)"/>`;
+  for(let y=Math.ceil(y0/sy)*sy;y<=y1+1e-9;y+=sy)s+=`<line x1="0" y1="${Y(y)}" x2="${W}" y2="${Y(y)}" stroke="var(--grid)"/>`;
+  if(y0<=0&&y1>=0)s+=`<line x1="0" y1="${Y(0)}" x2="${W}" y2="${Y(0)}" stroke="var(--axis)" stroke-width="1.6"/>`;
+  if(x0<=0&&x1>=0)s+=`<line x1="${X(0)}" y1="0" x2="${X(0)}" y2="${Hh}" stroke="var(--axis)" stroke-width="1.6"/>`;
+  s+=`<text x="${W-10}" y="${Y(0)-6}" fill="var(--axis)" font-size="13">x</text>`;
+  if(e.Sasy!==undefined)s+=`<line x1="0" y1="${Y(e.Sasy)}" x2="${W}" y2="${Y(e.Sasy)}" stroke="var(--muted)" stroke-dasharray="6 5"/><text x="6" y="${Y(e.Sasy)-5}" fill="var(--muted)" font-size="11">y = ${e.Sasy}</text>`;
+  let d='',pen=false;
+  for(let i=0;i<=900;i++){const x=x0+(x1-x0)*i/900;const y=e.S(x);if(!isFinite(y)||y>y1+(y1-y0)*2||y<y0-(y1-y0)*2){pen=false;continue}d+=(pen?'L':'M')+X(x).toFixed(2)+' '+Y(y).toFixed(2)+' ';pen=true}
+  s+=`<path d="${d}" fill="none" stroke="var(--curve2)" stroke-width="2.6" clip-path="url(#c${id})"/>`;
+  e.Sp.forEach(([x,y,l])=>{const ty=Y(y)<20?Y(y)+18:Y(y)-9;s+=`<circle cx="${X(x)}" cy="${Y(y)}" r="3.8" fill="var(--ink)"/><text x="${X(x)}" y="${ty}" fill="var(--ink)" font-size="11.5" font-weight="700" text-anchor="middle">${l}</text>`});
+  s+=`<text x="${W-6}" y="14" fill="var(--curve2)" font-size="13" font-weight="700" text-anchor="end">S(x)</text>`;
+  return s+'</svg>';
 }
 
-function show(i){
-  document.querySelectorAll('nav button').forEach((b,j)=>{b.classList.toggle('active',i===j);b.setAttribute('aria-pressed',i===j)});
-  document.querySelectorAll('main section').forEach((s,j)=>s.hidden=j!==i);
-  window.scrollTo({top:0});
-}
-function upd(){document.getElementById('score').textContent=`פתרתם נכון ${solved.size} מתוך ${total} סעיפים`}
+SECS.push({tab:'פונקציה צוברת שטח',title:'פונקציה צוברת שטח',rules:ACC});
 
-function parseNum(s){
-  s=s.trim().replace(/,/g,'.').replace(/\s/g,'').replace('−','-');
-  if(!s) return NaN;
-  if(s.includes('/')){const [a,b]=s.split('/');return parseFloat(a)/parseFloat(b)}
-  return Number(s);
-}
-function checkNum(pid){
-  const p=PARTS[pid], inp=document.getElementById('in-'+pid), fb=document.getElementById('fb-'+pid);
-  const v=parseNum(inp.value);
-  if(isNaN(v)){fb.className='fb no';fb.textContent='הקלידו מספר';return}
-  if(Math.abs(v-p.ans)<0.011){fb.className='fb ok';fb.textContent='נכון! ✓';inp.classList.add('right');solved.add(pid);upd()}
-  else{fb.className='fb no';fb.textContent='לא נכון, נסו שוב';inp.classList.remove('right')}
-}
-function checkChoice(btn){
-  const pid=btn.dataset.pid, p=PARTS[pid], k=+btn.dataset.k, fb=document.getElementById('fb-'+pid);
-  if(k===p.ans){btn.classList.add('right');fb.className='fb ok';fb.textContent='נכון! ✓';solved.add(pid);upd()}
-  else{btn.classList.add('wrong');fb.className='fb no';fb.textContent='לא נכון, נסו שוב'}
-}
-function checkProof(id){
-  const pr=PROOFS[id], fb=document.getElementById('pfb-'+id);
-  let all=true, empty=false;
-  document.querySelectorAll(`select[data-proof="${id}"]`).forEach(sel=>{
-    const k=+sel.dataset.r;
-    sel.classList.remove('right','wrong');
-    if(sel.value===''){empty=true;all=false;return}
-    const ok=[].concat(pr.steps[k][1]).includes(+sel.value);
-    sel.classList.add(ok?'right':'wrong'); if(!ok) all=false;
-  });
-  if(all){fb.className='fb ok';fb.textContent='ההוכחה נכונה! ✓';solved.add('p'+id);upd()}
-  else if(empty){fb.className='fb no';fb.textContent='בחרו נימוק לכל השורות'}
-  else{fb.className='fb no';fb.textContent='יש נימוקים שגויים (מסומנים באדום). נסו לתקן'}
+const NS='http://www.w3.org/2000/svg';
+function step(r){const c=[0.1,0.2,0.25,0.5,1,2,5,10,20];for(const s of c){if(r/s<=10)return s}return 50}
+function fmt(n){const r=Math.round(n*100)/100;return (r===0.5?'½':r===-0.5?'−½':String(r).replace('-','−'))}
+function plot(e,show){
+  const W=360,Hh=260,[x0,x1,y0,y1]=e.v;
+  const X=x=>(x-x0)/(x1-x0)*W, Y=y=>Hh-(y-y0)/(y1-y0)*Hh;
+  let s=`<svg viewBox="0 0 ${W} ${Hh}" xmlns="${NS}" role="img" aria-label="גרף"><defs><clipPath id="c${e.id}"><rect x="0" y="0" width="${W}" height="${Hh}"/></clipPath></defs>`;
+  const sx=step(x1-x0), sy=step(y1-y0);
+  for(let x=Math.ceil(x0/sx)*sx;x<=x1+1e-9;x+=sx){s+=`<line x1="${X(x)}" y1="0" x2="${X(x)}" y2="${Hh}" stroke="var(--grid)" stroke-width="1"/>`}
+  for(let y=Math.ceil(y0/sy)*sy;y<=y1+1e-9;y+=sy){s+=`<line x1="0" y1="${Y(y)}" x2="${W}" y2="${Y(y)}" stroke="var(--grid)" stroke-width="1"/>`}
+  const up=e.u||e.f, lo=e.l||e.g2||(()=>0), cl=y=>Math.max(y0-1,Math.min(y1+1,y));let p='';const N=240;
+  for(let i=0;i<=N;i++){const x=e.a+(e.b-e.a)*i/N;p+=`${X(x)},${Y(cl(up(x)))} `}
+  for(let i=N;i>=0;i--){const x=e.a+(e.b-e.a)*i/N;p+=`${X(x)},${Y(cl(lo(x)))} `}
+  const poly=(U,L,fill)=>{let q='';for(let i=0;i<=N;i++){const x=e.a+(e.b-e.a)*i/N;q+=`${X(x)},${Y(cl(U(x)))} `}for(let i=N;i>=0;i--){const x=e.a+(e.b-e.a)*i/N;q+=`${X(x)},${Y(cl(L(x)))} `}return `<polygon points="${q}" fill="${fill}" stroke="none" clip-path="url(#c${e.id})"/>`};
+  let g=e.signed?poly(x=>Math.max(e.f(x),0),()=>0,'var(--accent-soft)')+poly(()=>0,x=>Math.min(e.f(x),0),'var(--neg-soft)'):`<polygon points="${p}" fill="var(--accent-soft)" stroke="none" clip-path="url(#c${e.id})"/>`;
+  [e.a,e.b].forEach(x=>{const y=up(x),l=lo(x);if(Math.abs(y-l)>1e-9&&(e.g2||Math.abs(x)>1e-9))g+=`<line x1="${X(x)}" y1="${Y(Math.max(y0,Math.min(y1,l)))}" x2="${X(x)}" y2="${Y(Math.max(y0,Math.min(y1,y)))}" stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="5 4"/>`});
+  s+=`<g id="ar${e.id}" style="display:${show?'inline':'none'}">${g}</g>`;
+  if(y0<=0&&y1>=0)s+=`<line x1="0" y1="${Y(0)}" x2="${W}" y2="${Y(0)}" stroke="var(--axis)" stroke-width="1.6"/>`;
+  if(x0<=0&&x1>=0)s+=`<line x1="${X(0)}" y1="0" x2="${X(0)}" y2="${Hh}" stroke="var(--axis)" stroke-width="1.6"/>`;
+  s+=`<text x="${W-10}" y="${Y(0)-6}" fill="var(--axis)" font-size="13">x</text>`;
+  if(x0<=0&&x1>=0)s+=`<text x="${X(0)+6}" y="13" fill="var(--axis)" font-size="13">y</text>`;
+  if(!e.noticks)for(let x=Math.ceil(x0/sx)*sx;x<=x1+1e-9;x+=sx){if(Math.abs(x)<1e-9||X(x)<8||X(x)>W-14)continue;s+=`<text x="${X(x)}" y="${Math.min(Hh-4,Math.max(12,Y(0)+14))}" fill="var(--muted)" font-size="10" text-anchor="middle">${fmt(x)}</text>`}
+  if(!e.noticks)for(let y=Math.ceil(y0/sy)*sy;y<=y1+1e-9;y+=sy){if(Math.abs(y)<1e-9||Y(y)<10||Y(y)>Hh-6)continue;const lx=(x0<=0&&x1>=0)?X(0)-4:W-4;s+=`<text x="${lx}" y="${Y(y)+3}" fill="var(--muted)" font-size="10" text-anchor="end">${fmt(y)}</text>`}
+  const path=(fn,col)=>{let d='',pen=false;const M2=900;
+  for(let i=0;i<=M2;i++){const x=x0+(x1-x0)*i/M2;const y=fn(x);
+    if(!isFinite(y)||y>y1+(y1-y0)*2||y<y0-(y1-y0)*2){pen=false;continue}
+    d+=(pen?'L':'M')+X(x).toFixed(2)+' '+Y(y).toFixed(2)+' ';pen=true}
+  return `<path d="${d}" fill="none" stroke="${col}" stroke-width="2.4" clip-path="url(#c${e.id})"/>`};
+  s+=path(e.f,'var(--curve)');if(e.g2)s+=path(e.g2,'var(--curve2)');
+  (e.lbl||[]).forEach(([x,y,t])=>{s+=`<text x="${X(x)}" y="${Y(y)}" fill="var(--text)" font-size="13" font-weight="700" text-anchor="middle">${t}</text>`});
+  const mk=[[e.a,e.la||fmt(e.a)],[e.b,e.lb||fmt(e.b)],...(e.marks||[])];
+  let mg='';mk.forEach(([x,l])=>{mg+=`<circle cx="${X(x)}" cy="${Y(0)}" r="3.5" fill="var(--accent)"/><text x="${X(x)}" y="${Y(0)-8}" fill="var(--accent)" font-size="12" font-weight="700" text-anchor="middle">${l}</text>`});
+  s+=`<g id="mk${e.id}" style="display:${show?'inline':'none'}">${mg}</g>`;
+  return s+'</svg>';
 }
 
-document.addEventListener('click',ev=>{
-  const t=ev.target.closest('button'); if(!t) return;
-  if(t.dataset.check) checkNum(t.dataset.check);
-  else if(t.dataset.pid) checkChoice(t);
-  else if(t.dataset.pcheck) checkProof(t.dataset.pcheck);
-  else if(t.dataset.reveal){
-    const id=t.dataset.reveal;
-    document.getElementById('pbox-'+id).hidden=false;
-    document.getElementById('solbtn-'+id).hidden=false;
-    t.hidden=true;
-  }
-  else if(t.dataset.sol){
-    const s=document.getElementById('sol-'+t.dataset.sol);
-    s.classList.toggle('show');
-    t.textContent=s.classList.contains('show')?'הסתרת הפתרון':'הצגת פתרון מלא';
-  }
-});
-document.addEventListener('keydown',ev=>{
-  if(ev.key==='Enter'&&ev.target.matches('input.ans')) checkNum(ev.target.id.slice(3));
-});
-
-(function build(){
-  const nav=document.getElementById('nav'), main=document.getElementById('main');
-  TABS.forEach((t,ti)=>{
-    const b=document.createElement('button'); b.textContent=t.name; b.onclick=()=>show(ti); nav.appendChild(b);
-    const sec=document.createElement('section');
-    let h=`<div class="intro">${fmt(t.intro)}</div>`;
-    t.ex.forEach((e,i)=>h+=renderEx(e,ti+'-'+i,i+1));
-    sec.innerHTML=h; main.appendChild(sec);
-  });
-  show(0); upd();
-})();
+let sec=0,cur=0,uid=0;
+SECS.forEach(S=>S.rules.forEach(r=>r.ex.forEach(e=>e.id=uid++)));
+function render(){
+  document.getElementById('ttl').textContent=SECS[sec].title;
+  document.getElementById('secs').innerHTML=SECS.map((S,i)=>`<button class="sec ${i===sec?'active':''}" onclick="gs(${i})">${S.tab}</button>`).join('');
+  const RULES=SECS[sec].rules;
+  document.getElementById('tabs').innerHTML=RULES.map((r,i)=>`<button class="tab ${i===cur?'active':''}" onclick="go(${i})">${r.name}</button>`).join('');
+  const r=RULES[cur];
+  let h=`<div class="rule"><b>${r.name}</b><div style="margin-top:6px;line-height:2">${r.rule}</div></div>`;
+  r.ex.forEach((e,k)=>{
+    const show=k<2;
+    h+=`<div class="card"><h3>תרגיל ${k+1}${e.par?': '+e.par:''}</h3>
+      <div class="fx">${e.disp?M(e.disp):e.gx?`${M('f(x) = '+e.fx)}<br>${M('g(x) = '+e.gx)}`:M(e.top?e.top:'f(x) = '+e.fx)}</div>
+      <div style="margin-bottom:10px;line-height:1.9">${e.q.replace(/ ([אבגדהו])\. /g,'<br>$1. ')}</div>
+      ${plot(e,show)}
+      ${e.top?`<div style="color:var(--muted);font-size:.9rem;margin-top:4px">בשרטוט: גרף הנגזרת ${M("g′(x)")}</div>`:''}${e.cap?`<div style="color:var(--muted);font-size:.9rem;margin-top:4px">${e.cap}</div>`:''}${e.g2?`<div style="font-size:.9rem;margin-top:4px"><span style="color:var(--curve)">━ ${M('f(x)')}</span> &nbsp; <span style="color:var(--curve2)">━ ${e.gl||M('g(x)')}</span></div>`:''}
+      ${show?'':`<div class="row"><button class="b g" id="sb${e.id}" onclick="sh(${e.id})">סמן את השטח המבוקש</button></div>`}
+      <div class="row"><button class="b g" onclick="tg('hi${e.id}')">רמז</button><button class="b g" onclick="tg('fi${e.id}')">תשובה סופית</button><button class="b g" onclick="tg('so${e.id}')">פתרון מלא</button></div>
+      <div class="hint" id="hi${e.id}">${r.hint?r.hint:sec===3?`מצאו את נקודות החיתוך ופצלו את השטח לחלקים, כך שבכל חלק ברור מה מגביל אותו מלמעלה ומלמטה. השתמשו ב${e.h}.`:sec===2?`מצאו את נקודות החיתוך בין הגרפים, קבעו איזו פונקציה עליונה והשתמשו ב${e.h}.`:`השתמשו ב${r.name}. התחילו במציאת נקודות החיתוך עם ציר ה‑x, וסמנו על הגרף את השטח המבוקש.`}${sec===1?(e.mixed?' כאן חלק מהשטח מעל הציר וחלק מתחתיו: פצלו את האינטגרל בנקודת החיתוך.':' האינטגרל ייצא שלילי, והשטח הוא הערך המוחלט שלו.'):''}</div>
+      <div class="fin" id="fi${e.id}">תשובה סופית: <span class="ans">${e.ansH||M('S = '+e.ans)}</span>${e.S?plotS(e,'f'):''}</div>
+      <div class="sol" id="so${e.id}"><ol>${e.s.map(x=>`<li>${x}</li>`).join('')}</ol><div>תשובה: <span class="ans">${e.ansH||M('S = '+e.ans)}</span></div>${e.S?plotS(e,'s'):''}</div>
+    </div>`});
+  document.getElementById('main').innerHTML=h;
+  fixMath(document.getElementById('main'));fixMath(document.getElementById('tabs'));
+}
+const MATHRE=/[A-Za-z0-9√½±(][A-Za-z0-9√½±=<>≤≥+\-−.,()·\/′ⁿ ]*[A-Za-z0-9√½)′ⁿ]|[A-Za-z]/g;
+function trimParens(t){let o=(t.match(/\(/g)||[]).length,c=(t.match(/\)/g)||[]).length;
+  while(o>c&&t[0]==='('){t=t.slice(1);o--} while(c>o&&t[t.length-1]===')'){t=t.slice(0,-1);c--}return t}
+function fixMath(root){const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);const ns=[];
+  while(w.nextNode()){const n=w.currentNode;if(n.parentElement.closest('.m,svg'))continue;if(/[A-Za-z0-9]/.test(n.nodeValue))ns.push(n)}
+  ns.forEach(n=>{const t=n.nodeValue;let last=0,out=document.createDocumentFragment(),m;MATHRE.lastIndex=0;
+    while((m=MATHRE.exec(t))){let tok=m[0],st=m.index;const tr=trimParens(tok);st+=tok.indexOf(tr);tok=tr;if(!/[A-Za-z0-9]/.test(tok))continue;
+      out.appendChild(document.createTextNode(t.slice(last,st)));const sp=document.createElement('span');sp.className='m';sp.textContent=tok;out.appendChild(sp);last=st+tok.length}
+    out.appendChild(document.createTextNode(t.slice(last)));n.parentNode.replaceChild(out,n)})}
+function sh(id){const a=document.getElementById('ar'+id),m=document.getElementById('mk'+id),b=document.getElementById('sb'+id);
+  const on=a.style.display==='none';a.style.display=m.style.display=on?'inline':'none';b.textContent=on?'הסתר את הסימון':'סמן את השטח המבוקש'}
+function tg(id){const el=document.getElementById(id);el.style.display=el.style.display==='block'?'none':'block'}
+function go(i){cur=i;render();window.scrollTo(0,0)}
+function gs(i){sec=i;cur=0;render();window.scrollTo(0,0)}
+render();
 </script>
 </body>
 </html>
